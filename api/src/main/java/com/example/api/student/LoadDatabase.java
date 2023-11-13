@@ -18,11 +18,13 @@ public class LoadDatabase {
             log.info("Preloading " + repository.save(new Student(
                     "Missy",
                     "Elliot",
-                    "missyelliot@testmail.com")));
+                    "missyelliot@testmail.com",
+                    "12345")));
             log.info("Preloading " + repository.save(new Student(
                     "Beyonce",
                     "Knowles",
-                    "b.knowles@testmail.com")));
+                    "b.knowles@testmail.com",
+                    "qwertz")));
         };
     }
 }

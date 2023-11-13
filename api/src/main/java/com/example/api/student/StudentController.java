@@ -14,7 +14,7 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    List<Student> all() {
+    List<Student> allStudents() {
         return repository.findAll();
     }
 
@@ -23,6 +23,7 @@ public class StudentController {
         return repository.save(newStudent);
     }
 
+
     // Single item
 
     @GetMapping("/students/{id}")
@@ -30,7 +31,8 @@ public class StudentController {
         return repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
     }
 
-   @PutMapping("/students/{id}")
+   /*
+    @PutMapping("/students/{id}")
     Student replaceStudent(@RequestBody Student newStudent, @PathVariable Long id) {
         return repository.findById(id).map(student -> {
                     student.setFirstName(newStudent.getFirstName());
@@ -43,19 +45,20 @@ public class StudentController {
                     return repository.save(newStudent);
         });
     }
+    */
 
-    /*
     @PutMapping("/students/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestBody Student updatedStudent) {
         Student existingStudent = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // Update the existing person with the new data
+        // Update the existing student with the new data
         existingStudent.setFirstName(updatedStudent.getFirstName());
         existingStudent.setLastName(updatedStudent.getLastName());
         existingStudent.setMail(updatedStudent.getMail());
         return repository.save(existingStudent);
-    } */
+    }
+
 
     @DeleteMapping("/students/{id}")
     void deleteStudent(@PathVariable Long id) {

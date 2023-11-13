@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name="Student")
-class Student{
+public class Student{
 
     @Id @GeneratedValue
     private Long id;
@@ -21,10 +21,11 @@ class Student{
 
     public Student(){}
 
-    public Student(String firstName, String lastName, String mail){
+    public Student(String firstName, String lastName, String mail, String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
+        this.password = password;
     }
 
     public Long getId() {
@@ -75,9 +76,10 @@ class Student{
         if (!(o instanceof Student))
             return false;
         Student student = (Student) o;
-        return Objects.equals(this.id, student.id)
-                && Objects.equals(this.mail, student.mail)
-                && Objects.equals(this.lastName, student.lastName);
+        return Objects.equals(this.id, student.id) &&
+                Objects.equals(this.mail, student.mail) &&
+                Objects.equals(this.lastName, student.lastName) &&
+                Objects.equals(this.password, student.password);
     }
 
     @Override
@@ -87,7 +89,12 @@ class Student{
 
     @Override
     public String toString() {
-        return "Student{" + "id=" + this.id + ", firstName='" + this.firstName + '\'' + ", lastName='"
-                + this.lastName + '\'' + '\'' + ", mail='" + this.mail + '}';
+        return "Student{" +
+                "id=" + this.id +
+                ", firstName='" + this.firstName + '\'' +
+                ", lastName='" + this.lastName + '\'' + '\'' +
+                ", mail='" + this.mail +
+                '}';
     }
+
 }
