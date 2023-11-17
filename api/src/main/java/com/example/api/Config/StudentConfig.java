@@ -32,10 +32,10 @@ public class StudentConfig {
             );
 
             Student student2 = new Student(
-                    "Anna",
-                    "Bertram",
-                    "meineMail@mail.de",
-                    "12345"
+                    "Berta",
+                    "Cesar",
+                    "email@mail.de",
+                    "passwort"
             );
 
             studentRepository.saveAll(

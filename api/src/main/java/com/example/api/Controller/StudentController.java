@@ -1,9 +1,9 @@
 package com.example.api.Controller;
 
+import com.example.api.Request.LoginRequest;
 import com.example.api.Request.StudentRequest;
 import com.example.api.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 // Controller verbindung zum Client, hier werden die methoden ausgeführt
@@ -31,6 +31,15 @@ public class StudentController {
         return studentService.register(studentRequest);
     }
 
+    @PostMapping(path ="/login")
+    public String login(@RequestBody LoginRequest loginRequest){
+        boolean existsStudent = studentService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
+        if(existsStudent){
+            return "Anmeldung erfolgreich abgeschlossen.";
+        }
+        throw new IllegalStateException("Nutzer konnte nicht gefunden werden");
+
+    }
 
     //@GetMapping
 }

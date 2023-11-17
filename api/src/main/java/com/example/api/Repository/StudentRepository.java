@@ -12,4 +12,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     // Student wird mittels Email-Adresse in der Datenbank gefunden
     Optional <Student> findByEmail(String email);
+
+    Optional <Student> findByEmailAndPassword(String email, String password);
 }

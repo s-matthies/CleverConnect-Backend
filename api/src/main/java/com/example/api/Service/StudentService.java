@@ -6,6 +6,10 @@ import com.example.api.Request.StudentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+// hier werden Methoden geschrieben, die im Controller Anwendung finden
+// das macht den Controller übersichtlicher
 @Service
 public class StudentService {
 
@@ -44,5 +48,11 @@ public class StudentService {
                 studentRequest.getEmail(),
                 studentRequest.getPassword()
         ));
+    }
+
+    // Student wird nur optional , also nur, wenn in Datenbank vorhanden ausgegeben- nur dann funktioniert Login
+    public Optional <Student> login(String email, String password){
+        Optional <Student> student = studentRepository.findByEmailAndPassword(email, password);
+        return student;
     }
 }
