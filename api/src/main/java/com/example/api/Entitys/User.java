@@ -10,14 +10,15 @@ import java.util.List;
 
 
 @Entity
+// kann table nicht in User umbenenne, sonst gibt es Fehlermeldung
 @Table(name="Student")
-public class Student implements UserDetails {
+public class User implements UserDetails {
 
     //Schlüsselattribut Id vergeben
     @Id
     // Id wird mit SequenceGenerator und GeneratedValue eigenständig generiert
-    @SequenceGenerator(name= "studentSequence", sequenceName= "studentSequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentSequence")
+    @SequenceGenerator(name= "userSequence", sequenceName= "userSequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
 
     private Long id;
     private String firstName;
@@ -27,30 +28,31 @@ public class Student implements UserDetails {
     @Enumerated(EnumType.STRING) // sagt Spring, dass role ein enum ist und gibt diese als String wieder
     private Role role;
 
-    public Student() {
+    public User() {
     }
 
-    //Konstruktor ohen id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
-    public Student(String firstName, String lastName, String email, String password) {
+    //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public Student(long id, String firstName, String lastName, String email, String password) {
+    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
