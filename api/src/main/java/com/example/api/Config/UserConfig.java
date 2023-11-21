@@ -29,16 +29,14 @@ public class UserConfig {
                     "Anna",
                     "Bertram",
                     "meineMail@mail.de",
-                    "12345",
-                    "STUDENT"
+                    "12345"
             );
 
             User user2 = new User(
                     "Berta",
                     "Cesar",
                     "mail@mail.de",
-                    "passwort",
-                    "STUDENT"
+                    "passwort"
             );
 
             userRepository.saveAll(

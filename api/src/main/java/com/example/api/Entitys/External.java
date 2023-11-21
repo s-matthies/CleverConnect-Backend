@@ -1,16 +1,16 @@
 package com.example.api.Entitys;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+
 import java.util.Objects;
 
+@Entity
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
     private String company;
     private String availability;
-
-    public External() {
-        super("Berta", "Cesar", "mail@mail.de", "passwort", "STUDENT");
-    }
 
     public External(Long id, String firstName, String lastName, String email, String password,
                     Role role, String company, String availability) {
@@ -20,11 +20,16 @@ public class External extends User{
     }
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
-    public External(String firstName, String lastName, String email, String password, Role role,
+    //und ohne Role, da diese vergeben wird
+    public External(String firstName, String lastName, String email, String password,
                     String company, String availability) {
-        super(firstName, lastName, email, password, role);
+        super(firstName, lastName, email, password);
         this.company = company;
         this.availability = availability;
+    }
+
+    public External() {
+
     }
 
     public String getCompany() {

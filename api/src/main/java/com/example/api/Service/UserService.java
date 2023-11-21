@@ -33,7 +33,7 @@ public class UserService {
 
     }
 
-    // weitere Methode, um auch die  Attribute zu vergeben/speichern,
+    // weitere Methode, um auch die Attribute zu vergeben/speichern,
     // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
     // nicht alle Attribute vom Nutzer selbst eingeben werden
 
@@ -45,7 +45,8 @@ public class UserService {
                 userRequest.getLastname(),
                 userRequest.getEmail(),
                 userRequest.getPassword()
-        ));
+        )
+        );
     }
 
     // Optional : Userin wird nur ausgegeben, wenn in der DB vorhanden

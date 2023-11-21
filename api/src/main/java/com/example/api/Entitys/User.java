@@ -31,7 +31,15 @@ public class User implements UserDetails {
 
 
     //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -39,13 +47,8 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    public User() {
+
     }
 
     public Long getId() {
@@ -87,6 +90,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
