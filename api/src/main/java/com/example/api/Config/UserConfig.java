@@ -1,5 +1,6 @@
 package com.example.api.Config;
 
+import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,16 @@ public class UserConfig {
                     "Anna",
                     "Bertram",
                     "meineMail@mail.de",
-                    "12345"
+                    "12345",
+                    "STUDENT"
             );
 
             User user2 = new User(
                     "Berta",
                     "Cesar",
                     "mail@mail.de",
-                    "passwort"
+                    "passwort",
+                    "STUDENT"
             );
 
             userRepository.saveAll(

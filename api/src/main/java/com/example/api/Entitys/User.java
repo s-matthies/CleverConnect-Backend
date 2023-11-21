@@ -29,8 +29,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING) // sagt Spring, dass role ein enum ist und gibt diese als String wieder
     private Role role;
 
-    public User() {
-    }
 
     //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
     public User(String firstName, String lastName, String email, String password, Role role) {
@@ -41,7 +39,7 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
+    public User(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

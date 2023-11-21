@@ -9,6 +9,7 @@ public class External extends User{
     private String availability;
 
     public External() {
+        super("Berta", "Cesar", "mail@mail.de", "passwort", "STUDENT");
     }
 
     public External(Long id, String firstName, String lastName, String email, String password,
@@ -49,7 +50,7 @@ public class External extends User{
                 ", availability='" + availability + '\'' +
                 '}';
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), company, availability);
