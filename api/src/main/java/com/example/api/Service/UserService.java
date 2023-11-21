@@ -1,5 +1,6 @@
 package com.example.api.Service;
 
+import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
@@ -20,14 +21,12 @@ public class UserService {
     }
 
     public String userRegistration(User user){
-
         // da es sein kann, dass Email Adresse schon im System vorhanden ist, wird boolean gesetzt
         boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
         // wenn Email-Adresse des Studenten schon in Datenbank, dann Exception
         if(userExists) {
             throw new IllegalMonitorStateException("E-Mail Adresse ist bereits vergeben");
         }
-
         userRepository.save(user);
         return "User wurde erfolgreich registriert.";
 
@@ -44,7 +43,8 @@ public class UserService {
                 userRequest.getFirstname(),
                 userRequest.getLastname(),
                 userRequest.getEmail(),
-                userRequest.getPassword()
+                userRequest.getPassword(),
+                Role.STUDENT
         )
         );
     }

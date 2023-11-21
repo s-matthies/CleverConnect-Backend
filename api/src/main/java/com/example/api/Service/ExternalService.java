@@ -1,6 +1,7 @@
 package com.example.api.Service;
 
 import com.example.api.Entitys.External;
+import com.example.api.Entitys.Role;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
@@ -19,8 +20,8 @@ public class ExternalService {
     private final ExternalRepository externalRepository;
 
     //Konstruktor
-    public ExternalService(ExternalRepository externRepository) {
-        this.externalRepository = externRepository;
+    public ExternalService(ExternalRepository externalRepository) {
+        this.externalRepository = externalRepository;
     }
 
     /*
@@ -50,14 +51,15 @@ public class ExternalService {
      * werden soll, um eine Userin (Externe) zu erstellen
      */
 
-    public String registration(ExternalRequest externRequest) {
+    public String registration(ExternalRequest externalRequest) {
         return registerExtern(new External(
-                externRequest.getFirstName(),
-                externRequest.getLastName(),
-                externRequest.getEmail(),
-                externRequest.getPassword(),
-                externRequest.getCompany(),
-                externRequest.getAvailability()
+                externalRequest.getFirstName(),
+                externalRequest.getLastName(),
+                externalRequest.getEmail(),
+                externalRequest.getPassword(),
+                Role.EXTERN,
+                externalRequest.getCompany(),
+                externalRequest.getAvailability()
                 )
         );
     }

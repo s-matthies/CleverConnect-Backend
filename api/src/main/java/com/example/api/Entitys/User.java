@@ -31,11 +31,12 @@ public class User implements UserDetails {
 
 
     //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public User(Long id, String firstName, String lastName, String email, String password, Role role) {

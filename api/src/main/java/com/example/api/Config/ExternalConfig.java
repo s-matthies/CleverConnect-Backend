@@ -1,6 +1,7 @@
 package com.example.api.Config;
 
 import com.example.api.Entitys.External;
+import com.example.api.Entitys.Role;
 import com.example.api.Repository.ExternalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +29,7 @@ public class ExternalConfig {
                     "Elliot",
                     "missy.elliot@mail.de",
                     "qwertz",
+                    Role.EXTERN,
                     "Big Data Company",
                     "01/2024-12/2024"
             );

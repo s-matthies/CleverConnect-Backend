@@ -22,14 +22,13 @@ public class External extends User{
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     //und ohne Role, da diese vergeben wird
     public External(String firstName, String lastName, String email, String password,
-                    String company, String availability) {
-        super(firstName, lastName, email, password);
+                    Role role, String company, String availability) {
+        super(firstName, lastName, email, password, role);
         this.company = company;
         this.availability = availability;
     }
 
     public External() {
-
     }
 
     public String getCompany() {
