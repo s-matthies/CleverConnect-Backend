@@ -49,7 +49,7 @@ public class External extends User{
                 ", availability='" + availability + '\'' +
                 '}';
     }
-
+    
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), company, availability);
