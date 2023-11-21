@@ -6,6 +6,8 @@ import com.example.api.Request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -44,5 +46,10 @@ public class UserService {
                 userRequest.getEmail(),
                 userRequest.getPassword()
         ));
+    }
+
+    // Optional : Userin wird nur ausgegeben, wenn in der DB vorhanden
+    public Optional<User> login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
 }

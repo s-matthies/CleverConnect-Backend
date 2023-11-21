@@ -1,5 +1,6 @@
 package com.example.api.Controller;
 
+import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class UserController {
         return userService.register(userRequest);
     }
 
-
-    //@GetMapping
+    @PostMapping("/login")
+    public String login (@RequestBody LoginRequest loginRequest) {
+        boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
+        if(existsExternal) {
+            return "Anmeldung war erfolgreich!";
+        }
+        throw new IllegalStateException("Userin wurde nicht gefunden!");
+    }
 }
