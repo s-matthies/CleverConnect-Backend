@@ -3,19 +3,24 @@ package com.example.api.Service;
 import com.example.api.Entitys.External;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
+import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExternalService {
 
     //mit Repository verknüpfen, damit wir auf die DB zugreifen können
     @Autowired
-    private final ExternalRepository externRepository;
+    private final ExternalRepository externalRepository;
 
     //Konstruktor
     public ExternalService(ExternalRepository externRepository) {
-        this.externRepository = externRepository;
+        this.externalRepository = externRepository;
     }
 
     /*
@@ -29,14 +34,14 @@ public class ExternalService {
     public String registerExtern(External external) {
         //existiert student mit dieser email bereits in der DB?
         // im Repository findByMethode angelegt (-> E-Mail-Adresse muss eindeutig sein)
-        boolean externExists = externRepository.findByEmail(external.getEmail()).isPresent();
+        boolean externExists = externalRepository.findByEmail(external.getEmail()).isPresent();
 
         //wenn E-Mail bereits existiert, dann Exception
         if (externExists) {
             throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
         }
 
-        externRepository.save(external);
+        externalRepository.save(external);
         return "User*in wurde erfolgreich registriert!";
     }
 
@@ -56,4 +61,48 @@ public class ExternalService {
                 )
         );
     }
+
+    // Methode um Externe nach id zu laden
+    public External getExternal(Long id) {
+        return externalRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    // Methode um alle Externen zu laden
+    public List<External> allExternal() {
+        return externalRepository.findAll();
+    }
+
+    // Methode um Daten eine Userin zu aktualisieren
+    public String updateExternal(Long id, External newUser) {
+        // Externe Person anhand der ID finden
+        External existingUser = externalRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        //existierende Externe mit neuen Daten updaten
+        existingUser.setFirstName(newUser.getFirstName());
+        existingUser.setLastName(newUser.getLastName());
+        existingUser.setEmail(newUser.getEmail());
+        existingUser.setAvailability(newUser.getAvailability());
+        existingUser.setCompany(newUser.getCompany());
+        externalRepository.save(existingUser);
+        return "User*in mit der ID " + id + " erfolgreich aktualisiert!";
+    }
+
+    //Methode zum Löschen einer Userin/Externen
+    public String deleteExternal(Long id) {
+        External existingUser = externalRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        externalRepository.delete(existingUser);
+
+        return "User*in mit der ID " + id + " erfolgreich gelöscht!";
+    }
+
+    //Methode zum Login
+    // Optional : Userin wird nur ausgegeben, wenn in der DB vorhanden
+    public Optional<External> login(String email, String password) {
+        Optional <External> external = externalRepository.findByEmailAndPassword(email, password);
+        return external;
+    }
+
 }
