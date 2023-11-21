@@ -30,6 +30,7 @@ public class User implements UserDetails {
     private Role role;
 
 
+
     //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
