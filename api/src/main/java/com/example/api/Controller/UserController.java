@@ -1,8 +1,8 @@
 package com.example.api.Controller;
 
 import com.example.api.Request.LoginRequest;
-import com.example.api.Request.StudentRequest;
-import com.example.api.Service.StudentService;
+import com.example.api.Request.UserRequest;
+import com.example.api.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 // Pfad wird selbst festgelegt?
 @RequestMapping(path ="/test/version1")
-public class StudentController {
+public class UserController {
     // mit Service verknüpfen/verbinden
     @Autowired
-    private final StudentService studentService;
+    private final UserService userService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     // Mapping :Verbindung mit Client
@@ -27,19 +27,16 @@ public class StudentController {
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im StudentRequest sind werden übergeben
-    public String register(@RequestBody StudentRequest studentRequest){
-        return studentService.register(studentRequest);
+    public String register(@RequestBody UserRequest userRequest){
+        return userService.register(userRequest);
     }
 
-    @PostMapping(path ="/login")
-    public String login(@RequestBody LoginRequest loginRequest){
-        boolean existsStudent = studentService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
-        if(existsStudent){
-            return "Anmeldung erfolgreich abgeschlossen.";
+    @PostMapping("/login")
+    public String login (@RequestBody LoginRequest loginRequest) {
+        boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
+        if(existsExternal) {
+            return "Anmeldung war erfolgreich!";
         }
-        throw new IllegalStateException("Nutzer konnte nicht gefunden werden");
-
+        throw new IllegalStateException("Userin wurde nicht gefunden!");
     }
-
-    //@GetMapping
 }

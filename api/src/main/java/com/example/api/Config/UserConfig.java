@@ -1,7 +1,7 @@
 package com.example.api.Config;
 
-import com.example.api.Entitys.Student;
-import com.example.api.Repository.StudentRepository;
+import com.example.api.Entitys.User;
+import com.example.api.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -10,36 +10,36 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class StudentConfig {
+public class UserConfig {
 
-    // wir verknüpfen mit dem StudentRepository
+    // wir verknüpfen mit dem UserRepository
     @Autowired
-    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
-    public StudentConfig(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public UserConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     //wird beim Start des Programms ausgeführt
     @Bean
     CommandLineRunner commandLineRunner(){
         return args -> {
-            Student student1 = new Student(
+            User user1 = new User(
                     "Anna",
                     "Bertram",
                     "meineMail@mail.de",
                     "12345"
             );
 
-            Student student2 = new Student(
+            User user2 = new User(
                     "Berta",
                     "Cesar",
-                    "email@mail.de",
+                    "mail@mail.de",
                     "passwort"
             );
 
-            studentRepository.saveAll(
-                    List.of(student1, student2)
+            userRepository.saveAll(
+                    List.of(user1, user2)
             );
         };
     }

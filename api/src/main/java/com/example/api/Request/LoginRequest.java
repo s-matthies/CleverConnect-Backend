@@ -5,8 +5,8 @@ package com.example.api.Request;
 public class LoginRequest {
 
     //beim Login werden nur Email und Passwort eingegeben, deshalb nur diese beiden Attribute hier notwendig
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
     public LoginRequest(String email, String password) {
         this.email = email;

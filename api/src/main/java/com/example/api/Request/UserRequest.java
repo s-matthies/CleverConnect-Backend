@@ -1,14 +1,14 @@
 package com.example.api.Request;
 
-public class StudentRequest {
+public class UserRequest {
     // es werden alle Attribute angeben, die der Nutzer selbst ausfüllt
-    // Namen der Attribute sollen die der Entity Student entsprechen
+    // Namen der Attribute sollen die der Entity User entsprechen
     private final String firstname;
     private final String lastname;
     private final String email;
     private final String password;
 
-    public StudentRequest(String firstname, String lastname, String email, String password) {
+    public UserRequest(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
