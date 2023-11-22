@@ -86,7 +86,7 @@ public class UserService {
 
         return "User mit der ID " + id + " erfolgreich gelöscht!";
     }
-    
+
     // Methode für Login
     // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
     public Optional<User> login(String email, String password) {
