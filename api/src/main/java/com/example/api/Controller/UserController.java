@@ -1,10 +1,13 @@
 package com.example.api.Controller;
 
+import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // Controller verbindung zum Client, hier werden die methoden ausgeführt
 @RestController
@@ -30,6 +33,31 @@ public class UserController {
     public String register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
+
+    //alle User laden
+    @GetMapping("/load")
+    List<User> allStudents() {
+        return userService.allUser();
+    }
+
+    //einzelne User mit ID laden
+    @GetMapping("/load/{id}")
+    User getStudent(@PathVariable Long id) {
+        return userService.getUser(id);
+    }
+
+    // Daten eines Users ändern
+    @PutMapping("/update/{id}")
+    public String updateUser (@PathVariable Long id, @RequestBody User newUser) {
+        return userService.updateUser(id, newUser);
+    }
+
+    // eine User löschen
+    @DeleteMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
+
 
     @PostMapping("/login")
     public String login (@RequestBody LoginRequest loginRequest) {

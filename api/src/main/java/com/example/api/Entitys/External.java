@@ -13,16 +13,16 @@ public class External extends User{
     private String availability;
 
     public External(Long id, String firstName, String lastName, String email, String password,
-                    Role role, String company, String availability) {
-        super(id, firstName, lastName, email, password, role);
+                    Role role, boolean locked, boolean enabled, String company, String availability) {
+        super(id, firstName, lastName, email, password, role, locked, enabled);
         this.company = company;
         this.availability = availability;
     }
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     public External(String firstName, String lastName, String email, String password,
-                    Role role, String company, String availability) {
-        super(firstName, lastName, email, password, role);
+                    Role role, boolean locked, boolean enabled, String company, String availability) {
+        super(firstName, lastName, email, password, role, locked, enabled);
         this.company = company;
         this.availability = availability;
     }

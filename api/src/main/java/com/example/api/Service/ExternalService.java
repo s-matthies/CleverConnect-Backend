@@ -6,6 +6,7 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,8 @@ public class ExternalService {
                 externalRequest.getEmail(),
                 externalRequest.getPassword(),
                 Role.EXTERN,
+                false,
+                true,
                 externalRequest.getCompany(),
                 externalRequest.getAvailability()
                 )

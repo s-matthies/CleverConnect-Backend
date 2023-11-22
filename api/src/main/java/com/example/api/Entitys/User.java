@@ -28,25 +28,43 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING) // sagt Spring, dass role ein enum ist und gibt diese als String wieder
     private Role role;
-
+    boolean locked;
+    boolean enabled;
 
 
     //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName,
+                String lastName,
+                String email,
+                String password,
+                Role role,
+                boolean locked,
+                boolean enabled) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.locked = locked;
+        this.enabled = enabled;
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
+    public User(Long id,
+                String firstName,
+                String lastName,
+                String email,
+                String password,
+                Role role,
+                boolean locked,
+                boolean enabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.locked = locked;
+        this.enabled = enabled;
     }
 
     public User() {
