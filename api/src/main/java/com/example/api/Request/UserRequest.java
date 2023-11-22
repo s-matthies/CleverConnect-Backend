@@ -3,24 +3,24 @@ package com.example.api.Request;
 public class UserRequest {
     // es werden alle Attribute angeben, die der Nutzer selbst ausfüllt
     // Namen der Attribute sollen die der Entity User entsprechen
-    private final String firstname;
-    private final String lastname;
+    private final String firstName;
+    private final String lastName;
     private final String email;
     private final String password;
 
-    public UserRequest(String firstname, String lastname, String email, String password) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public UserRequest(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
     public String getFirstname() {
-        return firstname;
+        return firstName;
     }
 
     public String getLastname() {
-        return lastname;
+        return lastName;
     }
 
     public String getEmail() {
