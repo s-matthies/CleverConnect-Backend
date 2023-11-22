@@ -54,14 +54,4 @@ public class ExternalController {
     public String deleteExtern(@PathVariable Long id) {return externalService.deleteExternal(id);
     }
 
-    // Login
-    @PostMapping("/login")
-    public String login (@RequestBody LoginRequest loginRequest) {
-        boolean existsExternal = externalService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
-        if(existsExternal) {
-            return "Anmeldung war erfolgreich!";
-        }
-        throw new IllegalStateException("Userin wurde nicht gefunden!");
-    }
-
 }
