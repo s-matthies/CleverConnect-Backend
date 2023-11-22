@@ -30,6 +30,8 @@ public class ExternalConfig {
                     "missy.elliot@mail.de",
                     "qwertz",
                     Role.EXTERN,
+                    false,
+                    true,
                     "Big Data Company",
                     "01/2024-12/2024"
             );

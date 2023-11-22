@@ -4,9 +4,11 @@ import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
+import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,12 +46,15 @@ public class UserService {
                 userRequest.getLastname(),
                 userRequest.getEmail(),
                 userRequest.getPassword(),
-                Role.STUDENT
+                Role.STUDENT,
+                false,
+                true
         )
         );
     }
 
-    // Optional : Userin wird nur ausgegeben, wenn in der DB vorhanden
+    // Methode für Login
+    // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }

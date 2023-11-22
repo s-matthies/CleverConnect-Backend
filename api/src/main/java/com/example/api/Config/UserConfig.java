@@ -30,7 +30,9 @@ public class UserConfig {
                     "Bertram",
                     "meineMail@mail.de",
                     "12345",
-                    Role.STUDENT
+                    Role.STUDENT,
+                    false,
+                    true
             );
 
             User user2 = new User(
@@ -38,7 +40,9 @@ public class UserConfig {
                     "Cesar",
                     "mail@mail.de",
                     "passwort",
-                    Role.ADMIN
+                    Role.ADMIN,
+                    false,
+                    true
             );
 
             userRepository.saveAll(
