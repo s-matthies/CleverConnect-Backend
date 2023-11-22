@@ -49,9 +49,4 @@ public class ExternalController {
         return externalService.updateExternal(id, newUser);
     }
 
-    // eine Userin löschen
-    @DeleteMapping("/delete/{id}")
-    public String deleteExtern(@PathVariable Long id) {return externalService.deleteExternal(id);
-    }
-
 }
