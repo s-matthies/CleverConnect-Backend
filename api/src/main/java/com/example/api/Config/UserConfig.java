@@ -28,7 +28,7 @@ public class UserConfig {
             User user1 = new User(
                     "Anna",
                     "Bertram",
-                    "meineMail@mail.de",
+                    "meineMail@Student.HTW-Berlin.de",
                     "12345",
                     Role.STUDENT,
                     false,
@@ -36,10 +36,20 @@ public class UserConfig {
             );
 
             User user2 = new User(
-                    "Berta",
-                    "Cesar",
-                    "mail@mail.de",
+                    "Jörn",
+                    "Freiheit",
+                    "Joern.Freiheit@HTW-Berlin.de",
                     "passwort",
+                    Role.ADMIN,
+                    false,
+                    true
+            );
+
+            User user3 = new User(
+                    "Helena",
+                    "Mihaljevic",
+                    "Helena.Mihaljevic@HTW-Berlin.de",
+                    "passwort123",
                     Role.ADMIN,
                     false,
                     true
