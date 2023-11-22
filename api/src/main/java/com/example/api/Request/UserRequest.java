@@ -15,11 +15,11 @@ public class UserRequest {
         this.password = password;
     }
 
-    public String getFirstname() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public String getLastname() {
+    public String getLastName() {
         return lastName;
     }
 

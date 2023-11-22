@@ -42,8 +42,8 @@ public class UserService {
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
                 // Eingabe der Attribute
-                userRequest.getFirstname(),
-                userRequest.getLastname(),
+                userRequest.getFirstName(),
+                userRequest.getLastName(),
                 userRequest.getEmail(),
                 userRequest.getPassword(),
                 Role.STUDENT,
