@@ -5,7 +5,6 @@ import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +32,7 @@ public class UserController {
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im StudentRequest sind werden übergeben
     public ResponseEntity<ResponseEntity<String>> register(@RequestBody UserRequest userRequest){
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.register(userRequest));
+        return ResponseEntity.ok(userService.register(userRequest));
     }
 
     //alle User laden
@@ -65,7 +64,7 @@ public class UserController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateUser (@PathVariable Long id, @RequestBody User newUser) {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.updateUser(id, newUser));
+        return ResponseEntity.ok(userService.updateUser(id, newUser));
         //return userService.updateUser(id, newUser);
 
         /*
@@ -82,16 +81,14 @@ public class UserController {
 
     // eine Userin löschen
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteStudent(@PathVariable Long id) {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.deleteUser(id));
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deleteUser(id));
     }
 
 
     @PostMapping("/login")
-
-    public ResponseEntity<Object> signInStudent(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword()));
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword()));
     }
     /*
     public String login (@RequestBody LoginRequest loginRequest) {

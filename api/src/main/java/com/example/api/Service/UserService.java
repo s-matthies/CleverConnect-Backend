@@ -3,14 +3,12 @@ package com.example.api.Service;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
-import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -129,18 +127,6 @@ public class UserService {
         }
 
 
-    /*
-    public ResponseEntity<Object> deleteUser(Long id) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-        userRepository.delete(existingUser);
-
-        String message = "User mit der ID " + id + " erfolgreich gelöscht!";
-        return new ResponseEntity<>(message, HttpStatus.OK);
-        //return "User mit der ID " + id + " erfolgreich gelöscht!";
-    }
-     */
-
     // Methode für Login
     // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
     public Optional<User> login(String email, String password) {
@@ -159,19 +145,8 @@ public class UserService {
         }
         catch (IllegalStateException e) {
             // Exception abfangen und Fehler-Response zurückgeben
-            String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
     }
-
-    /*
-    public String login (@RequestBody LoginRequest loginRequest) {
-        boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
-        if(existsExternal) {
-            return "Anmeldung war erfolgreich!";
-        }
-        throw new IllegalStateException("Userin wurde nicht gefunden!");
-    }
-
-     */
 }
