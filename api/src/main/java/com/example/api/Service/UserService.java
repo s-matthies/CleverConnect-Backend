@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service-Klasse für die Verwaltung von Benutzern.
@@ -38,40 +37,33 @@ public class UserService {
      * @param user Der zu registrierende User.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<String> userRegistration(User user) {
+    public ResponseEntity<?> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
             boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
 
             // Wenn die E-Mail-Adresse bereits existiert, Exception auslösen
             if (userExists) {
-                throw new IllegalStateException("E-Mail Adresse ist bereits vergeben");
+                throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
-            // Wenn alles i.O. ist, wird User registriert
-            userRepository.save(user);
 
-            // Erfolgreiche Registrierung - JSON-Response zurückgeben
+            // Wenn alles i.O. ist, wird der User registriert
+            User savedUser = userRepository.save(user);
+
+            // Erfolgreiche Registrierung - User-Objekt zurückgeben
+            return ResponseEntity.ok(savedUser);
+            /*
             String message = "{\"User wurde erfolgreich registriert!\"}";
             return ResponseEntity.ok(message);
+            */
+
         } catch (IllegalStateException e) {
             // Exception abfangen und Fehler-JSON-Response zurückgeben
+
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorMessage);
         }
     }
-
-    /*
-    public String userRegistration(User user){
-        // da es sein kann, dass Email Adresse schon im System vorhanden ist, wird boolean gesetzt
-        boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
-        // wenn Email-Adresse des Studenten schon in Datenbank, dann Exception
-        if(userExists) {
-            throw new IllegalStateException("E-Mail Adresse ist bereits vergeben");
-        }
-        userRepository.save(user);
-        return "User wurde erfolgreich registriert.";
-    }
-    */
 
     // weitere Methode, um auch die Attribute zu vergeben/speichern,
     // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
@@ -82,7 +74,7 @@ public class UserService {
      * @param userRequest Das UserRequest-Objekt mit den Benutzerdaten.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<String> register(UserRequest userRequest){
+    public ResponseEntity<?> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
                 // Eingabe der Attribute
@@ -129,7 +121,7 @@ public class UserService {
      * @return ResponseEntity mit einer Erfolgsmeldung und dem HTTP-Status OK.
      * @throws UserNotFoundException Falls der User nicht gefunden wird.
      */
-    public ResponseEntity<Object> updateUser(Long id, User newUser) {
+    public ResponseEntity<User> updateUser(Long id, User newUser) {
 
             // Externe Person anhand der ID finden
             User existingUser = userRepository.findById(id)
@@ -139,12 +131,15 @@ public class UserService {
             existingUser.setFirstName(newUser.getFirstName());
             existingUser.setLastName(newUser.getLastName());
             existingUser.setEmail(newUser.getEmail());
-            userRepository.save(existingUser);
+            User savedUser = userRepository.save(existingUser);
 
+            /*
             // Response erstellen für den Erfolgsfall
-            String message = "User mit der id " + id + " wurde erfolgreich aktualisiert!";
+            String message = "{\"User mit der id \"" + id + "\" wurde erfolgreich aktualisiert!\"";
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return new ResponseEntity<>(message, HttpStatus.OK);
+            return ResponseEntity.ok(message);
+            */
+            return ResponseEntity.ok(savedUser);
     }
 
     //Methode zum Löschen eines Users
@@ -166,24 +161,19 @@ public class UserService {
             // Wenn der User gefunden wird, wird er aus dem Repository geloescht
             userRepository.delete(existingUser);
 
-            String message = "User mit der ID " + id + " erfolgreich gelöscht!";
+            String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return new ResponseEntity<>(message, HttpStatus.OK);
+            return ResponseEntity.ok(message);
         }
 
 
     // Methode für Login
     // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
-    /**
-     * Versucht, einen User anhand der E-Mail-Adresse und des Passworts anzumelden.
-     *
-     * @param email    Die E-Mail-Adresse des Users.
-     * @param password Das Passwort des Users.
-     * @return Ein Optional-Objekt, das den gefundenen User enthält, wenn vorhanden.
-     */
+   /*
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
+    */
 
     /**
      * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
@@ -198,14 +188,17 @@ public class UserService {
                 .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!"));
 
+        /*
             String message = "User wurde erfolgreich angemeldet";
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return new ResponseEntity<>(message, HttpStatus.OK);
+         */
+            return ResponseEntity.ok(existingUser);
         }
         catch (IllegalStateException e) {
             // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(errorMessage);
         }
     }
 }

@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im StudentRequest sind werden übergeben
-    public ResponseEntity<String> register(@RequestBody UserRequest userRequest){
+    public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
 
@@ -64,8 +64,8 @@ public class UserController {
      * @throws Exception Wenn während des Aktualisierungsvorgangs ein unerwarteter Fehler auftritt.
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updateUser (@PathVariable Long id, @RequestBody User newUser) {
-        return ResponseEntity.ok(userService.updateUser(id, newUser));
+    public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
+        return userService.updateUser(id, newUser);
 
         /*
          * - ResponseEntity.ok(): Dies erstellt eine ResponseEntity-Instanz mit dem HTTP-Statuscode 200 OK.
@@ -82,13 +82,13 @@ public class UserController {
     // eine Userin löschen
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.deleteUser(id));
+        return userService.deleteUser(id);
     }
 
 
     @PostMapping("/login")
     public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword()));
+        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
     /*
     public String login (@RequestBody LoginRequest loginRequest) {
