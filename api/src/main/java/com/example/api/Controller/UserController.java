@@ -35,7 +35,6 @@ public class UserController {
         return userService.register(userRequest);
     }
 
-
     //alle User laden
     @GetMapping("/load")
     List<User> allStudents() {

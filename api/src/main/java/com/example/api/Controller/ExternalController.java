@@ -27,7 +27,7 @@ public class ExternalController {
     - vom Client bekommen wir alle Attribute vom ExternRequest und erstellen damit die neue Userin
     */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody ExternalRequest externalRequest) {
+    public ResponseEntity<?> register(@RequestBody ExternalRequest externalRequest) {
         return externalService.registration(externalRequest);
     }
 
@@ -45,7 +45,7 @@ public class ExternalController {
 
     // Daten der Userin ändern
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
+    public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
         return externalService.updateExternal(id, newUser);
     }
 
