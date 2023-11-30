@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service-Klasse für die Verwaltung von Benutzern.
+ */
 @Service
 public class UserService {
 
@@ -20,10 +23,21 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
 
+    /**
+     * Konstruktor für die UserService-Klasse.
+     *
+     * @param userRepository Das UserRepository-Objekt, das für den Zugriff auf die Datenbank verwendet wird.
+     */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Registriert einen User und gibt eine entsprechende JSON-Antwort zurück.
+     *
+     * @param user Der zu registrierende User.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
+     */
     public ResponseEntity<String> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
@@ -63,7 +77,12 @@ public class UserService {
     // weitere Methode, um auch die Attribute zu vergeben/speichern,
     // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
     // nicht alle Attribute vom Nutzer selbst eingeben werden
-
+    /**
+     * Registriert einen User anhand eines UserRequest-Objekts und gibt eine entsprechende JSON-Antwort zurück.
+     *
+     * @param userRequest Das UserRequest-Objekt mit den Benutzerdaten.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
+     */
     public ResponseEntity<String> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
@@ -80,17 +99,37 @@ public class UserService {
     }
 
     // Methode um User nach id zu laden
+    /**
+     * Lädt einen User anhand der angegebenen ID.
+     *
+     * @param id Die ID des zu ladenden Users.
+     * @return Der gefundene User.
+     * @throws UserNotFoundException Falls der User nicht gefunden wird.
+     */
     public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     // Methode um alle User zu laden
+    /**
+     * Lädt alle User aus der Datenbank.
+     *
+     * @return Eine Liste aller User.
+     */
     public List<User> allUser() {
         return userRepository.findAll();
     }
 
     // Methode um Daten eine Userin zu aktualisieren
+    /**
+     * Aktualisiert die Daten eines Users anhand der angegebenen ID.
+     *
+     * @param id      Die ID des zu aktualisierenden Users.
+     * @param newUser Die neuen Daten des Users.
+     * @return ResponseEntity mit einer Erfolgsmeldung und dem HTTP-Status OK.
+     * @throws UserNotFoundException Falls der User nicht gefunden wird.
+     */
     public ResponseEntity<Object> updateUser(Long id, User newUser) {
 
             // Externe Person anhand der ID finden
@@ -110,6 +149,13 @@ public class UserService {
     }
 
     //Methode zum Löschen eines Users
+    /**
+     * Löscht einen User anhand der angegebenen ID.
+     *
+     * @param id Die ID des zu löschenden Users.
+     * @return ResponseEntity mit einer Erfolgsmeldung und dem HTTP-Status OK.
+     * @throws UserNotFoundException Falls der User nicht gefunden wird.
+     */
     public ResponseEntity<Object> deleteUser(Long id) {
 
             // den User anhand der ID im Repository zu finden
@@ -129,10 +175,24 @@ public class UserService {
 
     // Methode für Login
     // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
+    /**
+     * Versucht, einen User anhand der E-Mail-Adresse und des Passworts anzumelden.
+     *
+     * @param email    Die E-Mail-Adresse des Users.
+     * @param password Das Passwort des Users.
+     * @return Ein Optional-Objekt, das den gefundenen User enthält, wenn vorhanden.
+     */
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
+    /**
+     * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
+     *
+     * @param email    Die E-Mail-Adresse des Users.
+     * @param password Das Passwort des Users.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
+     */
     public ResponseEntity<Object> signInUser(String email, String password) {
         try {
         User existingUser = userRepository.findByEmailAndPassword(email, password)

@@ -65,7 +65,6 @@ public class UserController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateUser (@PathVariable Long id, @RequestBody User newUser) {
         return ResponseEntity.ok(userService.updateUser(id, newUser));
-        //return userService.updateUser(id, newUser);
 
         /*
          * - ResponseEntity.ok(): Dies erstellt eine ResponseEntity-Instanz mit dem HTTP-Statuscode 200 OK.
@@ -98,6 +97,5 @@ public class UserController {
         }
         throw new IllegalStateException("Userin wurde nicht gefunden!");
     }
-
      */
 }
