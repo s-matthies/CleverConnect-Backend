@@ -31,9 +31,10 @@ public class UserController {
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im StudentRequest sind werden übergeben
-    public ResponseEntity<ResponseEntity<String>> register(@RequestBody UserRequest userRequest){
-        return ResponseEntity.ok(userService.register(userRequest));
+    public ResponseEntity<String> register(@RequestBody UserRequest userRequest){
+        return userService.register(userRequest);
     }
+
 
     //alle User laden
     @GetMapping("/load")

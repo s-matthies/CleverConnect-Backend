@@ -47,17 +47,16 @@ public class UserService {
             if (userExists) {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben");
             }
-
             // Wenn alles i.O. ist, wird User registriert
             userRepository.save(user);
 
             // Erfolgreiche Registrierung - JSON-Response zurückgeben
-            String message = "User wurde erfolgreich registriert!";
-            return new ResponseEntity<>(message, HttpStatus.OK);
+            String message = "{\"User wurde erfolgreich registriert!\"}";
+            return ResponseEntity.ok(message);
         } catch (IllegalStateException e) {
             // Exception abfangen und Fehler-JSON-Response zurückgeben
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(errorMessage);
         }
     }
 

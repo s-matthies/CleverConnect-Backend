@@ -6,8 +6,7 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,18 +32,25 @@ public class ExternalService {
      */
 
     //SignUp-Methode erstellen
-    public String registerExtern(External external) {
-        //existiert student mit dieser email bereits in der DB?
-        // im Repository findByMethode angelegt (-> E-Mail-Adresse muss eindeutig sein)
-        boolean externExists = externalRepository.findByEmail(external.getEmail()).isPresent();
+    public ResponseEntity<String> registerExtern(External external) {
+        try {
+            //existiert student mit dieser email bereits in der DB?
+            // im Repository findByMethode angelegt (-> E-Mail-Adresse muss eindeutig sein)
+            boolean externExists = externalRepository.findByEmail(external.getEmail()).isPresent();
 
-        //wenn E-Mail bereits existiert, dann Exception
-        if (externExists) {
-            throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
+            //wenn E-Mail bereits existiert, dann Exception
+            if (externExists) {
+                throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
+            }
+            externalRepository.save(external);
+            String message = "{\"User*in wurde erfolgreich registriert!\"}";
+            return ResponseEntity.ok(message);
         }
-
-        externalRepository.save(external);
-        return "User*in wurde erfolgreich registriert!";
+        catch (IllegalStateException e) {
+            // Exception abfangen und Fehler-JSON-Response zurückgeben
+            String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
     }
 
     /*
@@ -52,7 +58,7 @@ public class ExternalService {
      * werden soll, um eine Userin (Externe) zu erstellen
      */
 
-    public String registration(ExternalRequest externalRequest) {
+    public ResponseEntity<String> registration(ExternalRequest externalRequest) {
         return registerExtern(new External(
                 externalRequest.getFirstName(),
                 externalRequest.getLastName(),
@@ -79,7 +85,7 @@ public class ExternalService {
     }
 
     // Methode um Daten eine Userin zu aktualisieren
-    public String updateExternal(Long id, External newUser) {
+    public ResponseEntity<String> updateExternal(Long id, External newUser) {
         // Externe Person anhand der ID finden
         External existingUser = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -91,7 +97,9 @@ public class ExternalService {
         existingUser.setAvailability(newUser.getAvailability());
         existingUser.setCompany(newUser.getCompany());
         externalRepository.save(existingUser);
-        return "User*in mit der ID " + id + " erfolgreich aktualisiert!";
+
+        String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
+        return ResponseEntity.ok().body(message);
     }
 
     //Methode zum Löschen einer Userin/Externen
