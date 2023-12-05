@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -46,6 +47,9 @@ public class UserService {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
 
+            // das Registrierungsdatum auf das aktuelle Datum setzen
+            user.setRegistrationDate(LocalDate.now());
+
             // Wenn alles i.O. ist, wird der User registriert
             User savedUser = userRepository.save(user);
 
@@ -81,6 +85,7 @@ public class UserService {
                 userRequest.getLastname(),
                 userRequest.getEmail(),
                 userRequest.getPassword(),
+                null,
                 Role.STUDENT,
                 false,
                 true
