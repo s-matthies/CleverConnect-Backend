@@ -1,16 +1,18 @@
 package com.example.api.Entitys;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "Externals")
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
     private String company;
+
     private String availability;
+
 
     public External(Long id, String firstName, String lastName, String email, String password,
                     Role role, boolean locked, boolean enabled, String company, String availability) {
