@@ -2,9 +2,9 @@ package com.example.api.Controller;
 
 import com.example.api.Entitys.External;
 import com.example.api.Request.ExternalRequest;
-import com.example.api.Request.LoginRequest;
 import com.example.api.Service.ExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ExternalController {
     - vom Client bekommen wir alle Attribute vom ExternRequest und erstellen damit die neue Userin
     */
     @PostMapping("/register")
-    public String register(@RequestBody ExternalRequest externalRequest) {
+    public ResponseEntity<?> register(@RequestBody ExternalRequest externalRequest) {
         return externalService.registration(externalRequest);
     }
 
@@ -45,7 +45,7 @@ public class ExternalController {
 
     // Daten der Userin ändern
     @PutMapping("/update/{id}")
-    public String updateExternal (@PathVariable Long id, @RequestBody External newUser) {
+    public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
         return externalService.updateExternal(id, newUser);
     }
 
