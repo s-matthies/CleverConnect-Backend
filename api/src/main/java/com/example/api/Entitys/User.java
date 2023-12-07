@@ -5,13 +5,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 
 @Entity
-// kann table nicht in User umbenenne, sonst gibt es Fehlermeldung
 @Table(name="Users")
 public class User implements UserDetails {
 
@@ -26,6 +27,7 @@ public class User implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+    private LocalDate registrationDate;
     @Enumerated(EnumType.STRING) // sagt Spring, dass role ein enum ist und gibt diese als String wieder
     private Role role;
     boolean locked;
@@ -37,6 +39,7 @@ public class User implements UserDetails {
                 String lastName,
                 String email,
                 String password,
+                LocalDate registrationDate,
                 Role role,
                 boolean locked,
                 boolean enabled) {
@@ -44,6 +47,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.registrationDate = registrationDate;
         this.role = role;
         this.locked = locked;
         this.enabled = enabled;
@@ -54,6 +58,7 @@ public class User implements UserDetails {
                 String lastName,
                 String email,
                 String password,
+                LocalDate registrationDate,
                 Role role,
                 boolean locked,
                 boolean enabled) {
@@ -62,6 +67,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.registrationDate = registrationDate != null ? registrationDate : LocalDate.now();
         this.role = role;
         this.locked = locked;
         this.enabled = enabled;
@@ -110,6 +116,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public Role getRole() {
@@ -167,7 +181,9 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && role == user.role;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) && role == user.role;
     }
 
     //hashcode ohne Passwort, da geheim

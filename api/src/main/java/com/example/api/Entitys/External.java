@@ -3,6 +3,7 @@ package com.example.api.Entitys;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -12,17 +13,17 @@ public class External extends User{
     private String company;
     private String availability;
 
-    public External(Long id, String firstName, String lastName, String email, String password,
+    public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, String availability) {
-        super(id, firstName, lastName, email, password, role, locked, enabled);
+        super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availability = availability;
     }
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
-    public External(String firstName, String lastName, String email, String password,
+    public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, String availability) {
-        super(firstName, lastName, email, password, role, locked, enabled);
+        super(firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availability = availability;
     }
