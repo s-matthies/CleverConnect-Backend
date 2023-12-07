@@ -1,5 +1,9 @@
 package com.example.api.Request;
 
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
+
 public class ExternalRequest {
 
     //alle Attribute, die die Userin (Externe) hier ausfüllen soll
@@ -8,16 +12,18 @@ public class ExternalRequest {
     private String lastName;
     private String email;
     private String password;
+    private LocalDate registrationDate;
     private String company;
     private String availability;
 
 
     public ExternalRequest(String firstName, String lastName, String email,
-                         String password, String company, String availability) {
+                           String password, LocalDate registrationDate, String company, String availability) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.registrationDate = registrationDate;
         this.company = company;
         this.availability = availability;
 
@@ -42,6 +48,8 @@ public class ExternalRequest {
     public String getPassword() {
         return password;
     }
+
+    public LocalDate getRegistrationDate() { return registrationDate; }
 
     public String getCompany() {
         return company;

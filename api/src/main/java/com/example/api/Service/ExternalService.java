@@ -9,6 +9,7 @@ import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class ExternalService {
             if (externExists) {
                 throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
             }
+            // das Registrierungsdatum auf das aktuelle Datum setzen
+            external.setRegistrationDate(LocalDate.now());
+
             User savedUser = externalRepository.save(external);
             return ResponseEntity.ok(savedUser);
 
@@ -66,6 +70,7 @@ public class ExternalService {
                 externalRequest.getLastName(),
                 externalRequest.getEmail(),
                 externalRequest.getPassword(),
+                null,
                 Role.EXTERN,
                 false,
                 true,
