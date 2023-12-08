@@ -36,7 +36,7 @@ public class ExternalConfig {
                     true,
                     "Big Data Company",
                     "01/2024-12/2024",
-                    "Ich bin aufgeschlossen, kann nicht nur singen, sondern leibe auch IT"
+                    "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT"
             );
 
             externalRepository.saveAll(

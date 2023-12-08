@@ -2,11 +2,13 @@ package com.example.api.Entitys;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
+@Table(name="EXTERNALS")
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse

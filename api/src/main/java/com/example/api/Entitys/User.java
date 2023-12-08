@@ -13,8 +13,11 @@ import java.util.Objects;
 
 
 @Entity
-// kann table nicht in User umbenenne, sonst gibt es eine Fehlermeldung
+// Inheritanctype Table per Class  bewirkt dass die Entities die von User erben, eigene Tables bekommen
+// Externals sind jetzt nicht mehr in einem Table mit Users
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name="Users")
+
 public class User implements UserDetails {
 
     //Schlüsselattribut Id vergeben
