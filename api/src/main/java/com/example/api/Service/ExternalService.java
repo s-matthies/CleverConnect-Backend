@@ -75,7 +75,8 @@ public class ExternalService {
                 false,
                 true,
                 externalRequest.getCompany(),
-                externalRequest.getAvailability()
+                externalRequest.getAvailability(),
+                externalRequest.getDescription()
                 )
         );
     }
@@ -103,6 +104,7 @@ public class ExternalService {
         existingUser.setEmail(newUser.getEmail());
         existingUser.setAvailability(newUser.getAvailability());
         existingUser.setCompany(newUser.getCompany());
+        existingUser.setDescription(newUser.getDescription());
         External savedExternal = externalRepository.save(existingUser);
 
         //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";

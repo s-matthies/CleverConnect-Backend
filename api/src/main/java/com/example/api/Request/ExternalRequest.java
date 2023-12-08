@@ -16,9 +16,11 @@ public class ExternalRequest {
     private String company;
     private String availability;
 
+    private String description;
+
 
     public ExternalRequest(String firstName, String lastName, String email,
-                           String password, LocalDate registrationDate, String company, String availability) {
+                           String password, LocalDate registrationDate, String company, String availability, String description) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -26,6 +28,7 @@ public class ExternalRequest {
         this.registrationDate = registrationDate;
         this.company = company;
         this.availability = availability;
+        this.description = description;
 
     }
 
@@ -57,5 +60,9 @@ public class ExternalRequest {
 
     public String getAvailability() {
         return availability;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
