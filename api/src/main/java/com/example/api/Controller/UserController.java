@@ -12,7 +12,7 @@ import java.util.List;
 // Controller verbindung zum Client, hier werden die methoden ausgeführt
 @RestController
 // Pfad wird selbst festgelegt?
-@RequestMapping(path ="/test/version1")
+@RequestMapping(path ="/user")
 public class UserController {
     // mit Service verknüpfen/verbinden
     @Autowired

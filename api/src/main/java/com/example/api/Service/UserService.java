@@ -18,6 +18,9 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -30,6 +33,11 @@ public class UserService {
             throw new IllegalMonitorStateException("E-Mail Adresse ist bereits vergeben");
         }
         userRepository.save(user);
+
+        emailService.sendEmail(user.getEmail(),
+                "Willkommen im System",
+                "Hallo liebe HTW-Studentin, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
+
         return "User wurde erfolgreich registriert.";
 
     }
