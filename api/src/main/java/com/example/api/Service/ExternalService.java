@@ -20,6 +20,9 @@ public class ExternalService {
     @Autowired
     private final ExternalRepository externalRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository) {
         this.externalRepository = externalRepository;
@@ -44,6 +47,12 @@ public class ExternalService {
         }
 
         externalRepository.save(external);
+
+        emailService.sendEmail(external.getEmail(),
+                    "Willkommen im System",
+                    "Hallo, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
+
+
         return "User*in wurde erfolgreich registriert!";
     }
 
