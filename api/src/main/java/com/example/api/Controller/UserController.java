@@ -4,7 +4,11 @@ import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +34,7 @@ public class UserController {
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im StudentRequest sind werden übergeben
-    public String register(@RequestBody UserRequest userRequest){
+    public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
 
@@ -48,18 +52,22 @@ public class UserController {
 
     // Daten eines Users ändern
     @PutMapping("/update/{id}")
-    public String updateUser (@PathVariable Long id, @RequestBody User newUser) {
+    public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
         return userService.updateUser(id, newUser);
     }
 
-    // eine User löschen
+    // eine Userin löschen
     @DeleteMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
 
 
     @PostMapping("/login")
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest, HttpSession httpSession) {
+        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
+    }
+    /*
     public String login (@RequestBody LoginRequest loginRequest) {
         boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
         if(existsExternal) {
@@ -67,4 +75,8 @@ public class UserController {
         }
         throw new IllegalStateException("Userin wurde nicht gefunden!");
     }
+     */
+
+
+
 }

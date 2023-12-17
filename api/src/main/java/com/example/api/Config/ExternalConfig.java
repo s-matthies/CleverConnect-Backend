@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
@@ -29,11 +30,13 @@ public class ExternalConfig {
                     "Elliot",
                     "missy.elliot@mail.de",
                     "qwertz",
+                    LocalDate.of(2023, 11, 19),
                     Role.EXTERN,
                     false,
                     true,
                     "Big Data Company",
-                    "01/2024-12/2024"
+                    "01/2024-12/2024",
+                    "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT"
             );
 
             externalRepository.saveAll(

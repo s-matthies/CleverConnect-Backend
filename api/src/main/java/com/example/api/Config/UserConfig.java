@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
@@ -30,6 +31,7 @@ public class UserConfig {
                     "Bertram",
                     "meineMail@Student.HTW-Berlin.de",
                     "12345",
+                    LocalDate.of(2023, 10, 1),
                     Role.STUDENT,
                     false,
                     true
@@ -40,6 +42,7 @@ public class UserConfig {
                     "Freiheit",
                     "Joern.Freiheit@HTW-Berlin.de",
                     "passwort",
+                    LocalDate.of(2023, 10, 15),
                     Role.ADMIN,
                     false,
                     true
@@ -50,6 +53,7 @@ public class UserConfig {
                     "Mihaljevic",
                     "Helena.Mihaljevic@HTW-Berlin.de",
                     "passwort123",
+                    LocalDate.of(2023, 11, 1),
                     Role.ADMIN,
                     false,
                     true
