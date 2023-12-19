@@ -1,5 +1,6 @@
 package com.example.api.Config;
 
+import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
 import com.example.api.Repository.ExternalRepository;
@@ -20,9 +21,20 @@ public class ExternalConfig {
     public ExternalConfig(ExternalRepository externalRepository) {
         this.externalRepository = externalRepository;
     }
+ /*
+    @Bean
+    CommandLineRunner initDataBachelorSubject(){
+        return args -> {
+            BachelorSubject bachelorSubject1 = new BachelorSubject(
+                    "spannendes thema1",
+                    "tolles Thema, echt wirklich",
+                    LocalDate.of(2023, 12, 20)
 
+            );
+        };
+    }
     //wird beim Start des Programms ausgeführt
-   /* @Bean
+    @Bean
     CommandLineRunner initDataExtern(){
         return args -> {
             External external1 = new External(
@@ -38,10 +50,12 @@ public class ExternalConfig {
                     LocalDate.of(2023, 1, 14), // Startdatum
                     LocalDate.of(2023, 12, 14), // Enddatum
                     "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT",
-                    "Datenbanken, Programmierung, Webtechnologien"
+                    "Datenbanken, Programmierung, Webtechnologien",
+
 
 
             );
+
 
             externalRepository.saveAll(
                     List.of(external1)

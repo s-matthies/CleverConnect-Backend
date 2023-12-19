@@ -12,7 +12,6 @@ import java.util.Objects;
 
 
 @Entity
-// kann table nicht in User umbenenne, sonst gibt es Fehlermeldung
 @Table(name="Users")
 public class User implements UserDetails {
 

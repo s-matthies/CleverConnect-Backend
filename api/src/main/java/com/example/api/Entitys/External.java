@@ -1,6 +1,7 @@
 package com.example.api.Entitys;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "EXTERNALS")
+@Table(name="EXTERNALS")
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
@@ -151,7 +152,8 @@ public class External extends User{
                 && Objects.equals(availabilityStart, external.availabilityStart)
                 && Objects.equals(availabilityEnd, external.availabilityEnd)
                 && Objects.equals(description, external.description)
-                && Objects.equals(expertise, external.expertise);
+                && Objects.equals(expertise, external.expertise)
+            && Objects.equals(bachelorSubjects, external.bachelorSubjects);
     }
 
 
