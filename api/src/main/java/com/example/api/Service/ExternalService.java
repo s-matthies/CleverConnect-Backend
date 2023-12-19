@@ -90,11 +90,14 @@ public class ExternalService {
                         false,
                         true,
                         externalRequest.getCompany(),
-                        externalRequest.getAvailability(),
-                        externalRequest.getDescription()
+                        externalRequest.getAvailabilityStart(),
+                        externalRequest.getAvailabilityEnd(),
+                        externalRequest.getDescription(),
+                        externalRequest.getExpertise()
                 )
         );
     }
+
 
     // Methode um Externe nach id zu laden
     public External getExternal(Long id) {
@@ -117,14 +120,17 @@ public class ExternalService {
         existingUser.setFirstName(newUser.getFirstName());
         existingUser.setLastName(newUser.getLastName());
         existingUser.setEmail(newUser.getEmail());
-        existingUser.setAvailability(newUser.getAvailability());
+        existingUser.setAvailabilityStart(newUser.getAvailabilityStart());
+        existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
+        existingUser.setExpertise(newUser.getExpertise());
         External savedExternal = externalRepository.save(existingUser);
 
         //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
         //return ResponseEntity.ok().body(message);
         return ResponseEntity.ok(savedExternal);
     }
+
 }
 

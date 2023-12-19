@@ -35,8 +35,11 @@ public class ExternalConfig {
                     false,
                     true,
                     "Big Data Company",
-                    "01/2024-12/2024",
-                    "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT"
+                    LocalDate.of(2023, 1, 14), // Startdatum
+                    LocalDate.of(2023, 12, 14), // Enddatum
+                    "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT",
+                    "Datenbanken, Programmierung, Webtechnologien"
+
             );
 
             externalRepository.saveAll(

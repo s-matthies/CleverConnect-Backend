@@ -1,5 +1,7 @@
 package com.example.api.Request;
 
+import java.time.LocalDate;
+
 public class ExternalRequest {
 
     //alle Attribute, die die Userin (Externe) hier ausfüllen soll
@@ -8,23 +10,31 @@ public class ExternalRequest {
     private String lastName;
     private String email;
     private String password;
+    private LocalDate registrationDate;
     private String company;
-    private String availability;
-
+    private LocalDate availabilityStart;
+    private LocalDate availabilityEnd;
     private String description;
+    private String expertise;
 
 
     public ExternalRequest(String firstName, String lastName, String email,
-                         String password, String company, String availability, String description) {
+                           String password, LocalDate registrationDate, String company, LocalDate availabilityStart ,
+                           LocalDate availabilityEnd, String description, String expertise) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.registrationDate = registrationDate;
         this.company = company;
-        this.availability = availability;
+        //this.availability = availability;
+        this.availabilityStart = availabilityStart;
+        this.availabilityEnd = availabilityEnd;
         this.description = description;
+        this.expertise = expertise;
 
     }
+
 
     // alle Getter erstellen
     // die Attribute, die wir bekommen -> für Registrierung der Userin einsetzen
@@ -50,12 +60,19 @@ public class ExternalRequest {
         return company;
     }
 
-    public String getAvailability() {
-        return availability;
+    public LocalDate getAvailabilityStart() {
+        return availabilityStart;
+    }
+
+    public LocalDate getAvailabilityEnd() {
+        return availabilityEnd;
     }
 
     public String getDescription() {
         return description;
     }
+
+    public String getExpertise() { return expertise; }
+
 
 }
