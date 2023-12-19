@@ -22,7 +22,7 @@ public class ExternalConfig {
     }
 
     //wird beim Start des Programms ausgeführt
-    @Bean
+   /* @Bean
     CommandLineRunner initDataExtern(){
         return args -> {
             External external1 = new External(
@@ -40,12 +40,13 @@ public class ExternalConfig {
                     "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT",
                     "Datenbanken, Programmierung, Webtechnologien"
 
+
             );
 
             externalRepository.saveAll(
                     List.of(external1)
             );
         };
-    }
+    }*/
 
 }

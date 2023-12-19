@@ -1,6 +1,9 @@
 package com.example.api.Request;
 
+import com.example.api.Entitys.BachelorSubject;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class ExternalRequest {
 
@@ -16,6 +19,7 @@ public class ExternalRequest {
     private LocalDate availabilityEnd;
     private String description;
     private String expertise;
+    private List<BachelorSubject> bachelorSubjects;
 
 
     public ExternalRequest(String firstName, String lastName, String email,
@@ -32,6 +36,7 @@ public class ExternalRequest {
         this.availabilityEnd = availabilityEnd;
         this.description = description;
         this.expertise = expertise;
+        this.bachelorSubjects = bachelorSubjects;
 
     }
 
@@ -73,6 +78,8 @@ public class ExternalRequest {
     }
 
     public String getExpertise() { return expertise; }
+
+    public List<BachelorSubject> getBachelorSubjects() {return bachelorSubjects; }
 
 
 }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "EXTERNALS")
@@ -16,30 +19,48 @@ public class External extends User{
     private String description;
     private String expertise;
 
+    /** es soll möglich sein, mehr als ein Bachelor-Thema angeben zu können,
+     // deshalb wird eine Liste erstellt
+     // oneToMany bedeutet, dass jedem External mehrere Bachelorthemen zugeordnet werden können
+     mappedBy: die Liste der Bachelorthemen wird einem External zugewiesen, (zeigt auf darauf)
+     CascadeType.ALL: alle Bachelorthemen die angelegt wurden, werden beim entsprechenden External gespeichert
+     orphanRemoval = true : wenn der External gelöscht wird, werden dadurch auch seine jeweiligen Bachelorthemen gelöscht
+     */
+    @OneToMany(
+            //mappedBy = "external",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name="external_id")
+    private List<BachelorSubject> bachelorSubjects = new ArrayList<>();
+
+
 
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
-                    String description, String expertise) {
+                    String description, String expertise,List<BachelorSubject> bachelorSubjects) {
         super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
         this.expertise = expertise;
+        this.bachelorSubjects = bachelorSubjects;
     }
 
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
-                    LocalDate availabilityEnd, String description, String expertise) {
+                    LocalDate availabilityEnd, String description, String expertise, List<BachelorSubject> bachelorSubjects) {
         super(firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
         this.expertise = expertise;
+        this.bachelorSubjects = bachelorSubjects;
 
     }
 
@@ -89,6 +110,16 @@ public class External extends User{
         this.expertise = expertise;
     }
 
+    public List<BachelorSubject> getBachelorSubjects()
+    {
+        return bachelorSubjects;
+    }
+
+    public void setBachelorSubjects(List<BachelorSubject> bachelorSubjects) {
+        this.bachelorSubjects = bachelorSubjects;
+    }
+
+
 
 
     @Override
@@ -99,13 +130,14 @@ public class External extends User{
                 ", availabilityEnd='" + availabilityEnd + '\'' +
                 ", description='" + description + '\'' +
                 ", expertise='" + expertise + '\'' +
+                ", bachelorSubjects='" + bachelorSubjects + '\'' +
                 '}';
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, expertise);
+        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, expertise, bachelorSubjects);
     }
 
 
