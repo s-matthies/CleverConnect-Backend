@@ -60,7 +60,7 @@ public class UserConfig {
             );
 
             userRepository.saveAll(
-                    List.of(user1, user2)
+                    List.of(user1, user2, user3)
             );
         };
     }

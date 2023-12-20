@@ -10,7 +10,8 @@ import java.util.List;
 
 
 @Entity
-@Table(name="EXTERNALS")
+@Table(name = "EXTERNALS")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
