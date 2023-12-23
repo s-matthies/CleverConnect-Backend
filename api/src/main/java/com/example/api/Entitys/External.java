@@ -8,10 +8,8 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name = "EXTERNALS")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "Externals")
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
@@ -38,6 +36,7 @@ public class External extends User{
 
 
 
+
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
@@ -50,6 +49,7 @@ public class External extends User{
         this.expertise = expertise;
         this.bachelorSubjects = bachelorSubjects;
     }
+
 
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird

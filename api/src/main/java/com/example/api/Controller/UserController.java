@@ -67,6 +67,8 @@ public class UserController {
     public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest, HttpSession httpSession) {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
     }
+
+
     /*
     public String login (@RequestBody LoginRequest loginRequest) {
         boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
