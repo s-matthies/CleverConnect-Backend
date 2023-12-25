@@ -6,7 +6,12 @@ import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,19 +21,50 @@ import java.util.List;
  * Service-Klasse für die Verwaltung von Benutzern.
  */
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private final static String USER_NOT_FOUND_MSG =
+            "user with email %s not found";
 
     // Verknüpfung mit dem Repository, damit auf die Datenbank zugegriffen werden kann
     @Autowired
     private final UserRepository userRepository;
 
+    // Verknüpfung mit dem bCrypt-PasswordEncoder, damit Passwörter verschlüsselt werden können
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     /**
      * Konstruktor für die UserService-Klasse.
      *
-     * @param userRepository Das UserRepository-Objekt, das für den Zugriff auf die Datenbank verwendet wird.
+     * @param userRepository        Das UserRepository-Objekt, das für den Zugriff auf die Datenbank verwendet wird.
+     * @param bCryptPasswordEncoder
      */
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       @Qualifier("bCryptPasswordEncoder") BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    /*
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+        return UserRepository.findByEmail(email) // User-Objekt laden
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                String.format(USER_NOT_FOUND_MSG, email)));
+    }
+     */
+
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+        // Instanz der Klasse erstellen und die Methode aufrufen
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+
+        return user;
     }
 
     /**
@@ -46,6 +82,12 @@ public class UserService {
             if (userExists) {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
+
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode(user.getPassword());
+
+            user.setPassword(encodedPassword);
+
 
             // das Registrierungsdatum auf das aktuelle Datum setzen
             user.setRegistrationDate(LocalDate.now());
@@ -205,4 +247,5 @@ public class UserService {
             return ResponseEntity.ok(errorMessage);
         }
     }
+
 }
