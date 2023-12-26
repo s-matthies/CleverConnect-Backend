@@ -8,6 +8,7 @@ import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
@@ -20,9 +21,14 @@ public class ExternalService {
     @Autowired
     private final ExternalRepository externalRepository;
 
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     //Konstruktor
-    public ExternalService(ExternalRepository externalRepository) {
+    public ExternalService(ExternalRepository externalRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.externalRepository = externalRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /*
@@ -43,6 +49,12 @@ public class ExternalService {
             if (externExists) {
                 throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
             }
+
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode(external.getPassword());
+
+            external.setPassword(encodedPassword);
+
             // das Registrierungsdatum auf das aktuelle Datum setzen
             external.setRegistrationDate(LocalDate.now());
 

@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
      * @param bCryptPasswordEncoder
      */
     public UserService(UserRepository userRepository,
-                       @Qualifier("bCryptPasswordEncoder") BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -122,7 +122,6 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<?> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
-                // Eingabe der Attribute
                 userRequest.getFirstname(),
                 userRequest.getLastname(),
                 userRequest.getEmail(),
