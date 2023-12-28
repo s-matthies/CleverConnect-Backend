@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface BachelorSubjectRepository  extends JpaRepository <BachelorSubject, Long> {
 
     Optional<BachelorSubject> findByTitleContaining(String title);
+
+    Optional<BachelorSubject> findByTitle(String title);
 }

@@ -62,7 +62,7 @@ public class BachelorSubject {
     }
 
     public void setDate(LocalDate date) {
-        this.date = date;
+        this.date = LocalDate.now();
     }
 
     public External getExternal() {
