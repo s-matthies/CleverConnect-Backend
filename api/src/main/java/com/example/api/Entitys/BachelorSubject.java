@@ -15,6 +15,7 @@ public class BachelorSubject {
 
     private String title;
     private String bDescription;
+    @Temporal(TemporalType.DATE)
     private LocalDate date;
 
     // ManyToOne, denn viele(Many) Bachelorthemen können nur einem(One) External zugeordnet werden
@@ -25,7 +26,7 @@ public class BachelorSubject {
     public BachelorSubject(String title, String bDescription, LocalDate date , External external) {
         this.title = title;
         this.bDescription = bDescription;
-        this.date = date;
+        this.date = LocalDate.now();
         this.external = external;
     }
 
@@ -39,6 +40,7 @@ public class BachelorSubject {
 
 
     public BachelorSubject() {
+        this.date = LocalDate.now();
     }
 
     public String getTitle() {
@@ -61,9 +63,6 @@ public class BachelorSubject {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = LocalDate.now();
-    }
 
     public External getExternal() {
         return external;
