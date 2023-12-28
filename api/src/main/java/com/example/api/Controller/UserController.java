@@ -30,10 +30,10 @@ public class UserController {
     // Post : es wird in die Datenbank hingeschrieben
     // Get: es wird aus der Datenbank herausgeholt
     // zb Liste aller Studenten soll angezeigt werden auf Client
-    // Pfad selbst angegeben - im Browser(Postman) dann localhost:8080/test/version1/register eingeben um Post zu testen/machen
+
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
-    // alle Attribute die im StudentRequest sind werden übergeben
+    // alle Attribute die im UserRequest sind, werden übergeben
     public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }

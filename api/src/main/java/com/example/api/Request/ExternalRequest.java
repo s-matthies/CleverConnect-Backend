@@ -31,7 +31,6 @@ public class ExternalRequest {
         this.password = password;
         this.registrationDate = registrationDate;
         this.company = company;
-        //this.availability = availability;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;

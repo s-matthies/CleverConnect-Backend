@@ -29,6 +29,14 @@ public class BachelorSubject {
         this.external = external;
     }
 
+    public BachelorSubject(Long id, String title, String bDescription, LocalDate date , External external) {
+        this.id = id;
+        this.title = title;
+        this.bDescription = bDescription;
+        this.date = date != null ? date : LocalDate.now();
+        this.external = external;
+    }
+
 
     public BachelorSubject() {
     }

@@ -50,7 +50,7 @@ public class ExternalConfig {
                             external1
                     ),
                              new BachelorSubject(
-                    "spannendes thema2",
+                    "THEMA 2",
                     "great",
                     LocalDate.of(2023, 12, 27),
                     external1
