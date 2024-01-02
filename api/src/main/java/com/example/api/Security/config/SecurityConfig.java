@@ -7,14 +7,15 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -31,35 +32,18 @@ public class SecurityConfig {
                 // CSRF-Schutz wird deaktiviert
                 .csrf((csrf) -> csrf.disable())
                 // Konfiguration der Zugriffsrechte
-
-
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/", "/user/register",
                                         "/external/register",
                                         "/user/login").permitAll()
-                                .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
-                                .requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")
+                                .requestMatchers("/user/**", "/external/**").permitAll()
+                                //.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
+                                //.requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")
                                 .anyRequest().authenticated()
                 )
-
-                // Login- und Logout-URLs werden festgelegt
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/user/login")
-                            .usernameParameter("email")
-                            .passwordParameter("password")
-                        .loginProcessingUrl("/user/login")
-                        //.defaultSuccessUrl("/dashboard")
-                        .permitAll()
-                )
-                .logout((logout) ->
-                        logout//.deleteCookies("remove")
-                                .invalidateHttpSession(false)
-                                .logoutUrl("/user/logout")
-                                .logoutSuccessUrl("/")
-                );
-
-
+                // Konfiguration des Login-Verhaltens
+                .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
