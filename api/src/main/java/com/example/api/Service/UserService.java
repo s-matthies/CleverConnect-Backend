@@ -229,16 +229,33 @@ public class UserService implements UserDetailsService {
      */
     public ResponseEntity<Object> signInUser(String email, String password) {
         try {
-        User existingUser = userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
-                        "Email oder Passwort nicht korrekt!"));
+            // verschlüsseltes Passwort aus der Datenbank laden
+            // es wird nach dem User mit der entsprechenden Email gesucht
+            String encodedPassword = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
+                            "Email oder Passwort nicht korrekt!"))
+                    .getPassword();
 
-        /*
+            // Passwort entschlüsseln und mit dem eingegebenen Passwort vergleichen
+            boolean passwordMatches = bCryptPasswordEncoder.matches(password, encodedPassword);
+
+            if (!passwordMatches) {
+                throw new IllegalStateException("Login war nicht erfolgreich! " +
+                        "Email oder Passwort nicht korrekt!");
+            }
+
+            // Wenn das Passwort und die E-Mail übereinstimmen, wird der User angemeldet
+            User existingUser = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
+                            "Email oder Passwort nicht korrekt!"));
+
+            return ResponseEntity.ok(existingUser);
+
+            /*
             String message = "User wurde erfolgreich angemeldet";
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return new ResponseEntity<>(message, HttpStatus.OK);
-         */
-            return ResponseEntity.ok(existingUser);
+            */
         }
         catch (IllegalStateException e) {
             // Exception abfangen und Fehler-Response zurückgeben
