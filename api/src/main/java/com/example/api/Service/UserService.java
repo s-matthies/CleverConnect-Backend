@@ -40,7 +40,7 @@ public class UserService {
     public ResponseEntity<?> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
-            boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+            boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
 
             // Wenn die E-Mail-Adresse bereits existiert, Exception auslösen
             if (userExists) {
