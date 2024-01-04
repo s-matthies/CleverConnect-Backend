@@ -23,6 +23,7 @@ public class UserConfig {
     }
 
     //wird beim Start des Programms ausgeführt
+    /*
     @Bean
     CommandLineRunner commandLineRunner(){
         return args -> {
@@ -64,4 +65,6 @@ public class UserConfig {
             );
         };
     }
+
+     */
 }
