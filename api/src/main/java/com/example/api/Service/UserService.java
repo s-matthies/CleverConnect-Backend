@@ -229,25 +229,18 @@ public class UserService implements UserDetailsService {
      */
     public ResponseEntity<Object> signInUser(String email, String password) {
         try {
-            // verschlüsseltes Passwort aus der Datenbank laden
-            // es wird nach dem User mit der entsprechenden Email gesucht
-            String encodedPassword = userRepository.findByEmail(email)
+            //
+            User existingUser = userRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
-                            "Email oder Passwort nicht korrekt!"))
-                    .getPassword();
+                            "Email oder Passwort nicht korrekt!"));
 
-            // Passwort entschlüsseln und mit dem eingegebenen Passwort vergleichen
-            boolean passwordMatches = bCryptPasswordEncoder.matches(password, encodedPassword);
+            // Passwort mit dem eingegebenen Passwort vergleichen
+            boolean passwordMatches = bCryptPasswordEncoder.matches(password, existingUser.getPassword());
 
             if (!passwordMatches) {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
-
-            // Wenn das Passwort und die E-Mail übereinstimmen, wird der User angemeldet
-            User existingUser = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
-                            "Email oder Passwort nicht korrekt!"));
 
             return ResponseEntity.ok(existingUser);
 
