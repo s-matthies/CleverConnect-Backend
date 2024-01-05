@@ -50,6 +50,11 @@ public class ExternalController {
         return externalService.updateExternal(id, newUser);
     }
 
+
+
+
+
+
 }
 
 

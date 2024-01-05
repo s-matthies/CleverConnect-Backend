@@ -9,9 +9,8 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name="EXTERNALS")
+@Table(name = "Externals")
 public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
@@ -19,7 +18,6 @@ public class External extends User{
     private LocalDate availabilityStart;
     private LocalDate availabilityEnd;
     private String description;
-
 
     /** es soll möglich sein, mehr als ein Bachelor-Thema angeben zu können,
      // deshalb wird eine Liste erstellt
@@ -40,6 +38,7 @@ public class External extends User{
 
 
 
+
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
@@ -51,6 +50,7 @@ public class External extends User{
         this.description = description;
         this.bachelorSubjects = bachelorSubjects;
     }
+
 
 
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
@@ -65,8 +65,6 @@ public class External extends User{
         this.bachelorSubjects = bachelorSubjects;
 
     }
-
-
 
 
     public External() {
@@ -130,7 +128,7 @@ public class External extends User{
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description,  bachelorSubjects);
+        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, bachelorSubjects);
     }
 
 
@@ -146,8 +144,5 @@ public class External extends User{
                 && Objects.equals(description, external.description)
             && Objects.equals(bachelorSubjects, external.bachelorSubjects);
     }
-
-
-
 
 }

@@ -12,8 +12,9 @@ import java.util.Objects;
 
 
 @Entity
+@Table(name = "Users")
+//  jede Klasse in der Vererbungshierarchie wird einer eigenen Tabelle in der Datenbank zugeordnet
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name="Users")
 public class User implements UserDetails {
 
     //Schlüsselattribut Id vergeben
@@ -190,4 +191,7 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, role);
     }
+
+
+
 }

@@ -78,10 +78,6 @@ public class ExternalService {
         }
     }
 
-
-
-
-
     /*
      * wir erstellen eine Request: das was von uns an den Server weitergeben
      * werden soll, um eine Userin (Externe) zu erstellen
@@ -174,6 +170,5 @@ public class ExternalService {
         //return ResponseEntity.ok().body(message);
         return ResponseEntity.ok(savedExternal);
     }
-
 }
 

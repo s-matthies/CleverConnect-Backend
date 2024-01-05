@@ -23,6 +23,7 @@ public class UserConfig {
     }
 /*
     //wird beim Start des Programms ausgeführt
+    /*
     @Bean
     CommandLineRunner commandLineRunner(){
         return args -> {
@@ -60,8 +61,10 @@ public class UserConfig {
             );
 
             userRepository.saveAll(
-                    List.of(user1, user2)
+                    List.of(user1, user2, user3)
             );
         };
-    }*/
+    }
+
+     */
 }
