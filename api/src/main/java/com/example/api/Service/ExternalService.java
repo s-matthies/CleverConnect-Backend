@@ -24,7 +24,10 @@ public class ExternalService {
     @Autowired
     private final ExternalRepository externalRepository;
 
-@Autowired
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private BachelorSubjectRepository bachelorSubjectRepository;
 
     @Autowired
@@ -55,10 +58,15 @@ public class ExternalService {
             if (externExists) {
                 throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
             }
+
+            // Passwort verschlüsseln
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode(external.getPassword());
+
+            external.setPassword(encodedPassword);
+
             // das Registrierungsdatum auf das aktuelle Datum setzen
             external.setRegistrationDate(LocalDate.now());
-
-
 
             User savedUser = externalRepository.save(external);
 

@@ -37,8 +37,6 @@ public class External extends User{
     private List<BachelorSubject> bachelorSubjects = new ArrayList<>();
 
 
-
-
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
@@ -110,8 +108,6 @@ public class External extends User{
     public void setBachelorSubjects(List<BachelorSubject> bachelorSubjects) {
         this.bachelorSubjects = bachelorSubjects;
     }
-
-
 
 
     @Override

@@ -21,7 +21,7 @@ public class ExternalRequest {
 
     private List<BachelorSubject> bachelorSubjects;
 
-    private String description;
+    private String b_description;
 
 
     public ExternalRequest(String firstName, String lastName, String email,

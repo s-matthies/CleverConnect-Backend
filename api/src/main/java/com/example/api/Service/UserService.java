@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,45 +28,34 @@ public class UserService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MSG =
             "user with email %s not found";
 
-    // Verknüpfung mit dem Repository, damit auf die Datenbank zugegriffen werden kann
-    @Autowired
     private final UserRepository userRepository;
-
-    // Verknüpfung mit dem bCrypt-PasswordEncoder, damit Passwörter verschlüsselt werden können
-    @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EmailService emailService;
+
 
     /**
      * Konstruktor für die UserService-Klasse.
      *
      * @param userRepository        Das UserRepository-Objekt, das für den Zugriff auf die Datenbank verwendet wird.
-     * @param bCryptPasswordEncoder
+     * @param bCryptPasswordEncoder Das BCryptPasswordEncoder-Objekt, das für die Verschlüsselung von Passwörtern
+     *                              verwendet wird.
+     * @param emailService          Das EmailService-Objekt, das für den Versand von E-Mails verwendet wird.
      */
+    @Autowired
     public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
     }
-
-    /*
-    @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-        return UserRepository.findByEmail(email) // User-Objekt laden
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                String.format(USER_NOT_FOUND_MSG, email)));
-    }
-     */
 
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
         // Instanz der Klasse erstellen und die Methode aufrufen
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
 
-        return user;
+        return userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
     /**
@@ -217,24 +211,19 @@ public class UserService implements UserDetailsService {
 
 
     // Methode für Login
-    // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
-   /*
-    public Optional<User> login(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
-    }
-    */
 
     /**
      * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
      *
-     * @param email    Die E-Mail-Adresse des Users.
-     * @param password Das Passwort des Users.
+     * @param email       Die E-Mail-Adresse des Users.
+     * @param password    Das Passwort des Users.
+     * @param httpSession Die HTTP-Session, in der der angemeldete User gespeichert wird.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<Object> signInUser(String email, String password) {
+    public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
         try {
             //
-            User existingUser = userRepository.findByEmail(email)
+            User existingUser = userRepository.findByEmailAndPassword(email, password)
                     .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
                             "Email oder Passwort nicht korrekt!"));
 
@@ -245,6 +234,9 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
+
+            // User in der Session speichern
+            httpSession.setAttribute("loggedInUser", existingUser);
 
             return ResponseEntity.ok(existingUser);
 
@@ -257,7 +249,7 @@ public class UserService implements UserDetailsService {
         catch (IllegalStateException e) {
             // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
-            return ResponseEntity.ok(errorMessage);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
 

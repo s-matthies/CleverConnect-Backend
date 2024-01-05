@@ -62,13 +62,10 @@ public class ExternalConfig {
 
             );
 
-
             externalRepository.saveAll(
                     List.of(external1)
             );
         };
     }*/
-
-     */
 
 }
