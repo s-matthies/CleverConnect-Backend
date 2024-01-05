@@ -93,7 +93,6 @@ public class ExternalService {
                         externalRequest.getAvailabilityStart(),
                         externalRequest.getAvailabilityEnd(),
                         externalRequest.getDescription(),
-                        externalRequest.getExpertise(),
                         externalRequest.getBachelorSubjects()
                 )
         );
@@ -125,7 +124,6 @@ public class ExternalService {
         existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
-        existingUser.setExpertise(newUser.getExpertise());
         existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
         External savedExternal = externalRepository.save(existingUser);
 
