@@ -1,5 +1,6 @@
 package com.example.api.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 
@@ -29,9 +30,11 @@ public class External extends User{
      */
     @OneToMany(
             //mappedBy = "external",
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonIgnore
     @JoinColumn(name="external_id")
     private List<BachelorSubject> bachelorSubjects = new ArrayList<>();
 

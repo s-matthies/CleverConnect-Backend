@@ -24,7 +24,7 @@ public class ExternalRequest {
 
     public ExternalRequest(String firstName, String lastName, String email,
                            String password, LocalDate registrationDate, String company, LocalDate availabilityStart ,
-                           LocalDate availabilityEnd, String description) {
+                           LocalDate availabilityEnd, String description, List<BachelorSubject> bachelorSubjects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -34,7 +34,6 @@ public class ExternalRequest {
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
-
         this.bachelorSubjects = bachelorSubjects;
 
     }
