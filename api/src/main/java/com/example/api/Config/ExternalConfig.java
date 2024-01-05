@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -21,23 +22,14 @@ public class ExternalConfig {
     public ExternalConfig(ExternalRepository externalRepository) {
         this.externalRepository = externalRepository;
     }
- /*
-    @Bean
-    CommandLineRunner initDataBachelorSubject(){
-        return args -> {
-            BachelorSubject bachelorSubject1 = new BachelorSubject(
-                    "spannendes thema1",
-                    "tolles Thema, echt wirklich",
-                    LocalDate.of(2023, 12, 20)
 
-            );
-        };
-    }
+    External external1;
+/*
     //wird beim Start des Programms ausgeführt
     @Bean
     CommandLineRunner initDataExtern(){
         return args -> {
-            External external1 = new External(
+            external1 = new External(
                     "Missy",
                     "Elliot",
                     "missy.elliot@mail.de",
@@ -51,6 +43,18 @@ public class ExternalConfig {
                     LocalDate.of(2023, 12, 14), // Enddatum
                     "Ich bin aufgeschlossen, kann nicht nur singen, sondern liebe auch IT",
                     "Datenbanken, Programmierung, Webtechnologien",
+                    List.of( new BachelorSubject (
+                            "spannendes thema1",
+                            "tolles Thema, echt wirklich",
+                            LocalDate.of(2023, 12, 27),
+                            external1
+                    ),
+                             new BachelorSubject(
+                    "THEMA 2",
+                    "great",
+                    LocalDate.of(2023, 12, 27),
+                    external1
+                    ))
 
 
 

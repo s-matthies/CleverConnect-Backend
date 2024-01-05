@@ -1,5 +1,6 @@
 package com.example.api.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 
@@ -27,9 +28,11 @@ public class External extends User{
      */
     @OneToMany(
             //mappedBy = "external",
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonIgnore
     @JoinColumn(name="external_id")
     private List<BachelorSubject> bachelorSubjects = new ArrayList<>();
 
@@ -39,7 +42,7 @@ public class External extends User{
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
-                    String description,List<BachelorSubject> bachelorSubjects) {
+                    String description, List<BachelorSubject> bachelorSubjects) {
         super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
@@ -98,7 +101,6 @@ public class External extends User{
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public List<BachelorSubject> getBachelorSubjects()
     {

@@ -1,8 +1,10 @@
 package com.example.api.Service;
 
+import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
+import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
@@ -22,6 +24,9 @@ public class ExternalService {
     //mit Repository verknüpfen, damit wir auf die DB zugreifen können
     @Autowired
     private final ExternalRepository externalRepository;
+
+@Autowired
+    private BachelorSubjectRepository bachelorSubjectRepository;
 
     @Autowired
     private EmailService emailService;
@@ -52,7 +57,10 @@ public class ExternalService {
             // das Registrierungsdatum auf das aktuelle Datum setzen
             external.setRegistrationDate(LocalDate.now());
 
+
+
             User savedUser = externalRepository.save(external);
+
             emailService.sendEmail(external.getEmail(),
                     "Willkommen im System",
                     "Hallo, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
@@ -76,6 +84,41 @@ public class ExternalService {
      */
 
     public ResponseEntity<?> registration(ExternalRequest externalRequest) {
+
+        External external = new External(
+                externalRequest.getFirstName(),
+                externalRequest.getLastName(),
+                externalRequest.getEmail(),
+                externalRequest.getPassword(),
+                null,
+                Role.EXTERN,
+                false,
+                true,
+                externalRequest.getCompany(),
+                externalRequest.getAvailabilityStart(),
+                externalRequest.getAvailabilityEnd(),
+                externalRequest.getDescription(),
+                null  // Set BachelorSubjects to null initially
+        );
+
+        // Save External without BachelorSubjects
+        External savedExternal = externalRepository.save(external);
+
+        // Now handle BachelorSubjects
+        List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();
+        if (bachelorSubjects != null) {
+            for (BachelorSubject subject : bachelorSubjects) {
+                // Set the External entity for each BachelorSubject
+                subject.setExternal(savedExternal);
+            }
+            // Save the associated BachelorSubjects
+            savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
+        }
+
+        return ResponseEntity.ok(savedExternal);
+
+
+        /*
         return registerExtern(new External(
                         externalRequest.getFirstName(),
                         externalRequest.getLastName(),
@@ -91,7 +134,7 @@ public class ExternalService {
                         externalRequest.getDescription(),
                         externalRequest.getBachelorSubjects()
                 )
-        );
+        );*/
     }
 
 

@@ -21,7 +21,7 @@ public class UserConfig {
     public UserConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+/*
     //wird beim Start des Programms ausgeführt
     /*
     @Bean
@@ -31,7 +31,7 @@ public class UserConfig {
                     "Anna",
                     "Bertram",
                     "meineMail@Student.HTW-Berlin.de",
-                    "12345",
+                    "12345-Hundert",
                     LocalDate.of(2023, 10, 1),
                     Role.STUDENT,
                     false,
@@ -42,7 +42,7 @@ public class UserConfig {
                     "Jörn",
                     "Freiheit",
                     "Joern.Freiheit@HTW-Berlin.de",
-                    "passwort",
+                    "passwort_Aber_sicher!",
                     LocalDate.of(2023, 10, 15),
                     Role.ADMIN,
                     false,
@@ -53,7 +53,7 @@ public class UserConfig {
                     "Helena",
                     "Mihaljevic",
                     "Helena.Mihaljevic@HTW-Berlin.de",
-                    "passwort123",
+                    "passwort123#",
                     LocalDate.of(2023, 11, 1),
                     Role.ADMIN,
                     false,
