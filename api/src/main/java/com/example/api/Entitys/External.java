@@ -17,7 +17,6 @@ public class External extends User{
     private LocalDate availabilityStart;
     private LocalDate availabilityEnd;
     private String description;
-    private String expertise;
 
     /** es soll möglich sein, mehr als ein Bachelor-Thema angeben zu können,
      // deshalb wird eine Liste erstellt
@@ -40,13 +39,12 @@ public class External extends User{
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
-                    String description, String expertise,List<BachelorSubject> bachelorSubjects) {
+                    String description,List<BachelorSubject> bachelorSubjects) {
         super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
-        this.expertise = expertise;
         this.bachelorSubjects = bachelorSubjects;
     }
 
@@ -55,18 +53,15 @@ public class External extends User{
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
-                    LocalDate availabilityEnd, String description, String expertise, List<BachelorSubject> bachelorSubjects) {
+                    LocalDate availabilityEnd, String description, List<BachelorSubject> bachelorSubjects) {
         super(firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
-        this.expertise = expertise;
         this.bachelorSubjects = bachelorSubjects;
 
     }
-
-
 
 
     public External() {
@@ -104,13 +99,6 @@ public class External extends User{
         this.description = description;
     }
 
-    public String getExpertise() {
-        return expertise;
-    }
-
-    public void setExpertise(String expertise) {
-        this.expertise = expertise;
-    }
 
     public List<BachelorSubject> getBachelorSubjects()
     {
@@ -131,7 +119,6 @@ public class External extends User{
                 ", availabilityStart='" + availabilityStart + '\'' +
                 ", availabilityEnd='" + availabilityEnd + '\'' +
                 ", description='" + description + '\'' +
-                ", expertise='" + expertise + '\'' +
                 ", bachelorSubjects='" + bachelorSubjects + '\'' +
                 '}';
     }
@@ -139,7 +126,7 @@ public class External extends User{
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, expertise, bachelorSubjects);
+        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, bachelorSubjects);
     }
 
 
@@ -153,11 +140,7 @@ public class External extends User{
                 && Objects.equals(availabilityStart, external.availabilityStart)
                 && Objects.equals(availabilityEnd, external.availabilityEnd)
                 && Objects.equals(description, external.description)
-                && Objects.equals(expertise, external.expertise)
             && Objects.equals(bachelorSubjects, external.bachelorSubjects);
     }
-
-
-
 
 }
