@@ -21,7 +21,7 @@ public class UserConfig {
     public UserConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+/*
     //wird beim Start des Programms ausgeführt
     @Bean
     CommandLineRunner commandLineRunner(){
@@ -63,5 +63,5 @@ public class UserConfig {
                     List.of(user1, user2)
             );
         };
-    }
+    }*/
 }

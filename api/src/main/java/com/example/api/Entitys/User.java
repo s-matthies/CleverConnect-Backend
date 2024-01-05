@@ -12,6 +12,7 @@ import java.util.Objects;
 
 
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name="Users")
 public class User implements UserDetails {
 

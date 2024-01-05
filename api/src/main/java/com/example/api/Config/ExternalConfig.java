@@ -24,7 +24,7 @@ public class ExternalConfig {
     }
 
     External external1;
-
+/*
     //wird beim Start des Programms ausgeführt
     @Bean
     CommandLineRunner initDataExtern(){
@@ -65,6 +65,6 @@ public class ExternalConfig {
                     List.of(external1)
             );
         };
-    }
+    }*/
 
 }
