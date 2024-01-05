@@ -1,8 +1,9 @@
 package com.example.api.Request;
 
-import org.springframework.cglib.core.Local;
+import com.example.api.Entitys.BachelorSubject;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ExternalRequest {
 
@@ -14,23 +15,31 @@ public class ExternalRequest {
     private String password;
     private LocalDate registrationDate;
     private String company;
-    private String availability;
+    private LocalDate availabilityStart;
+    private LocalDate availabilityEnd;
+    private String description;
+
+    private List<BachelorSubject> bachelorSubjects;
 
     private String description;
 
 
     public ExternalRequest(String firstName, String lastName, String email,
-                           String password, LocalDate registrationDate, String company, String availability, String description) {
+                           String password, LocalDate registrationDate, String company, LocalDate availabilityStart ,
+                           LocalDate availabilityEnd, String description, List<BachelorSubject> bachelorSubjects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.registrationDate = registrationDate;
         this.company = company;
-        this.availability = availability;
+        this.availabilityStart = availabilityStart;
+        this.availabilityEnd = availabilityEnd;
         this.description = description;
+        this.bachelorSubjects = bachelorSubjects;
 
     }
+
 
     // alle Getter erstellen
     // die Attribute, die wir bekommen -> für Registrierung der Userin einsetzen
@@ -58,11 +67,20 @@ public class ExternalRequest {
         return company;
     }
 
-    public String getAvailability() {
-        return availability;
+    public LocalDate getAvailabilityStart() {
+        return availabilityStart;
+    }
+
+    public LocalDate getAvailabilityEnd() {
+        return availabilityEnd;
     }
 
     public String getDescription() {
         return description;
     }
+
+
+    public List<BachelorSubject> getBachelorSubjects() {return bachelorSubjects; }
+
+
 }

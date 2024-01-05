@@ -4,6 +4,9 @@ import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +30,10 @@ public class UserController {
     // Post : es wird in die Datenbank hingeschrieben
     // Get: es wird aus der Datenbank herausgeholt
     // zb Liste aller Studenten soll angezeigt werden auf Client
-    // Pfad selbst angegeben - im Browser(Postman) dann localhost:8080/test/version1/register eingeben um Post zu testen/machen
+
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
-    // alle Attribute die im StudentRequest sind werden übergeben
+    // alle Attribute die im UserRequest sind, werden übergeben
     public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
@@ -86,9 +89,11 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
-        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest, HttpSession httpSession) {
+        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
     }
+
+
     /*
     public String login (@RequestBody LoginRequest loginRequest) {
         boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();

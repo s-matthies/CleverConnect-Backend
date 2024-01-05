@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -13,11 +12,9 @@ import java.util.Objects;
 
 
 @Entity
-// Inheritanctype Table per Class  bewirkt dass die Entities die von User erben, eigene Tables bekommen
-// Externals sind jetzt nicht mehr in einem Table mit Users
+@Table(name = "Users")
+//  jede Klasse in der Vererbungshierarchie wird einer eigenen Tabelle in der Datenbank zugeordnet
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name="Users")
-
 public class User implements UserDetails {
 
     //Schlüsselattribut Id vergeben
@@ -195,4 +192,7 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, role);
     }
+
+
+
 }

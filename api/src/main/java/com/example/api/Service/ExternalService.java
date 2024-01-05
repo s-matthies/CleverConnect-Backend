@@ -1,8 +1,10 @@
 package com.example.api.Service;
 
+import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
+import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
@@ -10,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,8 +24,11 @@ public class ExternalService {
     @Autowired
     private final ExternalRepository externalRepository;
 
+@Autowired
+    private BachelorSubjectRepository bachelorSubjectRepository;
+
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private EmailService emailService;
 
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository,
@@ -49,16 +55,18 @@ public class ExternalService {
             if (externExists) {
                 throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
             }
-
-            String encodedPassword = bCryptPasswordEncoder
-                    .encode(external.getPassword());
-
-            external.setPassword(encodedPassword);
-
             // das Registrierungsdatum auf das aktuelle Datum setzen
             external.setRegistrationDate(LocalDate.now());
 
+
+
             User savedUser = externalRepository.save(external);
+
+            emailService.sendEmail(external.getEmail(),
+                    "Willkommen im System",
+                    "Hallo, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
+
+
             return ResponseEntity.ok(savedUser);
 
             //String message = "{\"User*in wurde erfolgreich registriert!\"}";
@@ -77,7 +85,8 @@ public class ExternalService {
      */
 
     public ResponseEntity<?> registration(ExternalRequest externalRequest) {
-        return registerExtern(new External(
+
+        External external = new External(
                 externalRequest.getFirstName(),
                 externalRequest.getLastName(),
                 externalRequest.getEmail(),
@@ -87,11 +96,48 @@ public class ExternalService {
                 false,
                 true,
                 externalRequest.getCompany(),
-                externalRequest.getAvailability(),
-                externalRequest.getDescription()
-                )
+                externalRequest.getAvailabilityStart(),
+                externalRequest.getAvailabilityEnd(),
+                externalRequest.getDescription(),
+                null  // Set BachelorSubjects to null initially
         );
+
+        // Save External without BachelorSubjects
+        External savedExternal = externalRepository.save(external);
+
+        // Now handle BachelorSubjects
+        List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();
+        if (bachelorSubjects != null) {
+            for (BachelorSubject subject : bachelorSubjects) {
+                // Set the External entity for each BachelorSubject
+                subject.setExternal(savedExternal);
+            }
+            // Save the associated BachelorSubjects
+            savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
+        }
+
+        return ResponseEntity.ok(savedExternal);
+
+
+        /*
+        return registerExtern(new External(
+                        externalRequest.getFirstName(),
+                        externalRequest.getLastName(),
+                        externalRequest.getEmail(),
+                        externalRequest.getPassword(),
+                        null,
+                        Role.EXTERN,
+                        false,
+                        true,
+                        externalRequest.getCompany(),
+                        externalRequest.getAvailabilityStart(),
+                        externalRequest.getAvailabilityEnd(),
+                        externalRequest.getDescription(),
+                        externalRequest.getBachelorSubjects()
+                )
+        );*/
     }
+
 
     // Methode um Externe nach id zu laden
     public External getExternal(Long id) {
@@ -114,9 +160,11 @@ public class ExternalService {
         existingUser.setFirstName(newUser.getFirstName());
         existingUser.setLastName(newUser.getLastName());
         existingUser.setEmail(newUser.getEmail());
-        existingUser.setAvailability(newUser.getAvailability());
+        existingUser.setAvailabilityStart(newUser.getAvailabilityStart());
+        existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
+        existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
         External savedExternal = externalRepository.save(existingUser);
 
         //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
@@ -124,3 +172,4 @@ public class ExternalService {
         return ResponseEntity.ok(savedExternal);
     }
 }
+

@@ -5,14 +5,11 @@ import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -95,6 +92,11 @@ public class UserService implements UserDetailsService {
             // Wenn alles i.O. ist, wird der User registriert
             User savedUser = userRepository.save(user);
 
+            emailService.sendEmail(user.getEmail(),
+                    "Willkommen im System",
+                    "Hallo liebe HTW-Studentin, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
+
+
             // Erfolgreiche Registrierung - User-Objekt zurückgeben
             return ResponseEntity.ok(savedUser);
             /*
@@ -109,6 +111,8 @@ public class UserService implements UserDetailsService {
             return ResponseEntity.badRequest().body(errorMessage);
         }
     }
+
+
 
     // weitere Methode, um auch die Attribute zu vergeben/speichern,
     // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
@@ -258,3 +262,5 @@ public class UserService implements UserDetailsService {
     }
 
 }
+
+
