@@ -21,6 +21,8 @@ public class ExternalRequest {
 
     private List<BachelorSubject> bachelorSubjects;
 
+    private String description;
+
 
     public ExternalRequest(String firstName, String lastName, String email,
                            String password, LocalDate registrationDate, String company, LocalDate availabilityStart ,
@@ -58,6 +60,8 @@ public class ExternalRequest {
     public String getPassword() {
         return password;
     }
+
+    public LocalDate getRegistrationDate() { return registrationDate; }
 
     public String getCompany() {
         return company;

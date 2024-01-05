@@ -9,14 +9,13 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExternalService {
@@ -32,8 +31,10 @@ public class ExternalService {
     private EmailService emailService;
 
     //Konstruktor
-    public ExternalService(ExternalRepository externalRepository) {
+    public ExternalService(ExternalRepository externalRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.externalRepository = externalRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /*

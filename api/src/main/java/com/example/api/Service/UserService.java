@@ -13,20 +13,55 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Service-Klasse für die Verwaltung von Benutzern.
+ */
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private final static String USER_NOT_FOUND_MSG =
+            "user with email %s not found";
 
     // Verknüpfung mit dem Repository, damit auf die Datenbank zugegriffen werden kann
     @Autowired
     private final UserRepository userRepository;
 
+    // Verknüpfung mit dem bCrypt-PasswordEncoder, damit Passwörter verschlüsselt werden können
     @Autowired
-    private EmailService emailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    /**
+     * Konstruktor für die UserService-Klasse.
+     *
+     * @param userRepository        Das UserRepository-Objekt, das für den Zugriff auf die Datenbank verwendet wird.
+     * @param bCryptPasswordEncoder
+     */
+    public UserService(UserRepository userRepository,
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    /*
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+        return UserRepository.findByEmail(email) // User-Objekt laden
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                String.format(USER_NOT_FOUND_MSG, email)));
+    }
+     */
+
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+        // Instanz der Klasse erstellen und die Methode aufrufen
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+
+        return user;
     }
 
     /**
@@ -38,12 +73,18 @@ public class UserService {
     public ResponseEntity<?> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
-            boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+            boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
 
             // Wenn die E-Mail-Adresse bereits existiert, Exception auslösen
             if (userExists) {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
+
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode(user.getPassword());
+
+            user.setPassword(encodedPassword);
+
 
             // das Registrierungsdatum auf das aktuelle Datum setzen
             user.setRegistrationDate(LocalDate.now());
@@ -85,19 +126,19 @@ public class UserService {
     public ResponseEntity<?> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
-                        // Eingabe der Attribute
-                        userRequest.getFirstname(),
-                        userRequest.getLastname(),
-                        userRequest.getEmail(),
-                        userRequest.getPassword(),
-                        null,
-                        Role.STUDENT,
-                        false,
-                        true
-                )
+                userRequest.getFirstname(),
+                userRequest.getLastname(),
+                userRequest.getEmail(),
+                userRequest.getPassword(),
+                null,
+                Role.STUDENT,
+                false,
+                true
+        )
         );
     }
-// Methode um User nach id zu laden
+
+    // Methode um User nach id zu laden
     /**
      * Lädt einen User anhand der angegebenen ID.
      *
@@ -131,22 +172,23 @@ public class UserService {
      */
     public ResponseEntity<User> updateUser(Long id, User newUser) {
 
-        // Externe Person anhand der ID finden
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+            // Externe Person anhand der ID finden
+            User existingUser = userRepository.findById(id)
+                    .orElseThrow(() -> new UserNotFoundException(id));
 
-        //existierende USerin mit neuen Daten updaten
-        existingUser.setFirstName(newUser.getFirstName());
-        existingUser.setLastName(newUser.getLastName());
-        existingUser.setEmail(newUser.getEmail());
-        User savedUser = userRepository.save(existingUser);
+            //existierende USerin mit neuen Daten updaten
+            existingUser.setFirstName(newUser.getFirstName());
+            existingUser.setLastName(newUser.getLastName());
+            existingUser.setEmail(newUser.getEmail());
+            User savedUser = userRepository.save(existingUser);
 
             /*
             // Response erstellen für den Erfolgsfall
             String message = "{\"User mit der id \"" + id + "\" wurde erfolgreich aktualisiert!\"";
+            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return ResponseEntity.ok(message);
             */
-        return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(savedUser);
     }
 
     //Methode zum Löschen eines Users
@@ -159,51 +201,65 @@ public class UserService {
      */
     public ResponseEntity<Object> deleteUser(Long id) {
 
-        // den User anhand der ID im Repository zu finden
-        // wenn der User nicht gefunden wird, wird eine Exception ausgelöst
-        // und über die UserNotFoundException-Class behandelt
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+            // den User anhand der ID im Repository zu finden
+            // wenn der User nicht gefunden wird, wird eine Exception ausgelöst
+            // und über die UserNotFoundException-Class behandelt
+            User existingUser = userRepository.findById(id)
+                    .orElseThrow(() -> new UserNotFoundException(id));
 
-        // Wenn der User gefunden wird, wird er aus dem Repository geloescht
-        userRepository.delete(existingUser);
+            // Wenn der User gefunden wird, wird er aus dem Repository geloescht
+            userRepository.delete(existingUser);
 
-        String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
-        // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-        return ResponseEntity.ok(message);
+            String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
+            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
+            return ResponseEntity.ok(message);
+        }
+
+
+    // Methode für Login
+    // Optional : User wird nur ausgegeben, wenn in der DB vorhanden
+   /*
+    public Optional<User> login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
+    */
 
     /**
-     * Meldet einen Benutzer anhand seiner E-Mail und seines Passworts an.
+     * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
      *
-     * @param email       Die E-Mail-Adresse des Benutzers, der sich anmelden möchte.
-     * @param password    Das Passwort des Benutzers, der sich anmelden möchte.
-     * @param httpSession Repräsentiert die Sitzung des Benutzers. Wird verwendet,
-     *                    um das angemeldete Benutzerobjekt in der Sitzung zu speichern.
-     * @return Eine ResponseEntity<Object> mit dem angemeldeten Benutzerobjekt und dem HTTP-Status 200 OK,
-     *         wenn die Anmeldung erfolgreich ist. Andernfalls wird eine ResponseEntity mit einer Fehlermeldung
-     *         und dem HTTP-Status 401 Unauthorized zurückgegeben.
-     *         Beispiel für eine Fehlermeldung: {"error": "Login war nicht erfolgreich! Email oder Passwort nicht korrekt!"}
+     * @param email    Die E-Mail-Adresse des Users.
+     * @param password Das Passwort des Users.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
+    public ResponseEntity<Object> signInUser(String email, String password) {
         try {
-            User existingUser = userRepository.findByEmailAndPassword(email, password)
+            //
+            User existingUser = userRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
                             "Email oder Passwort nicht korrekt!"));
 
-            httpSession.setAttribute("loggedInUser", existingUser);  // Benutzerobjekt in der Sitzung speichern
-        /*
+            // Passwort mit dem eingegebenen Passwort vergleichen
+            boolean passwordMatches = bCryptPasswordEncoder.matches(password, existingUser.getPassword());
+
+            if (!passwordMatches) {
+                throw new IllegalStateException("Login war nicht erfolgreich! " +
+                        "Email oder Passwort nicht korrekt!");
+            }
+
+            return ResponseEntity.ok(existingUser);
+
+            /*
             String message = "User wurde erfolgreich angemeldet";
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return new ResponseEntity<>(message, HttpStatus.OK);
-         */
-            return ResponseEntity.ok(existingUser);
-        } catch (IllegalStateException e) {
+            */
+        }
+        catch (IllegalStateException e) {
+            // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+            return ResponseEntity.ok(errorMessage);
         }
     }
-
 
 }
 

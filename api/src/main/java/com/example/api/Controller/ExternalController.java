@@ -2,7 +2,6 @@ package com.example.api.Controller;
 
 import com.example.api.Entitys.External;
 import com.example.api.Request.ExternalRequest;
-import com.example.api.Request.LoginRequest;
 import com.example.api.Service.ExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,11 +48,6 @@ public class ExternalController {
     public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
         return externalService.updateExternal(id, newUser);
     }
-
-
-
-
-
 
 }
 
