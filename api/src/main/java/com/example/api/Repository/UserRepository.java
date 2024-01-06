@@ -12,7 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // User wird mittels Email-Adresse in der Datenbank gefunden
     Optional <User> findByEmailIgnoreCase(String email);
-    Optional <User> findByEmailAndPassword (String email, String password);
 
-    Optional <User> findByEmail (String email);
 }

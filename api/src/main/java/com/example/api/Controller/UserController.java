@@ -4,8 +4,6 @@ import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -93,7 +91,7 @@ public class UserController {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
     }
 
-    
+
     /*
     public String login (@RequestBody LoginRequest loginRequest) {
         boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();

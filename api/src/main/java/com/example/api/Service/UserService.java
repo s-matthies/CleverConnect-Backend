@@ -8,14 +8,12 @@ import com.example.api.UserNotFound.UserNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -223,7 +221,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
         try {
             //
-            User existingUser = userRepository.findByEmail(email)
+            User existingUser = userRepository.findByEmailIgnoreCase(email)
                     .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
                             "Email oder Passwort nicht korrekt!"));
 
