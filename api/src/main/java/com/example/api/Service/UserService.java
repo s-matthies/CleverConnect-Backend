@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.time.LocalDate;
@@ -211,7 +212,6 @@ public class UserService implements UserDetailsService {
 
 
     // Methode für Login
-
     /**
      * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
      *
@@ -223,7 +223,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
         try {
             //
-            User existingUser = userRepository.findByEmailAndPassword(email, password)
+            User existingUser = userRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
                             "Email oder Passwort nicht korrekt!"));
 

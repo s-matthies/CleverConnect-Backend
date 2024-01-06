@@ -93,7 +93,7 @@ public class UserController {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
     }
 
-
+    
     /*
     public String login (@RequestBody LoginRequest loginRequest) {
         boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();

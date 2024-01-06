@@ -42,12 +42,15 @@ public class SecurityConfig {
                                 //.requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")
                                 .anyRequest().authenticated()
                 )
+
+                .sessionManagement((sessionManagement) ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 // Konfiguration des Login-Verhaltens
                 .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
-    
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
