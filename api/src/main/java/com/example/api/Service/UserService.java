@@ -5,6 +5,9 @@ import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -251,6 +254,59 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    //Methode für Logout
+    /**
+     * Beendet die Sitzung eines Benutzers und führt eine Abmeldung durch.
+     *
+     * @param httpSession Repräsentiert die Sitzung des Benutzers. Wird verwendet,
+     *                    um benutzerspezifische Daten aus der Sitzung zu entfernen und die Sitzung zu invalidieren (ungültig zu machen).
+     * @param request     Repräsentiert die HTTP-Anfrage des Benutzers. Wird verwendet, um
+     *                    auf die Cookies zuzugreifen.
+     * @param response    Repräsentiert die HTTP-Antwort, die zur Steuerung des
+     *                    HTTP-Antwortverhaltens verwendet wird.
+     * @return Eine ResponseEntity<Object> mit einer JSON-Antwort, die den Erfolg oder Fehler des Logout-Vorgangs angibt.
+     *         Bei erfolgreichem Logout wird der HTTP-Status 200 OK zurückgegeben, andernfalls der HTTP-Status 401 Unauthorized.
+     *         Die JSON-Antwort enthält eine Erfolgsmeldung oder eine Fehlermeldung, je nachdem, ob ein Benutzer eingeloggt war oder nicht.
+     *         Beispiel für eine Erfolgsmeldung: {"message": "Logout erfolgreich"}
+     *         Beispiel für eine Fehlermeldung: {"error": "Es ist kein Benutzer eingeloggt."}
+     */
+    public ResponseEntity<Object> signOut(HttpSession httpSession,
+                                          HttpServletRequest request,
+                                          HttpServletResponse response) {
+        try {
+            // Überprüfen, ob ein Benutzer eingeloggt ist
+            User loggedInUser = (User) httpSession.getAttribute("loggedInUser");
+            if (loggedInUser == null) {
+                throw new IllegalStateException("Es ist kein User eingeloggt.");
+            }
+
+            // Lösche benutzerspezifische Daten aus der Sitzung
+            httpSession.removeAttribute("loggedInUser");
+
+            // Beende die aktuelle Sitzung (Session)
+            httpSession.invalidate();
+
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("JSESSIONID")) {
+                        cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
+                        cookie.setPath("/"); // der Pfad wird auf "/" gesetzt
+                        response.addCookie(cookie);
+                        //Dadurch wird der JSESSIONID-Cookie auf dem Client (Browser) gelöscht
+                    }
+                }
+            }
+
+            String message = "Logout erfolgreich";
+            return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
+        }
+        catch (IllegalStateException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+        }
+    }
 }
+
 
 
