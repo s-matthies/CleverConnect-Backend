@@ -3,6 +3,9 @@ package com.example.api.Controller;
 import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.UserRequest;
+import com.example.api.Security.auth.AuthenticationRequest;
+import com.example.api.Security.auth.AuthenticationResponse;
+import com.example.api.Security.auth.AuthenticationService;
 import com.example.api.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +23,11 @@ public class UserController {
     // mit Service verknüpfen/verbinden
     @Autowired
     private final UserService userService;
+    private final AuthenticationService service;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService service) {
         this.userService = userService;
+        this.service = service;
     }
 
     // Mapping :Verbindung mit Client
@@ -35,6 +40,17 @@ public class UserController {
     // alle Attribute die im UserRequest sind, werden übergeben
     public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
+    }
+
+    @PostMapping(path ="/authenticate")
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody AuthenticationRequest request){
+        return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
+        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
     //alle User laden
@@ -84,21 +100,6 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
-
-    @PostMapping("/login")
-    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
-        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
-    }
-
-    /*
-    public String login (@RequestBody LoginRequest loginRequest) {
-        boolean existsExternal = userService.login(loginRequest.getEmail(), loginRequest.getPassword()).isPresent();
-        if(existsExternal) {
-            return "Anmeldung war erfolgreich!";
-        }
-        throw new IllegalStateException("Userin wurde nicht gefunden!");
-    }
-     */
 
     @GetMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
