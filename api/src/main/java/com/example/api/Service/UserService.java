@@ -262,59 +262,52 @@ public class UserService implements UserDetailsService {
     }
 
 
-
     //Methode für Logout
-    /**
-     * Beendet die Sitzung eines Benutzers und führt eine Abmeldung durch.
-     *
-     * @param httpSession Repräsentiert die Sitzung des Benutzers. Wird verwendet,
-     *                    um benutzerspezifische Daten aus der Sitzung zu entfernen und die Sitzung zu invalidieren (ungültig zu machen).
-     * @param request     Repräsentiert die HTTP-Anfrage des Benutzers. Wird verwendet, um
-     *                    auf die Cookies zuzugreifen.
-     * @param response    Repräsentiert die HTTP-Antwort, die zur Steuerung des
-     *                    HTTP-Antwortverhaltens verwendet wird.
-     * @return Eine ResponseEntity<Object> mit einer JSON-Antwort, die den Erfolg oder Fehler des Logout-Vorgangs angibt.
-     *         Bei erfolgreichem Logout wird der HTTP-Status 200 OK zurückgegeben, andernfalls der HTTP-Status 401 Unauthorized.
-     *         Die JSON-Antwort enthält eine Erfolgsmeldung oder eine Fehlermeldung, je nachdem, ob ein Benutzer eingeloggt war oder nicht.
-     *         Beispiel für eine Erfolgsmeldung: {"message": "Logout erfolgreich"}
-     *         Beispiel für eine Fehlermeldung: {"error": "Es ist kein Benutzer eingeloggt."}
-     */
-    public ResponseEntity<Object> signOut(HttpSession httpSession,
-                                          HttpServletRequest request,
-                                          HttpServletResponse response) {
+    public ResponseEntity<Object> signOut(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Überprüfen, ob ein Benutzer eingeloggt ist
-            User loggedInUser = (User) httpSession.getAttribute("loggedInUser");
-            if (loggedInUser == null) {
-                throw new IllegalStateException("Es ist kein User eingeloggt.");
+            // Überprüfen, ob der Benutzer ein gültiges JWT-Token im Header hat
+            String authorizationHeader = request.getHeader("Authorization");
+
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                throw new IllegalStateException("Es ist kein Benutzer eingeloggt.");
             }
 
-            // Lösche benutzerspezifische Daten aus der Sitzung
-            httpSession.removeAttribute("loggedInUser");
+            // Token aus dem Authorization-Header extrahieren
+            String token = authorizationHeader.substring(7);
 
-            // Beende die aktuelle Sitzung (Session)
-            httpSession.invalidate();
+            // Hier wird angenommen, dass die Methode isTokenValid implementiert ist und das Token überprüft
+            if (!jwtService.isTokenValid(token, loadUserByUsername(jwtService.extractUsername(token))))
+                throw new IllegalStateException("Das Token ist ungültig oder abgelaufen.");
 
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("JSESSIONID")) {
-                        cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
-                        cookie.setPath("/"); // der Pfad wird auf "/" gesetzt
-                        response.addCookie(cookie);
-                        //Dadurch wird der JSESSIONID-Cookie auf dem Client (Browser) gelöscht
-                    }
-                }
-            }
+            // Die Session des Benutzers ungültig machen
+            // Dies ist notwendig, da der Benutzer sonst nicht ausgeloggt wird
+            // und das JWT-Token weiterhin gültig ist
+            // Die Methode invalidate() setzt das Ablaufdatum der Session auf die Vergangenheit
+            // Dadurch wird die Session ungültig und der Benutzer wird ausgeloggt
+            request.getSession().invalidate();
+
+            // Das JWT-Token im Cookie löschen
+            // Dazu wird ein neues Cookie erstellt, das den gleichen Namen wie das alte Cookie hat
+            // und das Ablaufdatum auf die Vergangenheit setzt
+            // Dadurch wird das Cookie ungültig und der Benutzer wird ausgeloggt
+            // Das Cookie wird dem HttpServletResponse-Objekt hinzugefügt
+            // Dadurch wird das Cookie an den Client gesendet
+            // Der Client löscht das Cookie und der Benutzer wird ausgeloggt
+            // Das Cookie wird auf dem Pfad "/" gesetzt
+            // Dadurch wird das Cookie für alle URLs auf der Domain gültig
+            Cookie cookie = new Cookie("jwtToken", null);
+            cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
+            cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt
+            response.addCookie(cookie);
 
             String message = "Logout erfolgreich";
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
+
 }
 
 

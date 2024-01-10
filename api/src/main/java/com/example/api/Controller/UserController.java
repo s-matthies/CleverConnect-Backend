@@ -6,7 +6,6 @@ import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +52,6 @@ public class UserController {
     // Daten eines Users ändern
     /**
      * Aktualisiert einen Benutzer mit den bereitgestellten Informationen.
-     *
      * Diese Methode ist dafür verantwortlich, einen vorhandenen Benutzer mit der angegebenen
      * ID mithilfe der im Parameter {@code newUser} bereitgestellten Informationen zu aktualisieren.
      * Die Methode gibt ein ResponseEntity zurück, das die aktualisierten Benutzerinformationen im Erfolgsfall
@@ -63,7 +61,6 @@ public class UserController {
      * @param newUser Das User-Objekt, das die aktualisierten Informationen enthält.
      * @return ResponseEntity mit dem HTTP-Status 200 OK und den aktualisierten Benutzerinformationen im Erfolgsfall,
      *         oder ein ResponseEntity mit dem HTTP-Status 400 BAD REQUEST und einer Fehlermeldung im JSON-Format im Fehlerfall.
-     * @throws Exception Wenn während des Aktualisierungsvorgangs ein unerwarteter Fehler auftritt.
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
@@ -104,8 +101,8 @@ public class UserController {
      */
 
     @GetMapping("/logout")
-    public ResponseEntity<Object> logout(HttpSession httpSession, HttpServletRequest request, HttpServletResponse response) {
-        return userService.signOut(httpSession, request, response);
+    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
+        return userService.signOut(request, response);
     }
 
 }
