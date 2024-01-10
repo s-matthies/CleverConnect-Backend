@@ -1,8 +1,7 @@
 package com.example.api.Security.auth;
 
 import com.example.api.Repository.UserRepository;
-import com.example.api.Security.jwt.AuthenticationRequest;
-import com.example.api.Security.jwt.AuthenticationResponse;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -12,13 +11,14 @@ public class AuthenticationService {
 
     private  final UserRepository repository;
     private final AuthenticationManager authenticationManager;
-    private final com.example.api.Security.jwt.JwtService JwtService;
+    private final JwtService JwtService;
 
 
     public AuthenticationService(UserRepository repository,
-                                 AuthenticationManager authenticationManager, com.example.api.Security.jwt.JwtService jwtService) {
+                                 AuthenticationManager authenticationManager, com.example.api.Security.auth.JwtService jwtService) {
         this.repository = repository;
         this.authenticationManager = authenticationManager;
+
         JwtService = jwtService;
     }
 
