@@ -89,8 +89,8 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest, HttpSession httpSession) {
-        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword(), httpSession);
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
+        return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
     /*

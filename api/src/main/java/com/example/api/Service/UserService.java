@@ -4,6 +4,10 @@ import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
+import com.example.api.Security.auth.AuthenticationRequest;
+import com.example.api.Security.auth.AuthenticationResponse;
+import com.example.api.Security.auth.AuthenticationService;
+import com.example.api.Security.auth.JwtService;
 import com.example.api.UserNotFound.UserNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +38,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
+    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
 
     /**
@@ -42,13 +49,17 @@ public class UserService implements UserDetailsService {
      * @param bCryptPasswordEncoder Das BCryptPasswordEncoder-Objekt, das für die Verschlüsselung von Passwörtern
      *                              verwendet wird.
      * @param emailService          Das EmailService-Objekt, das für den Versand von E-Mails verwendet wird.
+     * @param jwtService
+     * @param authenticationService
      */
     @Autowired
     public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, JwtService jwtService, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
+        this.jwtService = jwtService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -218,34 +229,30 @@ public class UserService implements UserDetailsService {
      *
      * @param email       Die E-Mail-Adresse des Users.
      * @param password    Das Passwort des Users.
-     * @param httpSession Die HTTP-Session, in der der angemeldete User gespeichert wird.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
+    public ResponseEntity<Object> signInUser(String email, String password) {
         try {
-            //
-            User existingUser = userRepository.findByEmailIgnoreCase(email)
-                    .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
-                            "Email oder Passwort nicht korrekt!"));
+            // Authentifizierung des Benutzers durch die AuthenticationService
+            AuthenticationResponse authenticationResponse = authenticationService.authenticate(
+                    new AuthenticationRequest(email, password)
+            );
 
-            // Passwort mit dem eingegebenen Passwort vergleichen
-            boolean passwordMatches = bCryptPasswordEncoder.matches(password, existingUser.getPassword());
-
-            if (!passwordMatches) {
+            // Überprüfen, ob die Authentifizierung erfolgreich war
+            if (authenticationResponse == null) {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
+            // JWT-Token in der Response zurückgeben
+            return ResponseEntity.ok(authenticationResponse);
 
-            // User in der Session speichern
-            httpSession.setAttribute("loggedInUser", existingUser);
+            //return ResponseEntity.ok(existingUser);
 
-            return ResponseEntity.ok(existingUser);
-
-            /*
-            String message = "User wurde erfolgreich angemeldet";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return new ResponseEntity<>(message, HttpStatus.OK);
-            */
+        } catch (BadCredentialsException e) {
+            // Exception abfangen und Fehler-Response zurückgeben
+            String errorMessage = "{ \"error\": \"Login war nicht erfolgreich! " +
+                    "Email oder Passwort nicht korrekt!\" }";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
         catch (IllegalStateException e) {
             // Exception abfangen und Fehler-Response zurückgeben
@@ -253,6 +260,8 @@ public class UserService implements UserDetailsService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
+
+
 
     //Methode für Logout
     /**
