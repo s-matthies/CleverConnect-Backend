@@ -12,7 +12,6 @@ import com.example.api.UserNotFound.UserNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +53,9 @@ public class UserService implements UserDetailsService {
      */
     @Autowired
     public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, JwtService jwtService, AuthenticationService authenticationService) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService,
+                       JwtService jwtService,
+                       AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;

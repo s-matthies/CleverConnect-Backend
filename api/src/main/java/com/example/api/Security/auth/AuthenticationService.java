@@ -15,11 +15,11 @@ public class AuthenticationService {
 
 
     public AuthenticationService(UserRepository repository,
-                                 AuthenticationManager authenticationManager, com.example.api.Security.auth.JwtService jwtService) {
+                                 AuthenticationManager authenticationManager,
+                                 JwtService jwtService) {
         this.repository = repository;
         this.authenticationManager = authenticationManager;
-
-        JwtService = jwtService;
+        this.JwtService = jwtService;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

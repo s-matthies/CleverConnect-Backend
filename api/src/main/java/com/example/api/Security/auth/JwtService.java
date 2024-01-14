@@ -1,5 +1,6 @@
 package com.example.api.Security.auth;
 
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -59,7 +60,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private  Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
                 .setSigningKey(getSignInKey())

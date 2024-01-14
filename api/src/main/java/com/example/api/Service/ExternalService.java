@@ -35,6 +35,7 @@ public class ExternalService {
     public ExternalService(ExternalRepository externalRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.externalRepository = externalRepository;
+
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -94,7 +95,6 @@ public class ExternalService {
                 // dazugehörige BachelorSubjects speichern
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
             }
-
 
             return ResponseEntity.ok(savedExternal);
         } catch (RuntimeException e) {
