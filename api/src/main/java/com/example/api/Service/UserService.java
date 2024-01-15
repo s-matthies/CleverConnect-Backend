@@ -48,8 +48,10 @@ public class UserService implements UserDetailsService {
      * @param bCryptPasswordEncoder Das BCryptPasswordEncoder-Objekt, das für die Verschlüsselung von Passwörtern
      *                              verwendet wird.
      * @param emailService          Das EmailService-Objekt, das für den Versand von E-Mails verwendet wird.
-     * @param jwtService
-     * @param authenticationService
+     * @param jwtService            Das JwtService-Objekt, das für die Erstellung und Überprüfung von JWT-Tokens
+     *                              verwendet wird.
+     * @param authenticationService Das AuthenticationService-Objekt, das für die Authentifizierung von Benutzern
+     *                              verwendet wird.
      */
     @Autowired
     public UserService(UserRepository userRepository,
@@ -106,15 +108,10 @@ public class UserService implements UserDetailsService {
 
 
             // Erfolgreiche Registrierung - User-Objekt zurückgeben
-            return ResponseEntity.ok(savedUser);
-            /*
-            String message = "{\"User wurde erfolgreich registriert!\"}";
-            return ResponseEntity.ok(message);
-            */
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 
         } catch (IllegalStateException e) {
             // Exception abfangen und Fehler-JSON-Response zurückgeben
-
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorMessage);
         }
@@ -208,7 +205,7 @@ public class UserService implements UserDetailsService {
      * @throws UserNotFoundException Falls der User nicht gefunden wird.
      */
     public ResponseEntity<Object> deleteUser(Long id) {
-
+        try {
             // den User anhand der ID im Repository zu finden
             // wenn der User nicht gefunden wird, wird eine Exception ausgelöst
             // und über die UserNotFoundException-Class behandelt
@@ -222,6 +219,12 @@ public class UserService implements UserDetailsService {
             // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return ResponseEntity.ok(message);
         }
+        catch (UserNotFoundException e) {
+            // Exception abfangen und Fehler-Response zurückgeben
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
+    }
 
 
     // Methode für Login

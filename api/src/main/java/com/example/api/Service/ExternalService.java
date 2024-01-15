@@ -8,6 +8,7 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class ExternalService {
     }
 
     /**
-     * Methode für die Regostrierung einer externen Person (Zweitbtreuer*in)
+     * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
      * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
      * @return  ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
@@ -99,9 +100,10 @@ public class ExternalService {
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
             }
 
-            return ResponseEntity.ok(savedExternal);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
+            return ResponseEntity.status(400).body(errorMessage);
         }
     }
 
