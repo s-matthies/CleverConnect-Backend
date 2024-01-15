@@ -33,10 +33,13 @@ public class ExternalService {
 
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           BachelorSubjectRepository bachelorSubjectRepository,
+                           EmailService emailService) {
         this.externalRepository = externalRepository;
-
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.bachelorSubjectRepository = bachelorSubjectRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -47,6 +50,14 @@ public class ExternalService {
      */
     public ResponseEntity<?> registration(ExternalRequest externalRequest) {
         try{
+            //existiert student mit dieser email bereits in der DB?
+            boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
+
+            //wenn E-Mail bereits existiert, dann Exception
+            if (externExists) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Die E-Mail ist bereits vergeben!\"}");
+            }
+
             External external = new External(
                     externalRequest.getFirstName(),
                     externalRequest.getLastName(),
@@ -62,14 +73,6 @@ public class ExternalService {
                     externalRequest.getDescription(),
                     null  // Set BachelorSubjects to null initially
             );
-
-            //existiert student mit dieser email bereits in der DB?
-            boolean externExists = externalRepository.findByEmail(external.getEmail()).isPresent();
-
-            //wenn E-Mail bereits existiert, dann Exception
-            if (externExists) {
-                throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
-            }
 
             // Passwort verschlüsseln
             String encodedPassword = bCryptPasswordEncoder.encode(external.getPassword());
@@ -101,6 +104,7 @@ public class ExternalService {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
 
     // Methode um Externe nach id zu laden
     public External getExternal(Long id) {

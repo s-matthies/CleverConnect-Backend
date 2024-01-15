@@ -5,6 +5,7 @@ import com.example.api.Request.ExternalRequest;
 import com.example.api.Service.ExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class ExternalController {
     - vom Client bekommen wir alle Attribute vom ExternRequest und erstellen damit die neue Userin
     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody ExternalRequest externalRequest) {
-        return externalService.registration(externalRequest);
+    public ResponseEntity<External> register(@RequestBody ExternalRequest externalRequest) {
+        return (ResponseEntity<External>) externalService.registration(externalRequest);
     }
 
     //Alle Externen laden
