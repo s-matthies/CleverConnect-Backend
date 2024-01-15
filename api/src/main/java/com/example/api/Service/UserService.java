@@ -202,6 +202,7 @@ public class UserService implements UserDetailsService {
             // und über die UserNotFoundException-Class behandelt
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException(id));
+            
 
             // Wenn der User gefunden wird, wird er aus dem Repository geloescht
             userRepository.delete(existingUser);

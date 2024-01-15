@@ -1,13 +1,12 @@
 package com.example.api.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "Externals")
@@ -15,7 +14,9 @@ public class External extends User{
 
     //zusätzliche Attribute der abgeleiteten Klasse
     private String company;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // eingefügt weil im Client Date im backend funktioniert...
     private LocalDate availabilityStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate availabilityEnd;
     private String description;
 
@@ -37,15 +38,34 @@ public class External extends User{
     private List<BachelorSubject> bachelorSubjects = new ArrayList<>();
 
 
+    @JsonIgnore
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "choosen_fields",
+            joinColumns = @JoinColumn(name = "external_id"),
+            inverseJoinColumns = @JoinColumn(name = "specialField_id")
+    )
+    private List<SpecialField> specialFields = new ArrayList<>();
+
+    public void choseField( SpecialField specialField) {
+        specialFields.add(specialField);
+    }
+
+
+
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
-                    String description, List<BachelorSubject> bachelorSubjects) {
+                    String description, List<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
         super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
+        this.specialFields = specialFields;
         this.bachelorSubjects = bachelorSubjects;
     }
 
@@ -54,12 +74,13 @@ public class External extends User{
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
-                    LocalDate availabilityEnd, String description, List<BachelorSubject> bachelorSubjects) {
+                    LocalDate availabilityEnd, String description, List<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
         super(firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
+        this.specialFields = specialFields;
         this.bachelorSubjects = bachelorSubjects;
 
     }
@@ -109,6 +130,13 @@ public class External extends User{
         this.bachelorSubjects = bachelorSubjects;
     }
 
+    public List<SpecialField> getSpecialFields() {
+        return specialFields;
+    }
+
+    public void setSpecialFields(List<SpecialField> fieldsChoosen) {
+        this.specialFields = fieldsChoosen;
+    }
 
     @Override
     public String toString() {
@@ -117,6 +145,7 @@ public class External extends User{
                 ", availabilityStart='" + availabilityStart + '\'' +
                 ", availabilityEnd='" + availabilityEnd + '\'' +
                 ", description='" + description + '\'' +
+                ", fieldsChoosen='" + specialFields + '\'' +
                 ", bachelorSubjects='" + bachelorSubjects + '\'' +
                 '}';
     }
@@ -124,7 +153,7 @@ public class External extends User{
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, bachelorSubjects);
+        return Objects.hash(super.hashCode(), company, availabilityStart, availabilityEnd, description, specialFields, bachelorSubjects);
     }
 
 
@@ -138,6 +167,7 @@ public class External extends User{
                 && Objects.equals(availabilityStart, external.availabilityStart)
                 && Objects.equals(availabilityEnd, external.availabilityEnd)
                 && Objects.equals(description, external.description)
+                && Objects.equals(specialFields, external.specialFields)
             && Objects.equals(bachelorSubjects, external.bachelorSubjects);
     }
 

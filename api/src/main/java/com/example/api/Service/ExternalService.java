@@ -3,8 +3,10 @@ package com.example.api.Service;
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
+import com.example.api.Entitys.SpecialField;
 import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
+import com.example.api.Repository.SpecialFieldRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExternalService {
@@ -27,6 +30,9 @@ public class ExternalService {
 
     @Autowired
     private BachelorSubjectRepository bachelorSubjectRepository;
+
+    @Autowired
+    private SpecialFieldRepository specialFieldRepository;
 
     @Autowired
     private EmailService emailService;
@@ -59,6 +65,7 @@ public class ExternalService {
                     externalRequest.getAvailabilityStart(),
                     externalRequest.getAvailabilityEnd(),
                     externalRequest.getDescription(),
+                    null, // Specialfield ersteinmal null, da erst Id von external generiert werden muss
                     null  // Set BachelorSubjects to null initially
             );
 
@@ -93,6 +100,15 @@ public class ExternalService {
                 }
                 // dazugehörige BachelorSubjects speichern
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
+
+                List<SpecialField> specialFields = externalRequest.getSpecialFields();
+                if (specialFields != null) {
+                    for (SpecialField field : specialFields) {
+                        // fügt den external zu der liste des spieziellen special fields dazu
+                        field.getExternal().add(savedExternal);
+                    }
+                    savedExternal.setSpecialFields(specialFieldRepository.saveAll(specialFields));
+            }
             }
 
 
@@ -127,6 +143,7 @@ public class ExternalService {
         existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
+        existingUser.setSpecialFields(newUser.getSpecialFields());
         existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
         External savedExternal = externalRepository.save(existingUser);
 
