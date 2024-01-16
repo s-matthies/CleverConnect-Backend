@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
      * @param user Der zu registrierende User.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<?> userRegistration(User user) {
+    public ResponseEntity<Object> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
             boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
@@ -90,26 +90,18 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
 
-            String encodedPassword = bCryptPasswordEncoder
-                    .encode(user.getPassword());
-
+            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
+            user.setRegistrationDate(LocalDate.now()); // das Registrierungsdatum auf das aktuelle Datum setzen
 
-
-            // das Registrierungsdatum auf das aktuelle Datum setzen
-            user.setRegistrationDate(LocalDate.now());
-
-            // Wenn alles i.O. ist, wird der User registriert
             User savedUser = userRepository.save(user);
 
             emailService.sendEmail(user.getEmail(),
                     "Willkommen im System",
                     "Hallo liebe HTW-Studentin, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
 
-
             // Erfolgreiche Registrierung - User-Objekt zurückgeben
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-
         } catch (IllegalStateException e) {
             // Exception abfangen und Fehler-JSON-Response zurückgeben
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
@@ -117,18 +109,13 @@ public class UserService implements UserDetailsService {
         }
     }
 
-
-
-    // weitere Methode, um auch die Attribute zu vergeben/speichern,
-    // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
-    // nicht alle Attribute vom Nutzer selbst eingeben werden
     /**
      * Registriert einen User anhand eines UserRequest-Objekts und gibt eine entsprechende JSON-Antwort zurück.
      *
      * @param userRequest Das UserRequest-Objekt mit den Benutzerdaten.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<?> register(UserRequest userRequest){
+    public ResponseEntity<Object> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
                 userRequest.getFirstname(),
@@ -139,11 +126,9 @@ public class UserService implements UserDetailsService {
                 Role.STUDENT,
                 false,
                 true
-        )
-        );
+        ));
     }
 
-    // Methode um User nach id zu laden
     /**
      * Lädt einen User anhand der angegebenen ID.
      *
@@ -156,7 +141,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    // Methode um alle User zu laden
+
     /**
      * Lädt alle User aus der Datenbank.
      *
@@ -166,7 +151,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    // Methode um Daten eine Userin zu aktualisieren
+
+
     /**
      * Aktualisiert die Daten eines Users anhand der angegebenen ID.
      *
@@ -185,14 +171,8 @@ public class UserService implements UserDetailsService {
             existingUser.setFirstName(newUser.getFirstName());
             existingUser.setLastName(newUser.getLastName());
             existingUser.setEmail(newUser.getEmail());
-            User savedUser = userRepository.save(existingUser);
 
-            /*
-            // Response erstellen für den Erfolgsfall
-            String message = "{\"User mit der id \"" + id + "\" wurde erfolgreich aktualisiert!\"";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return ResponseEntity.ok(message);
-            */
+            User savedUser = userRepository.save(existingUser);
             return ResponseEntity.ok(savedUser);
     }
 
@@ -207,8 +187,6 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<Object> deleteUser(Long id) {
         try {
             // den User anhand der ID im Repository zu finden
-            // wenn der User nicht gefunden wird, wird eine Exception ausgelöst
-            // und über die UserNotFoundException-Class behandelt
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException(id));
 
@@ -216,11 +194,9 @@ public class UserService implements UserDetailsService {
             userRepository.delete(existingUser);
 
             String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return ResponseEntity.ok(message);
         }
         catch (UserNotFoundException e) {
-            // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
@@ -249,17 +225,12 @@ public class UserService implements UserDetailsService {
             }
             // JWT-Token in der Response zurückgeben
             return ResponseEntity.ok(authenticationResponse);
-
-            //return ResponseEntity.ok(existingUser);
-
         } catch (BadCredentialsException e) {
-            // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"Login war nicht erfolgreich! " +
                     "Email oder Passwort nicht korrekt!\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
         catch (IllegalStateException e) {
-            // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
@@ -284,21 +255,9 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Das Token ist ungültig oder abgelaufen.");
 
             // Die Session des Benutzers ungültig machen
-            // Dies ist notwendig, da der Benutzer sonst nicht ausgeloggt wird
-            // und das JWT-Token weiterhin gültig ist
-            // Die Methode invalidate() setzt das Ablaufdatum der Session auf die Vergangenheit
-            // Dadurch wird die Session ungültig und der Benutzer wird ausgeloggt
             request.getSession().invalidate();
 
             // Das JWT-Token im Cookie löschen
-            // Dazu wird ein neues Cookie erstellt, das den gleichen Namen wie das alte Cookie hat
-            // und das Ablaufdatum auf die Vergangenheit setzt
-            // Dadurch wird das Cookie ungültig und der Benutzer wird ausgeloggt
-            // Das Cookie wird dem HttpServletResponse-Objekt hinzugefügt
-            // Dadurch wird das Cookie an den Client gesendet
-            // Der Client löscht das Cookie und der Benutzer wird ausgeloggt
-            // Das Cookie wird auf dem Pfad "/" gesetzt
-            // Dadurch wird das Cookie für alle URLs auf der Domain gültig
             Cookie cookie = new Cookie("jwtToken", null);
             cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
             cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt

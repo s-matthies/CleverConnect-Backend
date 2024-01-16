@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // Controller verbindung zum Client, hier werden die methoden ausgeführt
+
 @RestController
 // Pfad wird selbst festgelegt?
 @RequestMapping(path ="user")
@@ -38,15 +39,17 @@ public class UserController {
     @PostMapping(path ="/register")
     //es wird angegeben, was man von Client Seite haben möchte - wir bekommen "Körper" vom Client
     // alle Attribute die im UserRequest sind, werden übergeben
-    public ResponseEntity<?> register(@RequestBody UserRequest userRequest){
+    public ResponseEntity<Object> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
+
 
     @PostMapping(path ="/authenticate")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {

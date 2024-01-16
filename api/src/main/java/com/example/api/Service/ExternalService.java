@@ -49,7 +49,7 @@ public class ExternalService {
      * @return  ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
-    public ResponseEntity<?> registration(ExternalRequest externalRequest) {
+    public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
         try{
             //existiert student mit dieser email bereits in der DB?
             boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
