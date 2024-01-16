@@ -110,10 +110,6 @@ public class ExternalService {
                     }
 
                     for (SpecialField field : specialFields) {
-                        // Ensure IDs are set for SpecialField entities
-                        //if (field.getId() == null) {
-                            // Set ID logic here
-                        //}
 
                         // Establish the bidirectional relationship
                         field.getExternal().add(savedExternal);

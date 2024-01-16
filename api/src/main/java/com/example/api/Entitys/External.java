@@ -137,7 +137,6 @@ public class External extends User{
     public void setSpecialFields(List<SpecialField> specialFields) {
 
         this.specialFields = specialFields;
-        //this.specialFields = (specialFields != null) ? specialFields : new ArrayList<>();
     }
 
     @Override

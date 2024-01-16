@@ -75,7 +75,6 @@ public class SpecialField {
     public void setExternal(List<External> externals) {
 
         this.externals = externals;
-        //this.externals = (externals != null) ? externals : new ArrayList<>();
     }
 }
 
