@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name = "Special_Field")
@@ -20,16 +22,16 @@ public class SpecialField {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "specialFields", cascade = CascadeType.ALL)
-    private List<External> externals = new ArrayList<>();
+    private Set<External> externals = new HashSet<>();
 
-    public SpecialField(String value, String title, Boolean disabled, List<External> externals) {
+    public SpecialField(String value, String title, Boolean disabled, Set<External> externals) {
         this.value = value;
         this.title = title;
         this.disabled = disabled;
         this.externals = externals;
     }
 
-    public SpecialField(Long id, String value, String title, Boolean disabled, List<External> externals) {
+    public SpecialField(Long id, String value, String title, Boolean disabled, Set<External> externals) {
         this.id = id;
         this.value = value;
         this.title = title;
@@ -67,12 +69,12 @@ public class SpecialField {
         this.disabled = disabled;
     }
 
-    public List<External> getExternal() {
+    public Set<External> getExternal() {
 
         return externals;
     }
 
-    public void setExternal(List<External> externals) {
+    public void setExternal(Set<External> externals) {
 
         this.externals = externals;
     }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -106,7 +107,7 @@ public class ExternalService {
                 if (specialFields != null) {
                     // Ensure the specialFields list is initialized only once
                     if (savedExternal.getSpecialFields() == null) {
-                        savedExternal.setSpecialFields(new ArrayList<>());
+                        savedExternal.setSpecialFields(new HashSet<>());
                     }
 
                     for (SpecialField field : specialFields) {

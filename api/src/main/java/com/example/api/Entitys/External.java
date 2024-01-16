@@ -48,7 +48,7 @@ public class External extends User{
             joinColumns = @JoinColumn(name = "external_id"),
             inverseJoinColumns = @JoinColumn(name = "specialField_id")
     )
-    private List<SpecialField> specialFields = new ArrayList<>();
+    private Set<SpecialField> specialFields = new HashSet<>();
 
     public void choseField( SpecialField specialField) {
         specialFields.add(specialField);
@@ -59,7 +59,7 @@ public class External extends User{
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd,
-                    String description, List<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
+                    String description, Set<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
         super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
@@ -74,7 +74,7 @@ public class External extends User{
     //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
-                    LocalDate availabilityEnd, String description, List<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
+                    LocalDate availabilityEnd, String description, Set<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
         super(firstName, lastName, email, password, registrationDate, role, locked, enabled);
         this.company = company;
         this.availabilityStart = availabilityStart;
@@ -130,11 +130,11 @@ public class External extends User{
         this.bachelorSubjects = bachelorSubjects;
     }
 
-    public List<SpecialField> getSpecialFields() {
+    public Set<SpecialField> getSpecialFields() {
         return specialFields;
     }
 
-    public void setSpecialFields(List<SpecialField> specialFields) {
+    public void setSpecialFields(Set<SpecialField> specialFields) {
 
         this.specialFields = specialFields;
     }
