@@ -20,21 +20,21 @@ public class SpecialField {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "specialFields", cascade = CascadeType.ALL)
-    private List<External> external = new ArrayList<>();
+    private List<External> externals = new ArrayList<>();
 
-    public SpecialField(String value, String title, Boolean disabled, List<External> external) {
+    public SpecialField(String value, String title, Boolean disabled, List<External> externals) {
         this.value = value;
         this.title = title;
         this.disabled = disabled;
-        this.external = external;
+        this.externals = externals;
     }
 
-    public SpecialField(Long id, String value, String title, Boolean disabled, List<External> external) {
+    public SpecialField(Long id, String value, String title, Boolean disabled, List<External> externals) {
         this.id = id;
         this.value = value;
         this.title = title;
         this.disabled = disabled;
-        this.external = external;
+        this.externals = externals;
     }
 
     public SpecialField() {
@@ -68,11 +68,14 @@ public class SpecialField {
     }
 
     public List<External> getExternal() {
-        return external;
+
+        return externals;
     }
 
-    public void setExternal(List<External> expertsInField) {
-        this.external = expertsInField;
+    public void setExternal(List<External> externals) {
+
+        this.externals = externals;
+        //this.externals = (externals != null) ? externals : new ArrayList<>();
     }
 }
 

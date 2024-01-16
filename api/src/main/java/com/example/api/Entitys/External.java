@@ -134,8 +134,10 @@ public class External extends User{
         return specialFields;
     }
 
-    public void setSpecialFields(List<SpecialField> fieldsChoosen) {
-        this.specialFields = fieldsChoosen;
+    public void setSpecialFields(List<SpecialField> specialFields) {
+
+        this.specialFields = specialFields;
+        //this.specialFields = (specialFields != null) ? specialFields : new ArrayList<>();
     }
 
     @Override
@@ -145,7 +147,7 @@ public class External extends User{
                 ", availabilityStart='" + availabilityStart + '\'' +
                 ", availabilityEnd='" + availabilityEnd + '\'' +
                 ", description='" + description + '\'' +
-                ", fieldsChoosen='" + specialFields + '\'' +
+                ", specialFields='" + specialFields + '\'' +
                 ", bachelorSubjects='" + bachelorSubjects + '\'' +
                 '}';
     }

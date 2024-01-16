@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -103,11 +104,28 @@ public class ExternalService {
 
                 List<SpecialField> specialFields = externalRequest.getSpecialFields();
                 if (specialFields != null) {
-                    for (SpecialField field : specialFields) {
-                        // fügt den external zu der liste des spieziellen special fields dazu
-                        field.getExternal().add(savedExternal);
+                    // Ensure the specialFields list is initialized only once
+                    if (savedExternal.getSpecialFields() == null) {
+                        savedExternal.setSpecialFields(new ArrayList<>());
                     }
-                    savedExternal.setSpecialFields(specialFieldRepository.saveAll(specialFields));
+
+                    for (SpecialField field : specialFields) {
+                        // Ensure IDs are set for SpecialField entities
+                        //if (field.getId() == null) {
+                            // Set ID logic here
+                        //}
+
+                        // Establish the bidirectional relationship
+                        field.getExternal().add(savedExternal);
+                        savedExternal.getSpecialFields().add(field);
+
+                        specialFieldRepository.save(field);
+                        externalRepository.save(savedExternal);
+                    }
+
+
+
+                    //savedExternal.setSpecialFields(specialFieldRepository.saveAll(specialFields));
             }
             }
 
