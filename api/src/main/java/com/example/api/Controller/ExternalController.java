@@ -27,7 +27,7 @@ public class ExternalController {
     - vom Client bekommen wir alle Attribute vom ExternRequest und erstellen damit die neue Userin
     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody ExternalRequest externalRequest) {
+    public ResponseEntity<Object> register(@RequestBody ExternalRequest externalRequest) {
         return externalService.registration(externalRequest);
     }
 

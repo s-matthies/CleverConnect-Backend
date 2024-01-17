@@ -8,6 +8,7 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,19 +34,31 @@ public class ExternalService {
 
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           BachelorSubjectRepository bachelorSubjectRepository,
+                           EmailService emailService) {
         this.externalRepository = externalRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.bachelorSubjectRepository = bachelorSubjectRepository;
+        this.emailService = emailService;
     }
 
     /**
-     * Methode für die Regostrierung einer externen Person (Zweitbtreuer*in)
+     * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
      * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
      * @return  ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
-    public ResponseEntity<?> registration(ExternalRequest externalRequest) {
+    public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
         try{
+            //existiert student mit dieser email bereits in der DB?
+            boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
+
+            //wenn E-Mail bereits existiert, dann Exception
+            if (externExists) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Die E-Mail ist bereits vergeben!\"}");
+            }
+
             External external = new External(
                     externalRequest.getFirstName(),
                     externalRequest.getLastName(),
@@ -61,14 +74,6 @@ public class ExternalService {
                     externalRequest.getDescription(),
                     null  // Set BachelorSubjects to null initially
             );
-
-            //existiert student mit dieser email bereits in der DB?
-            boolean externExists = externalRepository.findByEmail(external.getEmail()).isPresent();
-
-            //wenn E-Mail bereits existiert, dann Exception
-            if (externExists) {
-                throw new IllegalStateException(("Die E-Mail ist bereits vergeben!"));
-            }
 
             // Passwort verschlüsseln
             String encodedPassword = bCryptPasswordEncoder.encode(external.getPassword());
@@ -95,12 +100,13 @@ public class ExternalService {
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
             }
 
-
-            return ResponseEntity.ok(savedExternal);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
+            return ResponseEntity.status(400).body(errorMessage);
         }
     }
+
 
     // Methode um Externe nach id zu laden
     public External getExternal(Long id) {
