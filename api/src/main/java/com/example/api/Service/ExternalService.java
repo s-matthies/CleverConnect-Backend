@@ -7,11 +7,13 @@ import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -120,10 +122,38 @@ public class ExternalService {
     }
 
     // Methode um Daten eine Userin zu aktualisieren
+    @Transactional
     public ResponseEntity<External> updateExternal(Long id, External newUser) {
         // Externe Person anhand der ID finden
         External existingUser = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        // Lösche die bestehenden Bachelor-Themen
+        existingUser.getBachelorSubjects().clear();
+
+        // Füge die aktualisierten Bachelor-Themen hinzu
+        List<BachelorSubject> updatedSubjects = newUser.getBachelorSubjects();
+        if (updatedSubjects != null) {
+            updatedSubjects.forEach(subject -> {
+                subject.setExternal(existingUser);
+                existingUser.getBachelorSubjects().add(subject);
+            });
+        }
+
+
+        /*
+        // BachelorSubjects behandeln
+        List<BachelorSubject> bachelorSubjects = newUser.getBachelorSubjects();
+        if (bachelorSubjects != null) {
+            for (BachelorSubject subject : bachelorSubjects) {
+                // Set the External entity for each BachelorSubject
+                subject.setExternal(existingUser);
+            }
+            // dazugehörige BachelorSubjects speichern
+            existingUser.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
+        }
+
+         */
 
         //existierende Externe mit neuen Daten updaten
         existingUser.setFirstName(newUser.getFirstName());
@@ -133,14 +163,15 @@ public class ExternalService {
         existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
-        existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
+        //existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
+
+
         External savedExternal = externalRepository.save(existingUser);
 
         //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
         //return ResponseEntity.ok().body(message);
         return ResponseEntity.ok(savedExternal);
     }
-
 
 }
 

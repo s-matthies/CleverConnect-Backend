@@ -58,13 +58,13 @@ public class UserController {
 
     //alle User laden
     @GetMapping("/load")
-    List<User> allStudents() {
+    List<User> allUsers() {
         return userService.allUser();
     }
 
     //einzelne User mit ID laden
     @GetMapping("/load/{id}")
-    User getStudent(@PathVariable Long id) {
+    User getUsers(@PathVariable Long id) {
         return userService.getUser(id);
     }
 

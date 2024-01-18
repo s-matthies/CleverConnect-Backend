@@ -1,8 +1,10 @@
 package com.example.api.Controller;
 
+import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.Service.ExternalService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
