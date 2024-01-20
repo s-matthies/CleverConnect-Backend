@@ -10,6 +10,8 @@ public class ExternalDTO {
     private String lastName;
     private String email;
     private String password;
+    private String registrationDate;
+    private String role;
     private String company;
     private String availabilityStart;
     private String availabilityEnd;
@@ -21,6 +23,9 @@ public class ExternalDTO {
         this.lastName = external.getLastName();
         this.email = external.getEmail();
         this.password = external.getPassword();
+        this.registrationDate = (external.getRegistrationDate() != null) ?
+                external.getRegistrationDate().toString() : null;
+        this.role = String.valueOf(external.getRole());
         this.company = external.getCompany();
         this.availabilityStart = (external.getAvailabilityStart() != null) ?
                 external.getAvailabilityStart().toString() : null;
@@ -67,6 +72,26 @@ public class ExternalDTO {
 
     public String getCompany() {
         return company;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setCompany(String company) {
