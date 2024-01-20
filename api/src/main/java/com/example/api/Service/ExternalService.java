@@ -7,13 +7,11 @@ import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +32,7 @@ public class ExternalService {
     @Autowired
     private EmailService emailService;
 
+
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -47,12 +46,13 @@ public class ExternalService {
 
     /**
      * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
+     *
      * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
-     * @return  ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
     public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
-        try{
+        try {
             //existiert student mit dieser email bereits in der DB?
             boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
 
@@ -103,7 +103,7 @@ public class ExternalService {
             }
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
-        } catch (RuntimeException e) {
+        } catch (IllegalStateException e) {
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.status(400).body(errorMessage);
         }
@@ -122,7 +122,6 @@ public class ExternalService {
     }
 
     // Methode um Daten eine Userin zu aktualisieren
-    @Transactional
     public ResponseEntity<External> updateExternal(Long id, External newUser) {
         // Externe Person anhand der ID finden
         External existingUser = externalRepository.findById(id)
@@ -140,20 +139,6 @@ public class ExternalService {
             });
         }
 
-
-        /*
-        // BachelorSubjects behandeln
-        List<BachelorSubject> bachelorSubjects = newUser.getBachelorSubjects();
-        if (bachelorSubjects != null) {
-            for (BachelorSubject subject : bachelorSubjects) {
-                // Set the External entity for each BachelorSubject
-                subject.setExternal(existingUser);
-            }
-            // dazugehörige BachelorSubjects speichern
-            existingUser.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
-        }
-
-         */
 
         //existierende Externe mit neuen Daten updaten
         existingUser.setFirstName(newUser.getFirstName());
@@ -173,5 +158,17 @@ public class ExternalService {
         return ResponseEntity.ok(savedExternal);
     }
 
+    /**
+     * Methode um die BachelorSubjects einer externen Person zu laden
+     *
+     * @param externalId Die ID der externen Person
+     * @return Liste der BachelorSubjects der externen Person
+     */
+    public List<BachelorSubject> getBachelorSubjectsForExternal(Long externalId) {
+        External external = externalRepository.findById(externalId)
+                .orElseThrow(() -> new UserNotFoundException(externalId));
+
+        return external.getBachelorSubjects();
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.example.api.Controller;
 
+import com.example.api.DTO.ExternalDTO;
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Request.ExternalRequest;
@@ -39,16 +40,28 @@ public class ExternalController {
         return externalService.allExternal();
     }
 
-    //einzelne Userin mit ID laden
+    //einzelne Externe mit ID laden
     @GetMapping("/load/{id}")
     External getExternal(@PathVariable Long id) {
         return externalService.getExternal(id);
     }
 
-    // Daten der Userin ändern
+    // Daten einer Externen aktualisieren
     @PutMapping("/update/{id}")
     public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
+        List<BachelorSubject> updatedBachelorSubjects = newUser.getBachelorSubjects();
         return externalService.updateExternal(id, newUser);
+    }
+
+    // External mit BachelorSubjects laden
+    @GetMapping("/{externalId}/bachelorSubjects")
+    public ResponseEntity<ExternalDTO> getExternalWithSubjects(@PathVariable Long externalId) {
+        External external = externalService.getExternal(externalId);
+
+        List<BachelorSubject> bachelorSubjects = externalService.getBachelorSubjectsForExternal(externalId);
+        ExternalDTO externalWithSubjectsDTO = new ExternalDTO(external, bachelorSubjects);
+
+        return ResponseEntity.ok(externalWithSubjectsDTO);
     }
 
 }
