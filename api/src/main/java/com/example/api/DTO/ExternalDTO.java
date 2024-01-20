@@ -22,8 +22,10 @@ public class ExternalDTO {
         this.email = external.getEmail();
         this.password = external.getPassword();
         this.company = external.getCompany();
-        this.availabilityStart = external.getAvailabilityStart().toString();
-        this.availabilityEnd = external.getAvailabilityEnd().toString();
+        this.availabilityStart = (external.getAvailabilityStart() != null) ?
+                external.getAvailabilityStart().toString() : null;
+        this.availabilityEnd = (external.getAvailabilityEnd() != null) ?
+                external.getAvailabilityEnd().toString() : null;
         this.description = external.getDescription();
 
         // Mappe die BachelorSubjects auf die BachelorSubjectDTOs
@@ -33,10 +35,6 @@ public class ExternalDTO {
                         subject.getBDescription(),
                         subject.getDate().toString()))
                 .toList();
-    }
-
-    public String getFirstName() {
-        return firstName;
     }
 
     public void setFirstName(String firstName) {

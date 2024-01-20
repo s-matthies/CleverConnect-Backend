@@ -5,7 +5,6 @@ import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.Service.ExternalService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +33,21 @@ public class ExternalController {
         return externalService.registration(externalRequest);
     }
 
-    //Alle Externen laden
+    // alle Externen mit jeweiligen BachelorSubjects laden
+    @GetMapping("/load")
+    public ResponseEntity<List<ExternalDTO>> allExternals() {
+        List<ExternalDTO> externalDTOS = externalService.getAllExternalsWithSubjects();
+        return ResponseEntity.ok(externalDTOS);
+    }
+
+    /*
+    //Alle Externen laden ohne BachelorSubjects
     @GetMapping("/load")
     List<External> allExtern() {
         return externalService.allExternal();
     }
+
+     */
 
     //einzelne Externe mit ID laden
     @GetMapping("/load/{id}")

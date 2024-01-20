@@ -1,5 +1,6 @@
 package com.example.api.Service;
 
+import com.example.api.DTO.ExternalDTO;
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -116,10 +118,25 @@ public class ExternalService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    /*
     // Methode um alle Externen zu laden
     public List<External> allExternal() {
         return externalRepository.findAll();
     }
+     */
+
+    // Methode um alle Externen mit Bachelorthemen zu laden
+    public List<ExternalDTO> getAllExternalsWithSubjects() {
+        List<External> allExternals = externalRepository.findAll();
+        List<ExternalDTO> externalDTOs = new ArrayList<>();
+
+        for (External external : allExternals) {
+            List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
+            externalDTOs.add(new ExternalDTO(external, bachelorSubjects));
+        }
+        return externalDTOs;
+    }
+
 
     // Methode um Daten eine Userin zu aktualisieren
     public ResponseEntity<External> updateExternal(Long id, External newUser) {
@@ -138,7 +155,6 @@ public class ExternalService {
                 existingUser.getBachelorSubjects().add(subject);
             });
         }
-
 
         //existierende Externe mit neuen Daten updaten
         existingUser.setFirstName(newUser.getFirstName());
