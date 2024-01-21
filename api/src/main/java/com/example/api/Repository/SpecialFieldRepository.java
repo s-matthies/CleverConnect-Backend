@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SpecialFieldRepository extends JpaRepository <SpecialField, Long>{
 
-    Optional<SpecialField> findByTitle(String title);
+    Optional<SpecialField> findByName(String name);
 }
