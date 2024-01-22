@@ -152,7 +152,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-
     /**
      * Aktualisiert die Daten eines Users anhand der angegebenen ID.
      *
@@ -276,22 +275,14 @@ public class UserService implements UserDetailsService {
         try {
             // Entfernen Sie das "Bearer"-Präfix und alle möglichen Leerzeichen
             token = token.replace("Bearer ", "").trim();
-            // Extract the user id from the token
+            // Extrahieren der Benutzerkennung aus dem Token
             String username = jwtService.extractUsername(token);
             User existingUser = (User) loadUserByUsername(username);
-
-            /*
-            // User anhand der ID finden
-            User existingUser = userRepository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException(id));
-
-             */
 
             // Überprüfen, ob das alte Passwort korrekt ist
             if (!bCryptPasswordEncoder.matches(oldPassword, existingUser.getPassword())) {
                 throw new IllegalStateException("Das alte Passwort ist nicht korrekt!");
             }
-
             // Das neue Passwort verschlüsseln und setzen
             String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
             existingUser.setPassword(encodedPassword);
