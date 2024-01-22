@@ -2,6 +2,7 @@ package com.example.api.Controller;
 
 import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
+import com.example.api.Request.PasswordChangeRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Security.auth.AuthenticationRequest;
 import com.example.api.Security.auth.AuthenticationResponse;
@@ -108,5 +109,20 @@ public class UserController {
     public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
         return userService.signOut(request, response);
     }
+
+    @PutMapping("/updatePassword/{id}")
+    public ResponseEntity<Object> updatePassword(@RequestHeader("Authorization") String token,
+                                                 @RequestBody PasswordChangeRequest request) {
+        return userService.changePassword(token, request.getOldPassword(), request.getNewPassword());
+    }
+
+/*
+    @PutMapping("/updatePassword/{id}")
+    public ResponseEntity<Object> updatePassword(@PathVariable Long id,
+                                                 @RequestBody PasswordChangeRequest request) {
+        return userService.changePassword(id, request.getOldPassword(), request.getNewPassword());
+    }
+
+ */
 
 }
