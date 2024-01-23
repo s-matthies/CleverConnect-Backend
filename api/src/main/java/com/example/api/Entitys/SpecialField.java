@@ -26,7 +26,7 @@ public class SpecialField {
         this.externals = externals;
     }
 
-    public SpecialField(Long id, String name, String title, Boolean disabled, Set<External> externals) {
+    public SpecialField(Long id, String name, Set<External> externals) {
         this.id = id;
         this.name = name;
         this.externals = externals;
