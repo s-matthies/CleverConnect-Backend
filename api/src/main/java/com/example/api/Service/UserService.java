@@ -4,14 +4,18 @@ import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
 import com.example.api.Request.UserRequest;
+import com.example.api.Security.auth.AuthenticationRequest;
+import com.example.api.Security.auth.AuthenticationResponse;
+import com.example.api.Security.auth.AuthenticationService;
+import com.example.api.Security.auth.JwtService;
 import com.example.api.UserNotFound.UserNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +37,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
+    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
 
     /**
@@ -42,13 +48,21 @@ public class UserService implements UserDetailsService {
      * @param bCryptPasswordEncoder Das BCryptPasswordEncoder-Objekt, das für die Verschlüsselung von Passwörtern
      *                              verwendet wird.
      * @param emailService          Das EmailService-Objekt, das für den Versand von E-Mails verwendet wird.
+     * @param jwtService            Das JwtService-Objekt, das für die Erstellung und Überprüfung von JWT-Tokens
+     *                              verwendet wird.
+     * @param authenticationService Das AuthenticationService-Objekt, das für die Authentifizierung von Benutzern
+     *                              verwendet wird.
      */
     @Autowired
     public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService,
+                       JwtService jwtService,
+                       AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
+        this.jwtService = jwtService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -66,7 +80,7 @@ public class UserService implements UserDetailsService {
      * @param user Der zu registrierende User.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<?> userRegistration(User user) {
+    public ResponseEntity<Object> userRegistration(User user) {
         try {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
             boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
@@ -76,50 +90,32 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
 
-            String encodedPassword = bCryptPasswordEncoder
-                    .encode(user.getPassword());
-
+            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
+            user.setRegistrationDate(LocalDate.now()); // das Registrierungsdatum auf das aktuelle Datum setzen
 
-
-            // das Registrierungsdatum auf das aktuelle Datum setzen
-            user.setRegistrationDate(LocalDate.now());
-
-            // Wenn alles i.O. ist, wird der User registriert
             User savedUser = userRepository.save(user);
 
             emailService.sendEmail(user.getEmail(),
                     "Willkommen im System",
                     "Hallo liebe HTW-Studentin, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
 
-
             // Erfolgreiche Registrierung - User-Objekt zurückgeben
-            return ResponseEntity.ok(savedUser);
-            /*
-            String message = "{\"User wurde erfolgreich registriert!\"}";
-            return ResponseEntity.ok(message);
-            */
-
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         } catch (IllegalStateException e) {
             // Exception abfangen und Fehler-JSON-Response zurückgeben
-
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorMessage);
         }
     }
 
-
-
-    // weitere Methode, um auch die Attribute zu vergeben/speichern,
-    // praktisch, wenn Attribute zb Profilbild automatisch von System erzeugt wird und
-    // nicht alle Attribute vom Nutzer selbst eingeben werden
     /**
      * Registriert einen User anhand eines UserRequest-Objekts und gibt eine entsprechende JSON-Antwort zurück.
      *
      * @param userRequest Das UserRequest-Objekt mit den Benutzerdaten.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<?> register(UserRequest userRequest){
+    public ResponseEntity<Object> register(UserRequest userRequest){
         // greift vorher erstellte Methode zurück
         return userRegistration(new User(
                 userRequest.getFirstname(),
@@ -130,11 +126,9 @@ public class UserService implements UserDetailsService {
                 Role.STUDENT,
                 false,
                 true
-        )
-        );
+        ));
     }
 
-    // Methode um User nach id zu laden
     /**
      * Lädt einen User anhand der angegebenen ID.
      *
@@ -147,7 +141,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    // Methode um alle User zu laden
+
     /**
      * Lädt alle User aus der Datenbank.
      *
@@ -157,7 +151,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    // Methode um Daten eine Userin zu aktualisieren
+
     /**
      * Aktualisiert die Daten eines Users anhand der angegebenen ID.
      *
@@ -176,14 +170,8 @@ public class UserService implements UserDetailsService {
             existingUser.setFirstName(newUser.getFirstName());
             existingUser.setLastName(newUser.getLastName());
             existingUser.setEmail(newUser.getEmail());
-            User savedUser = userRepository.save(existingUser);
 
-            /*
-            // Response erstellen für den Erfolgsfall
-            String message = "{\"User mit der id \"" + id + "\" wurde erfolgreich aktualisiert!\"";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return ResponseEntity.ok(message);
-            */
+            User savedUser = userRepository.save(existingUser);
             return ResponseEntity.ok(savedUser);
     }
 
@@ -196,10 +184,8 @@ public class UserService implements UserDetailsService {
      * @throws UserNotFoundException Falls der User nicht gefunden wird.
      */
     public ResponseEntity<Object> deleteUser(Long id) {
-
+        try {
             // den User anhand der ID im Repository zu finden
-            // wenn der User nicht gefunden wird, wird eine Exception ausgelöst
-            // und über die UserNotFoundException-Class behandelt
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException(id));
             
@@ -208,9 +194,13 @@ public class UserService implements UserDetailsService {
             userRepository.delete(existingUser);
 
             String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
             return ResponseEntity.ok(message);
         }
+        catch (UserNotFoundException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
+    }
 
 
     // Methode für Login
@@ -219,92 +209,97 @@ public class UserService implements UserDetailsService {
      *
      * @param email       Die E-Mail-Adresse des Users.
      * @param password    Das Passwort des Users.
-     * @param httpSession Die HTTP-Session, in der der angemeldete User gespeichert wird.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<Object> signInUser(String email, String password, HttpSession httpSession) {
+    public ResponseEntity<Object> signInUser(String email, String password) {
         try {
-            //
-            User existingUser = userRepository.findByEmailIgnoreCase(email)
-                    .orElseThrow(() -> new IllegalStateException("Login war nicht erfolgreich! " +
-                            "Email oder Passwort nicht korrekt!"));
+            // Authentifizierung des Benutzers durch die AuthenticationService
+            AuthenticationResponse authenticationResponse = authenticationService.authenticate(
+                    new AuthenticationRequest(email, password)
+            );
 
-            // Passwort mit dem eingegebenen Passwort vergleichen
-            boolean passwordMatches = bCryptPasswordEncoder.matches(password, existingUser.getPassword());
-
-            if (!passwordMatches) {
+            // Überprüfen, ob die Authentifizierung erfolgreich war
+            if (authenticationResponse == null) {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
-
-            // User in der Session speichern
-            httpSession.setAttribute("loggedInUser", existingUser);
-
-            return ResponseEntity.ok(existingUser);
-
-            /*
-            String message = "User wurde erfolgreich angemeldet";
-            // eine ResponseEntity mit der Erfolgsmeldung und dem HTTP-Status OK wird zurückgegeben
-            return new ResponseEntity<>(message, HttpStatus.OK);
-            */
+            // JWT-Token in der Response zurückgeben
+            return ResponseEntity.ok(authenticationResponse);
+        } catch (BadCredentialsException e) {
+            String errorMessage = "{ \"error\": \"Login war nicht erfolgreich! " +
+                    "Email oder Passwort nicht korrekt!\" }";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
         catch (IllegalStateException e) {
-            // Exception abfangen und Fehler-Response zurückgeben
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
 
+
     //Methode für Logout
-    /**
-     * Beendet die Sitzung eines Benutzers und führt eine Abmeldung durch.
-     *
-     * @param httpSession Repräsentiert die Sitzung des Benutzers. Wird verwendet,
-     *                    um benutzerspezifische Daten aus der Sitzung zu entfernen und die Sitzung zu invalidieren (ungültig zu machen).
-     * @param request     Repräsentiert die HTTP-Anfrage des Benutzers. Wird verwendet, um
-     *                    auf die Cookies zuzugreifen.
-     * @param response    Repräsentiert die HTTP-Antwort, die zur Steuerung des
-     *                    HTTP-Antwortverhaltens verwendet wird.
-     * @return Eine ResponseEntity<Object> mit einer JSON-Antwort, die den Erfolg oder Fehler des Logout-Vorgangs angibt.
-     *         Bei erfolgreichem Logout wird der HTTP-Status 200 OK zurückgegeben, andernfalls der HTTP-Status 401 Unauthorized.
-     *         Die JSON-Antwort enthält eine Erfolgsmeldung oder eine Fehlermeldung, je nachdem, ob ein Benutzer eingeloggt war oder nicht.
-     *         Beispiel für eine Erfolgsmeldung: {"message": "Logout erfolgreich"}
-     *         Beispiel für eine Fehlermeldung: {"error": "Es ist kein Benutzer eingeloggt."}
-     */
-    public ResponseEntity<Object> signOut(HttpSession httpSession,
-                                          HttpServletRequest request,
-                                          HttpServletResponse response) {
+    public ResponseEntity<Object> signOut(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Überprüfen, ob ein Benutzer eingeloggt ist
-            User loggedInUser = (User) httpSession.getAttribute("loggedInUser");
-            if (loggedInUser == null) {
-                throw new IllegalStateException("Es ist kein User eingeloggt.");
+            // Überprüfen, ob der Benutzer ein gültiges JWT-Token im Header hat
+            String authorizationHeader = request.getHeader("Authorization");
+
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                throw new IllegalStateException("Es ist kein Benutzer eingeloggt.");
             }
 
-            // Lösche benutzerspezifische Daten aus der Sitzung
-            httpSession.removeAttribute("loggedInUser");
+            // Token aus dem Authorization-Header extrahieren
+            String token = authorizationHeader.substring(7);
 
-            // Beende die aktuelle Sitzung (Session)
-            httpSession.invalidate();
+            // Hier wird angenommen, dass die Methode isTokenValid implementiert ist und das Token überprüft
+            if (!jwtService.isTokenValid(token, loadUserByUsername(jwtService.extractUsername(token))))
+                throw new IllegalStateException("Das Token ist ungültig oder abgelaufen.");
 
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("JSESSIONID")) {
-                        cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
-                        cookie.setPath("/"); // der Pfad wird auf "/" gesetzt
-                        response.addCookie(cookie);
-                        //Dadurch wird der JSESSIONID-Cookie auf dem Client (Browser) gelöscht
-                    }
-                }
-            }
+            // Die Session des Benutzers ungültig machen
+            request.getSession().invalidate();
+
+            // Das JWT-Token im Cookie löschen
+            Cookie cookie = new Cookie("jwtToken", null);
+            cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
+            cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt
+            response.addCookie(cookie);
 
             String message = "Logout erfolgreich";
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+        }
+    }
+
+    //Methode für Passwort ändern
+    public ResponseEntity<Object> changePassword(String token, String oldPassword, String newPassword) {
+        try {
+            // Entfernen Sie das "Bearer"-Präfix und alle möglichen Leerzeichen
+            token = token.replace("Bearer ", "").trim();
+            // Extrahieren der Benutzerkennung aus dem Token
+            String username = jwtService.extractUsername(token);
+            User existingUser = (User) loadUserByUsername(username);
+
+            // Überprüfen, ob das alte Passwort korrekt ist
+            if (!bCryptPasswordEncoder.matches(oldPassword, existingUser.getPassword())) {
+                throw new IllegalStateException("Das alte Passwort ist nicht korrekt!");
+            }
+            // Das neue Passwort verschlüsseln und setzen
+            String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
+            existingUser.setPassword(encodedPassword);
+
+            // User speichern
+            User savedUser = userRepository.save(existingUser);
+
+            // Erfolgsnachricht zurückgeben
+            String message = "Passwort erfolgreich geändert";
+            return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
+        } catch (UserNotFoundException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        } catch (IllegalStateException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
     }
 }
