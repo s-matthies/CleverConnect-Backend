@@ -1,9 +1,12 @@
 package com.example.api.Request;
 
 import com.example.api.Entitys.BachelorSubject;
+import com.example.api.Entitys.SpecialField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class ExternalRequest {
 
@@ -15,18 +18,21 @@ public class ExternalRequest {
     private String password;
     private LocalDate registrationDate;
     private String company;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")  // damit date wirklich im richtigen For
     private LocalDate availabilityStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate availabilityEnd;
     private String description;
 
+    private List<SpecialField> specialFields;
     private List<BachelorSubject> bachelorSubjects;
 
-    private String b_description;
+
 
 
     public ExternalRequest(String firstName, String lastName, String email,
                            String password, LocalDate registrationDate, String company, LocalDate availabilityStart ,
-                           LocalDate availabilityEnd, String description, List<BachelorSubject> bachelorSubjects) {
+                           LocalDate availabilityEnd, String description, List<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -36,6 +42,7 @@ public class ExternalRequest {
         this.availabilityStart = availabilityStart;
         this.availabilityEnd = availabilityEnd;
         this.description = description;
+        this.specialFields = specialFields;
         this.bachelorSubjects = bachelorSubjects;
 
     }
@@ -79,6 +86,9 @@ public class ExternalRequest {
         return description;
     }
 
+    public List<SpecialField> getSpecialFields() {
+        return specialFields;
+    }
 
     public List<BachelorSubject> getBachelorSubjects() {return bachelorSubjects; }
 

@@ -19,9 +19,10 @@ public class User implements UserDetails {
 
     //Schlüsselattribut Id vergeben
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     // Id wird mit SequenceGenerator und GeneratedValue eigenständig generiert
-    @SequenceGenerator(name= "userSequence", sequenceName= "userSequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
+    //@SequenceGenerator(name= "userSequence", sequenceName= "userSequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
 
     private Long id;
     private String firstName;
