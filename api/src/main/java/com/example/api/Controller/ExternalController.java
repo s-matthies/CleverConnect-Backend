@@ -22,61 +22,50 @@ public class ExternalController {
         this.externalService = externalService;
     }
 
-    // Userin (Externe) in die DB speichern
-    /*
-    - @RequestBody: was wir von der User-Eingabe bekommen
-    - wir wollen die Attribute aus dem externRequest haben
-    - vom Client bekommen wir alle Attribute vom ExternRequest und erstellen damit die neue Userin
-    */
+
+    /**
+     * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
+     * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
+     */
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody ExternalRequest externalRequest) {
         return externalService.registration(externalRequest);
     }
 
-    // alle Externen mit jeweiligen BachelorSubjects laden
+    /**
+     * Methode für das Laden aller externen Personen (Zweitbetreuer*innen)
+     * @return ResponseEntity mit den Daten aller externen Personen (Zweitbetreuer*innen)
+     */
     @GetMapping("/load")
     public ResponseEntity<List<ExternalDTO>> allExternals() {
         List<ExternalDTO> externalDTOS = externalService.getAllExternalsWithSubjects();
         return ResponseEntity.ok(externalDTOS);
     }
 
-    /*
-    //Alle Externen laden ohne BachelorSubjects
-    @GetMapping("/load")
-    List<External> allExtern() {
-        return externalService.allExternal();
-    }
-
+    /**
+     * Methode für das Laden einer externen Person (Zweitbetreuer*in)
+     * @param id Die ID der externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der externen Person (Zweitbetreuer*in)
      */
-
-    //einzelne Externe mit ID laden
     @GetMapping("/load/{id}")
     public ResponseEntity<ExternalDTO> getExternal(@PathVariable Long id) {
         ExternalDTO externalDTO = externalService.getExternal(id);
         return ResponseEntity.ok(externalDTO);
     }
 
-    // Daten einer Externen aktualisieren
+    /**
+     * Methode für das Aktualisieren einer externen Person (Zweitbetreuer*in)
+     * @param id Die ID der externen Person (Zweitbetreuer*in)
+     * @param newUser Die Anfrage mit den aktualisierten Daten der externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den aktualisierten Daten der externen Person (Zweitbetreuer*in)
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
         List<BachelorSubject> updatedBachelorSubjects = newUser.getBachelorSubjects();
         return externalService.updateExternal(id, newUser);
     }
-
-
-    // External mit BachelorSubjects laden
-    @GetMapping("/{externalId}/bachelorSubjects")
-    public ResponseEntity<ExternalDTO> getExternalWithSubjects(@PathVariable Long externalId) {
-        ExternalDTO external = externalService.getExternal(externalId);
-
-        List<BachelorSubject> bachelorSubjects = externalService.getBachelorSubjectsForExternal(externalId);
-        ExternalDTO externalWithSubjectsDTO = new ExternalDTO(external, bachelorSubjects);
-
-        return ResponseEntity.ok(externalWithSubjectsDTO);
-    }
-
-
-
+    
 }
 
 

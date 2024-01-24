@@ -160,25 +160,11 @@ public class ExternalService {
         existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
-        //existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
-
 
         External savedExternal = externalRepository.save(existingUser);
 
-        //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
-        //return ResponseEntity.ok().body(message);
         return ResponseEntity.ok(savedExternal);
     }
-
-
-
-    public List<BachelorSubject> getBachelorSubjectsForExternal(Long externalId) {
-        External external = externalRepository.findById(externalId)
-                .orElseThrow(() -> new UserNotFoundException(externalId));
-
-        return external.getBachelorSubjects();
-    }
-
 
 }
 
