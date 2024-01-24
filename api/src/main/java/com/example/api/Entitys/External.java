@@ -40,10 +40,7 @@ public class External extends User{
 
 
     @JsonIgnore
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "choosen_fields",
             joinColumns = @JoinColumn(name = "external_id"),
