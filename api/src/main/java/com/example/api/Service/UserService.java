@@ -152,7 +152,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-
     /**
      * Aktualisiert die Daten eines Users anhand der angegebenen ID.
      *
@@ -271,6 +270,37 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    //Methode für Passwort ändern
+    public ResponseEntity<Object> changePassword(String token, String oldPassword, String newPassword) {
+        try {
+            // Entfernen Sie das "Bearer"-Präfix und alle möglichen Leerzeichen
+            token = token.replace("Bearer ", "").trim();
+            // Extrahieren der Benutzerkennung aus dem Token
+            String username = jwtService.extractUsername(token);
+            User existingUser = (User) loadUserByUsername(username);
+
+            // Überprüfen, ob das alte Passwort korrekt ist
+            if (!bCryptPasswordEncoder.matches(oldPassword, existingUser.getPassword())) {
+                throw new IllegalStateException("Das alte Passwort ist nicht korrekt!");
+            }
+            // Das neue Passwort verschlüsseln und setzen
+            String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
+            existingUser.setPassword(encodedPassword);
+
+            // User speichern
+            User savedUser = userRepository.save(existingUser);
+
+            // Erfolgsnachricht zurückgeben
+            String message = "Passwort erfolgreich geändert";
+            return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
+        } catch (UserNotFoundException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        } catch (IllegalStateException e) {
+            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
+    }
 }
 
 
