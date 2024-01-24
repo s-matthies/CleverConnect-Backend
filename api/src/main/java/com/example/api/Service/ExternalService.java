@@ -1,10 +1,12 @@
 package com.example.api.Service;
 
+import com.example.api.BachelorSubjectNotFound.BachelorSubjectNotFoundException;
 import com.example.api.DTO.ExternalDTO;
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.SpecialField;
+import com.example.api.NotFoundExceptions.SpecialFieldNotFoundException;
 import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Repository.SpecialFieldRepository;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExternalService {
@@ -126,9 +129,6 @@ public class ExternalService {
                         specialFieldRepository.save(field);
                         externalRepository.save(savedExternal);
                     }
-
-
-
                     //savedExternal.setSpecialFields(specialFieldRepository.saveAll(specialFields));
             }
             }
@@ -172,16 +172,37 @@ public class ExternalService {
         External existingUser = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        // Lösche die bestehenden Bachelor-Themen
-        existingUser.getBachelorSubjects().clear();
 
         // Füge die aktualisierten Bachelor-Themen hinzu
         List<BachelorSubject> updatedSubjects = newUser.getBachelorSubjects();
         if (updatedSubjects != null) {
-            updatedSubjects.forEach(subject -> {
-                subject.setExternal(existingUser);
-                existingUser.getBachelorSubjects().add(subject);
-            });
+            existingUser.getBachelorSubjects().clear();
+            for (BachelorSubject updatedSubject : updatedSubjects) {
+                // Find the existing subject in the database
+                BachelorSubject existingSubject = bachelorSubjectRepository.findById(updatedSubject.getId())
+                        .orElseThrow(() -> new BachelorSubjectNotFoundException(updatedSubject.getId()));
+                // Update the existing subject with the new data
+                existingSubject.setTitle(updatedSubject.getTitle());
+                //existingSubject.setDate(updatedSubject.getDate());
+                existingSubject.setBDescription(updatedSubject.getBDescription());
+                // Add the updated subject to the existingUser's bachelorSubjects
+                existingUser.getBachelorSubjects().add(existingSubject);
+            }
+        }
+
+        // Füge die aktualisierten Spezialgebiete hinzu
+        Set<SpecialField> updatedFields = newUser.getSpecialFields();
+        if (updatedFields != null) {
+            existingUser.getSpecialFields().clear();
+            for (SpecialField updatedField : updatedFields) {
+                // Find the existing field in the database
+                SpecialField existingField = specialFieldRepository.findById(updatedField.getId())
+                        .orElseThrow(() -> new SpecialFieldNotFoundException(updatedField.getId()));
+                // Update the existing field with the new data
+                existingField.setName(updatedField.getName());
+                // Add the updated field to the existingUser's specialFields
+                existingUser.getSpecialFields().add(existingField);
+            }
         }
 
         //existierende Externe mit neuen Daten updaten
@@ -198,6 +219,5 @@ public class ExternalService {
 
         return ResponseEntity.ok(savedExternal);
     }
-
 }
 
