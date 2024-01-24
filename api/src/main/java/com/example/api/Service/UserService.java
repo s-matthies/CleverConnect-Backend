@@ -96,9 +96,11 @@ public class UserService implements UserDetailsService {
 
             User savedUser = userRepository.save(user);
 
-            emailService.sendEmail(user.getEmail(),
-                    "Willkommen im System",
-                    "Hallo liebe HTW-Studentin, Sie haben sich erfolgreich registriert und können die Platform nun nutzen. Viel Freude dabei!");
+            String firstName = user.getFirstName();
+            String lastName = user.getLastName();
+            String email = user.getEmail();
+
+            emailService.sendWelcomeEmailUser(email, firstName, lastName);
 
             // Erfolgreiche Registrierung - User-Objekt zurückgeben
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);

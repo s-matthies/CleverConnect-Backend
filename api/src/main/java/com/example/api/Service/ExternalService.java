@@ -97,10 +97,11 @@ public class ExternalService {
 
             External savedExternal = externalRepository.save(external);
 
-            emailService.sendEmail(external.getEmail(),
-                    "Willkommen im System",
-                    "Hallo, Sie haben sich erfolgreich registriert und können die Plattform nun nutzen. " +
-                            "Viel Freude dabei!");
+            String firstName = externalRequest.getFirstName();
+            String lastName = externalRequest.getLastName();
+            String email = externalRequest.getEmail();
+
+            emailService.sendWelcomeEmailExternal(email, firstName, lastName);
 
             // BachelorSubjects behandeln
             List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();
