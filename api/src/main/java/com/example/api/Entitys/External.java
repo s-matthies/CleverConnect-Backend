@@ -1,5 +1,6 @@
 package com.example.api.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -135,9 +136,10 @@ public class External extends User{
     }
 
     public void setSpecialFields(Set<SpecialField> specialFields) {
-
         this.specialFields = specialFields;
     }
+
+
 
     @Override
     public String toString() {
@@ -169,7 +171,7 @@ public class External extends User{
                 && Objects.equals(availabilityEnd, external.availabilityEnd)
                 && Objects.equals(description, external.description)
                 && Objects.equals(specialFields, external.specialFields)
-            && Objects.equals(bachelorSubjects, external.bachelorSubjects);
+                && Objects.equals(bachelorSubjects, external.bachelorSubjects);
     }
 
 }
