@@ -10,6 +10,7 @@ import com.example.api.Repository.ExternalRepository;
 import com.example.api.Repository.SpecialFieldRepository;
 import com.example.api.Request.ExternalRequest;
 import com.example.api.UserNotFound.UserNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,7 @@ public class ExternalService {
      * @return ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
+    @Transactional
     public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
         try {
             //existiert student mit dieser email bereits in der DB?
@@ -106,6 +108,8 @@ public class ExternalService {
                 for (BachelorSubject subject : bachelorSubjects) {
                     // Set the External entity for each BachelorSubject
                     subject.setExternal(savedExternal);
+                    System.out.println("BachelorSubject Title: " + subject.getTitle());
+                    System.out.println("BachelorSubject BDescription: " + subject.getBDescription());
                 }
                 // dazugehörige BachelorSubjects speichern
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));

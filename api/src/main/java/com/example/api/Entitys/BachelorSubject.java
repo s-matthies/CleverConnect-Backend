@@ -14,12 +14,13 @@ public class BachelorSubject {
     private Long id;
 
     private String title;
+    @Column(name = "b_description")
     private String bDescription;
     @Temporal(TemporalType.DATE)
     private LocalDate date;
 
     // ManyToOne, denn viele(Many) Bachelorthemen können nur einem(One) External zugeordnet werden
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name="external_id")
     private External external;
 
