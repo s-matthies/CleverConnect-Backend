@@ -113,17 +113,13 @@ public class ExternalService {
 
 
     // Methode um Externe nach id zu laden
-    public External getExternal(Long id) {
-        return externalRepository.findById(id)
+    public ExternalDTO getExternal(Long id) {
+        External external = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+        List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
+        return new ExternalDTO(external, bachelorSubjects);
     }
 
-    /*
-    // Methode um alle Externen zu laden
-    public List<External> allExternal() {
-        return externalRepository.findAll();
-    }
-     */
 
     // Methode um alle Externen mit Bachelorthemen zu laden
     public List<ExternalDTO> getAllExternalsWithSubjects() {
@@ -174,17 +170,15 @@ public class ExternalService {
         return ResponseEntity.ok(savedExternal);
     }
 
-    /**
-     * Methode um die BachelorSubjects einer externen Person zu laden
-     *
-     * @param externalId Die ID der externen Person
-     * @return Liste der BachelorSubjects der externen Person
-     */
+
+
     public List<BachelorSubject> getBachelorSubjectsForExternal(Long externalId) {
         External external = externalRepository.findById(externalId)
                 .orElseThrow(() -> new UserNotFoundException(externalId));
 
         return external.getBachelorSubjects();
     }
+
+
 }
 

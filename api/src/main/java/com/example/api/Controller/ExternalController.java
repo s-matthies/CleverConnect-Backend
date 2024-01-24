@@ -51,8 +51,9 @@ public class ExternalController {
 
     //einzelne Externe mit ID laden
     @GetMapping("/load/{id}")
-    External getExternal(@PathVariable Long id) {
-        return externalService.getExternal(id);
+    public ResponseEntity<ExternalDTO> getExternal(@PathVariable Long id) {
+        ExternalDTO externalDTO = externalService.getExternal(id);
+        return ResponseEntity.ok(externalDTO);
     }
 
     // Daten einer Externen aktualisieren
@@ -62,16 +63,19 @@ public class ExternalController {
         return externalService.updateExternal(id, newUser);
     }
 
+
     // External mit BachelorSubjects laden
     @GetMapping("/{externalId}/bachelorSubjects")
     public ResponseEntity<ExternalDTO> getExternalWithSubjects(@PathVariable Long externalId) {
-        External external = externalService.getExternal(externalId);
+        ExternalDTO external = externalService.getExternal(externalId);
 
         List<BachelorSubject> bachelorSubjects = externalService.getBachelorSubjectsForExternal(externalId);
         ExternalDTO externalWithSubjectsDTO = new ExternalDTO(external, bachelorSubjects);
 
         return ResponseEntity.ok(externalWithSubjectsDTO);
     }
+
+
 
 }
 
