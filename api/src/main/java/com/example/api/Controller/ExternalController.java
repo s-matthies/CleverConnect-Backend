@@ -55,15 +55,14 @@ public class ExternalController {
     }
 
     /**
-     * Methode für das Aktualisieren einer externen Person (Zweitbetreuer*in)
+     * Methode für das Löschen einer externen Person (Zweitbetreuer*in)
      * @param id Die ID der externen Person (Zweitbetreuer*in)
-     * @param newUser Die Anfrage mit den aktualisierten Daten der externen Person (Zweitbetreuer*in)
-     * @return ResponseEntity mit den aktualisierten Daten der externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der gelöschten externen Person (Zweitbetreuer*in)
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<External> updateExternal (@PathVariable Long id, @RequestBody External newUser) {
-        List<BachelorSubject> updatedBachelorSubjects = newUser.getBachelorSubjects();
-        return externalService.updateExternal(id, newUser);
+    public ResponseEntity<Object> updateExternal (@PathVariable Long id,
+                                                  @RequestBody ExternalRequest externalRequest) {
+        return externalService.updateExternal(id, externalRequest);
     }
     
 }

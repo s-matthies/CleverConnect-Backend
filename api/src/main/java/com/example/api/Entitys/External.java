@@ -31,8 +31,8 @@ public class External extends User{
     @OneToMany(
             //mappedBy = "external",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
+            //orphanRemoval = true
     )
     @JsonIgnore
     @JoinColumn(name="external_id")

@@ -14,7 +14,6 @@ public class SpecialField {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
 
@@ -36,6 +35,21 @@ public class SpecialField {
     public SpecialField() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<External> getExternals() {
+        return externals;
+    }
+
+    public void setExternals(Set<External> externals) {
+        this.externals = externals;
+    }
 
     public String getName() {
         return name;
