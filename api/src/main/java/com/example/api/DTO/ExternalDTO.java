@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExternalDTO {
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -23,6 +24,7 @@ public class ExternalDTO {
     public ExternalDTO(External external,
                        List<SpecialField> specialFields,
                        List<BachelorSubject> bachelorSubjects) {
+        this.id = external.getId();
         this.firstName = external.getFirstName();
         this.lastName = external.getLastName();
         this.email = external.getEmail();
@@ -53,6 +55,14 @@ public class ExternalDTO {
                         subject.getBDescription(),
                         subject.getDate().toString()))
                 .collect(Collectors.toList());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setFirstName(String firstName) {
