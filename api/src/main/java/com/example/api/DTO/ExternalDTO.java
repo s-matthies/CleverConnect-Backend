@@ -2,27 +2,32 @@ package com.example.api.DTO;
 
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
+import com.example.api.Entitys.SpecialField;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExternalDTO {
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
     private String registrationDate;
     private String role;
     private String company;
     private String availabilityStart;
     private String availabilityEnd;
     private String description;
+    private List<SpecialFieldDTO> specialFields;
     private List<BachelorSubjectDTO> bachelorSubjects;
 
-    public ExternalDTO(External external, List<BachelorSubject> bachelorSubjects) {
+    public ExternalDTO(External external,
+                       List<SpecialField> specialFields,
+                       List<BachelorSubject> bachelorSubjects) {
+        this.id = external.getId();
         this.firstName = external.getFirstName();
         this.lastName = external.getLastName();
         this.email = external.getEmail();
-        this.password = external.getPassword();
         this.registrationDate = (external.getRegistrationDate() != null) ?
                 external.getRegistrationDate().toString() : null;
         this.role = String.valueOf(external.getRole());
@@ -32,14 +37,32 @@ public class ExternalDTO {
         this.availabilityEnd = (external.getAvailabilityEnd() != null) ?
                 external.getAvailabilityEnd().toString() : null;
         this.description = external.getDescription();
+        this.specialFields = convertSpecialFieldsToDTO(specialFields);
+        this.bachelorSubjects = convertBachelorSubjectsToDTO(bachelorSubjects);
 
-        // Mappe die BachelorSubjects auf die BachelorSubjectDTOs
-        this.bachelorSubjects = bachelorSubjects.stream()
+    }
+
+    private List<SpecialFieldDTO> convertSpecialFieldsToDTO(List<SpecialField> specialFields) {
+        return specialFields.stream()
+                .map(field -> new SpecialFieldDTO(field.getName()))
+                .collect(Collectors.toList());
+    }
+
+    private List<BachelorSubjectDTO> convertBachelorSubjectsToDTO(List<BachelorSubject> bachelorSubjects) {
+        return bachelorSubjects.stream()
                 .map(subject -> new BachelorSubjectDTO(
                         subject.getTitle(),
                         subject.getBDescription(),
                         subject.getDate().toString()))
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setFirstName(String firstName) {
@@ -60,14 +83,6 @@ public class ExternalDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCompany() {
@@ -130,39 +145,12 @@ public class ExternalDTO {
         this.bachelorSubjects = bachelorSubjects;
     }
 
-    public static class BachelorSubjectDTO {
-        private String title;
-        private String bDescription;
-        private String date;
-
-        public BachelorSubjectDTO(String title, String bDescription, String date) {
-            this.title = title;
-            this.bDescription = bDescription;
-            this.date = date;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getBDescription() {
-            return bDescription;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public void setBDescription(String bDescription) {
-            this.bDescription = bDescription;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
+    public List<SpecialFieldDTO> getSpecialFields() {
+        return specialFields;
     }
+
+    public void setSpecialFields(List<SpecialFieldDTO> specialFields) {
+        this.specialFields = specialFields;
+    }
+
 }

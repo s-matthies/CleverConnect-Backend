@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ExternalService {
@@ -147,7 +146,9 @@ public class ExternalService {
         External external = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
-        return new ExternalDTO(external, bachelorSubjects);
+        List<SpecialField> specialFields = new ArrayList<>(external.getSpecialFields());
+
+        return new ExternalDTO(external, specialFields, bachelorSubjects);
     }
 
 
@@ -158,7 +159,8 @@ public class ExternalService {
 
         for (External external : allExternals) {
             List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
-            externalDTOs.add(new ExternalDTO(external, bachelorSubjects));
+            List<SpecialField> specialFields = new ArrayList<>(external.getSpecialFields());
+            externalDTOs.add(new ExternalDTO(external,specialFields, bachelorSubjects));
         }
         return externalDTOs;
     }

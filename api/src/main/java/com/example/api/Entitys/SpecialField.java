@@ -1,5 +1,6 @@
 package com.example.api.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -18,7 +19,7 @@ public class SpecialField {
 
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "specialFields", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "specialFields", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<External> externals = new HashSet<>();
 
     public SpecialField(String name,  Set<External> externals) {
@@ -34,8 +35,6 @@ public class SpecialField {
 
     public SpecialField() {
     }
-
-
 
 
     public String getName() {
