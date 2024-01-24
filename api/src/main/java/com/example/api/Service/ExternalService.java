@@ -1,5 +1,6 @@
 package com.example.api.Service;
 
+import com.example.api.DTO.ExternalDTO;
 import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.Role;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +34,7 @@ public class ExternalService {
     @Autowired
     private EmailService emailService;
 
+
     //Konstruktor
     public ExternalService(ExternalRepository externalRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -45,12 +48,13 @@ public class ExternalService {
 
     /**
      * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
+     *
      * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
-     * @return  ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
     public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
-        try{
+        try {
             //existiert student mit dieser email bereits in der DB?
             boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
 
@@ -101,7 +105,7 @@ public class ExternalService {
             }
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
-        } catch (RuntimeException e) {
+        } catch (IllegalStateException e) {
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.status(400).body(errorMessage);
         }
@@ -109,21 +113,44 @@ public class ExternalService {
 
 
     // Methode um Externe nach id zu laden
-    public External getExternal(Long id) {
-        return externalRepository.findById(id)
+    public ExternalDTO getExternal(Long id) {
+        External external = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+        List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
+        return new ExternalDTO(external, bachelorSubjects);
     }
 
-    // Methode um alle Externen zu laden
-    public List<External> allExternal() {
-        return externalRepository.findAll();
+
+    // Methode um alle Externen mit Bachelorthemen zu laden
+    public List<ExternalDTO> getAllExternalsWithSubjects() {
+        List<External> allExternals = externalRepository.findAll();
+        List<ExternalDTO> externalDTOs = new ArrayList<>();
+
+        for (External external : allExternals) {
+            List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
+            externalDTOs.add(new ExternalDTO(external, bachelorSubjects));
+        }
+        return externalDTOs;
     }
+
 
     // Methode um Daten eine Userin zu aktualisieren
     public ResponseEntity<External> updateExternal(Long id, External newUser) {
         // Externe Person anhand der ID finden
         External existingUser = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        // Lösche die bestehenden Bachelor-Themen
+        existingUser.getBachelorSubjects().clear();
+
+        // Füge die aktualisierten Bachelor-Themen hinzu
+        List<BachelorSubject> updatedSubjects = newUser.getBachelorSubjects();
+        if (updatedSubjects != null) {
+            updatedSubjects.forEach(subject -> {
+                subject.setExternal(existingUser);
+                existingUser.getBachelorSubjects().add(subject);
+            });
+        }
 
         //existierende Externe mit neuen Daten updaten
         existingUser.setFirstName(newUser.getFirstName());
@@ -133,14 +160,11 @@ public class ExternalService {
         existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
         existingUser.setCompany(newUser.getCompany());
         existingUser.setDescription(newUser.getDescription());
-        existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
+
         External savedExternal = externalRepository.save(existingUser);
 
-        //String message = "{\"User*in mit der ID\" " + id + "\" erfolgreich aktualisiert!\"}";
-        //return ResponseEntity.ok().body(message);
         return ResponseEntity.ok(savedExternal);
     }
-
 
 }
 

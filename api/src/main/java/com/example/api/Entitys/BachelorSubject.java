@@ -51,11 +51,11 @@ public class BachelorSubject {
         this.title = title;
     }
 
-    public String getbDescription() {
+    public String getBDescription() {
         return bDescription;
     }
 
-    public void setbDescription(String bDescription) {
+    public void setBDescription(String bDescription) {
         this.bDescription = bDescription;
     }
 
@@ -71,6 +71,5 @@ public class BachelorSubject {
     public void setExternal(External external) {
         this.external = external;
     }
-
 
 }
