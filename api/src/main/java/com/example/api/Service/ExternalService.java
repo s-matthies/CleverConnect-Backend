@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExternalService {
@@ -131,11 +132,8 @@ public class ExternalService {
                         specialFieldRepository.save(field);
                         externalRepository.save(savedExternal);
                     }
-
-
-
                     //savedExternal.setSpecialFields(specialFieldRepository.saveAll(specialFields));
-            }
+                }
             }
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
@@ -147,6 +145,13 @@ public class ExternalService {
 
 
     // Methode um Externe nach id zu laden
+    /**
+     * Methode um eine externe Person (Zweitbetreuer*in) anhand der ID zu laden
+     *
+     * @param id Die ID der zu ladenden externen Person (Zweitbetreuer*in)
+     * @return ExternalDTO mit den Daten der externen Person (Zweitbetreuer*in)
+     * @throws UserNotFoundException wenn die externe Person (Zweitbetreuer*in) nicht gefunden wurde
+     */
     public ExternalDTO getExternal(Long id) {
         External external = externalRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -157,7 +162,12 @@ public class ExternalService {
     }
 
 
-    // Methode um alle Externen mit Bachelorthemen zu laden
+
+    /**
+     * Methode um alle externen Personen (Zweitbetreuer*innen) mit ihren jeweiligen Bachelorthemen und Fachgebieten zu laden
+     *
+     * @return Liste von ExternalDTOs mit den Daten aller externen Personen (Zweitbetreuer*innen)
+     */
     public List<ExternalDTO> getAllExternalsWithSubjects() {
         List<External> allExternals = externalRepository.findAll();
         List<ExternalDTO> externalDTOs = new ArrayList<>();
@@ -165,44 +175,68 @@ public class ExternalService {
         for (External external : allExternals) {
             List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
             List<SpecialField> specialFields = new ArrayList<>(external.getSpecialFields());
-            externalDTOs.add(new ExternalDTO(external,specialFields, bachelorSubjects));
+            externalDTOs.add(new ExternalDTO(external, specialFields, bachelorSubjects));
         }
         return externalDTOs;
     }
 
 
     // Methode um Daten eine Userin zu aktualisieren
-    public ResponseEntity<External> updateExternal(Long id, External newUser) {
-        // Externe Person anhand der ID finden
-        External existingUser = externalRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    /**
+     * Methode um eine externe Person (Zweitbetreuer*in) anhand der ID zu aktualisieren
+     *
+     * @param id Die ID der zu aktualisierenden externen Person (Zweitbetreuer*in)
+     * @param externalRequest Die Anfrage mit den neuen Daten der externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der aktualisierten externen Person (Zweitbetreuer*in)
+     * @throws UserNotFoundException wenn die externe Person (Zweitbetreuer*in) nicht gefunden wurde
+     */
+    public ResponseEntity<Object> updateExternal(Long id, ExternalRequest externalRequest) {
+        try {
+            // Externe Person anhand der ID finden
+            External existingExternal = externalRepository.findById(id)
+                    .orElseThrow(() -> new UserNotFoundException(id));
 
-        // Lösche die bestehenden Bachelor-Themen
-        existingUser.getBachelorSubjects().clear();
+            // existierende Externe mit neuen Daten updaten
+            existingExternal.setFirstName(externalRequest.getFirstName());
+            existingExternal.setLastName(externalRequest.getLastName());
+            existingExternal.setEmail(externalRequest.getEmail());
+            existingExternal.setCompany(externalRequest.getCompany());
+            existingExternal.setAvailabilityStart(externalRequest.getAvailabilityStart());
+            existingExternal.setAvailabilityEnd(externalRequest.getAvailabilityEnd());
+            existingExternal.setDescription(externalRequest.getDescription());
 
-        // Füge die aktualisierten Bachelor-Themen hinzu
-        List<BachelorSubject> updatedSubjects = newUser.getBachelorSubjects();
-        if (updatedSubjects != null) {
-            updatedSubjects.forEach(subject -> {
-                subject.setExternal(existingUser);
-                existingUser.getBachelorSubjects().add(subject);
-            });
+            // BachelorSubjects behandeln
+            List<BachelorSubject> updatedSubjects = externalRequest.getBachelorSubjects();
+            if (updatedSubjects != null) {
+                existingExternal.getBachelorSubjects().clear();
+                for (BachelorSubject subject : updatedSubjects) {
+                    // für jedes BachelorSubject die externe Person setzen
+                    subject.setExternal(existingExternal);
+                }
+                // dazugehörige BachelorSubjects speichern
+                existingExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(updatedSubjects));
+            }
+
+
+            // SpecialFields behandeln
+            List<SpecialField> updatedFields = externalRequest.getSpecialFields();
+            if (updatedFields != null) {
+                existingExternal.getSpecialFields().clear();
+                for (SpecialField field : updatedFields) {
+                    // bidirektionale Beziehung herstellen zwischen SpecialField und External
+                    field.getExternal().add(existingExternal);
+                    existingExternal.getSpecialFields().add(field);
+
+                    specialFieldRepository.save(field);
+                }
+            }
+
+            External savedExternal = externalRepository.save(existingExternal);
+
+            return ResponseEntity.ok(savedExternal);
+        } catch (IllegalStateException e) {
+            String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
+            return ResponseEntity.status(400).body(errorMessage);
         }
-
-        //existierende Externe mit neuen Daten updaten
-        existingUser.setFirstName(newUser.getFirstName());
-        existingUser.setLastName(newUser.getLastName());
-        existingUser.setEmail(newUser.getEmail());
-        existingUser.setAvailabilityStart(newUser.getAvailabilityStart());
-        existingUser.setAvailabilityEnd(newUser.getAvailabilityEnd());
-        existingUser.setCompany(newUser.getCompany());
-        existingUser.setDescription(newUser.getDescription());
-        existingUser.setSpecialFields(newUser.getSpecialFields());
-        existingUser.setBachelorSubjects(newUser.getBachelorSubjects());
-        External savedExternal = externalRepository.save(existingUser);
-
-        return ResponseEntity.ok(savedExternal);
     }
-
 }
-

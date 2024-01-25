@@ -39,6 +39,25 @@ public class BachelorSubject {
         this.external = external;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getbDescription() {
+        return bDescription;
+    }
+
+    public void setbDescription(String bDescription) {
+        this.bDescription = bDescription;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public BachelorSubject() {
         this.date = LocalDate.now();
