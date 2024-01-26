@@ -55,6 +55,17 @@ public class ExternalController {
     }
 
     /**
+     * Methode für das Laden einer externen Person (Zweitbetreuer*in)
+     * @param email Die E-Mail-Adresse der externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der externen Person (Zweitbetreuer*in)
+     */
+    @GetMapping("/loadByEmail")
+    public ResponseEntity<ExternalDTO> getExternalByEmail(@RequestParam String email) {
+        ExternalDTO externalDTO = externalService.getExternalByEmail(email);
+        return ResponseEntity.ok(externalDTO);
+    }
+
+    /**
      * Methode für das Löschen einer externen Person (Zweitbetreuer*in)
      * @param id Die ID der externen Person (Zweitbetreuer*in)
      * @return ResponseEntity mit den Daten der gelöschten externen Person (Zweitbetreuer*in)

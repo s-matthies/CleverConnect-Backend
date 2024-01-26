@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UserNotFoundException extends RuntimeException {
 
     private Long id;
+    private String email;
     /**
      * Konstruktor für die UserNotFoundException.
      *
@@ -21,13 +22,23 @@ public class UserNotFoundException extends RuntimeException {
         this.id = id;
     }
 
+    public UserNotFoundException(String email) {
+        super ("User mit der E-Mail " + email + " wurde nicht gefunden!");
+        this.email = email;
+    }
+
     /**
      * Gibt eine JSON-Zeichenfolge zurück, die Informationen über die Exception enthält.
      *
      * @return JSON-Zeichenfolge mit Fehlerinformationen.
      */
     public String toJsonString() {
-        return "{\"error\": \"User not found\", \"userId\": " + id + "}";
+        if (id != null) {
+            return "{\"error\": \"User not found\", \"userId\": " + id + "}";
+        }
+        else {
+            return "{\"error\": \"User not found\", \"email\": " + email + "}";
+        }
     }
 }
 

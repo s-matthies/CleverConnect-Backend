@@ -161,6 +161,22 @@ public class ExternalService {
         return new ExternalDTO(external, specialFields, bachelorSubjects);
     }
 
+    // Methode um Externe nach Email zu laden
+    /**
+     * Methode um eine externe Person (Zweitbetreuer*in) anhand der E-Mail zu laden
+     *
+     * @param email Die E-Mail der zu ladenden externen Person (Zweitbetreuer*in)
+     * @return ExternalDTO mit den Daten der externen Person (Zweitbetreuer*in)
+     * @throws UserNotFoundException wenn die externe Person (Zweitbetreuer*in) nicht gefunden wurde
+     */
+    public ExternalDTO getExternalByEmail(String email) {
+        External external = externalRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+        List<BachelorSubject> bachelorSubjects = external.getBachelorSubjects();
+        List<SpecialField> specialFields = new ArrayList<>(external.getSpecialFields());
+
+        return new ExternalDTO(external, specialFields, bachelorSubjects);
+    }
 
 
     /**
@@ -239,4 +255,5 @@ public class ExternalService {
             return ResponseEntity.status(400).body(errorMessage);
         }
     }
+
 }
