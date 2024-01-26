@@ -262,6 +262,8 @@ public class UserService implements UserDetailsService {
             // Das JWT-Token im Cookie löschen
             Cookie cookie = new Cookie("jwtToken", null);
             cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
+            cookie.setSecure(true); // Secure-Flag setzen / Cookie wird nur über sichere Verbindungen übertragen (HTTPS)
+            cookie.setHttpOnly(true); // HttpOnly-Flag setzen / Cookie kann nicht von clientseitigen Skripten (z.B. JavaScript) ausgelesen werden
             cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt
             response.addCookie(cookie);
 
