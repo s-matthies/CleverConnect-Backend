@@ -34,9 +34,7 @@ public class SecurityConfig {
                 // Konfiguration der Zugriffsrechte
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                //.requestMatchers("/", "/user/register",
-                                //       "/external/register",
-                                //      "/user/login").permitAll()
+                                //.requestMatchers("/", "/user/register, "/external/register", "/user/login").permitAll()
                                 .requestMatchers("/user/**", "/external/**").permitAll()
                                 //.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
                                 //.requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")

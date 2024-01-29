@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -225,8 +226,18 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
+
+            //Rolle des Users ermitteln
+            User user = (User) loadUserByUsername(email);
+            Role role = user.getRole();
+
+            // Rolle und Jwt-Token in der response zurückgeben
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("role", role);
+            response.put("token", authenticationResponse);
+
             // JWT-Token in der Response zurückgeben
-            return ResponseEntity.ok(authenticationResponse);
+            return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
             String errorMessage = "{ \"error\": \"Login war nicht erfolgreich! " +
                     "Email oder Passwort nicht korrekt!\" }";
@@ -260,11 +271,7 @@ public class UserService implements UserDetailsService {
             request.getSession().invalidate();
 
             // Das JWT-Token im Cookie löschen
-            Cookie cookie = new Cookie("jwtToken", null);
-            cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
-            cookie.setSecure(true); // Secure-Flag setzen / Cookie wird nur über sichere Verbindungen übertragen (HTTPS)
-            cookie.setHttpOnly(true); // HttpOnly-Flag setzen / Cookie kann nicht von clientseitigen Skripten (z.B. JavaScript) ausgelesen werden
-            cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt
+            Cookie cookie = getCookie();
             response.addCookie(cookie);
 
             String message = "Logout erfolgreich";
@@ -273,6 +280,15 @@ public class UserService implements UserDetailsService {
             String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
+    }
+
+    private static Cookie getCookie() {
+        Cookie cookie = new Cookie("jwtToken", null);
+        cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
+        cookie.setSecure(true); // Secure-Flag setzen / Cookie wird nur über sichere Verbindungen übertragen (HTTPS)
+        cookie.setHttpOnly(true); // HttpOnly-Flag setzen / Cookie kann nicht von clientseitigen Skripten (z.B. JavaScript) ausgelesen werden
+        cookie.setPath("/"); // Der Pfad wird auf "/" gesetzt
+        return cookie;
     }
 
     //Methode für Passwort ändern
