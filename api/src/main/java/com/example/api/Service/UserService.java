@@ -1,5 +1,6 @@
 package com.example.api.Service;
 
+import com.example.api.DTO.SignInResponse;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
@@ -214,7 +215,7 @@ public class UserService implements UserDetailsService {
      * @param password    Das Passwort des Users.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
-    public ResponseEntity<Object> signInUser(String email, String password) {
+    public ResponseEntity<SignInResponse> signInUser(String email, String password) {
         try {
             // Authentifizierung des Benutzers durch die AuthenticationService
             AuthenticationResponse authenticationResponse = authenticationService.authenticate(
@@ -231,21 +232,23 @@ public class UserService implements UserDetailsService {
             User user = (User) loadUserByUsername(email);
             Role role = user.getRole();
 
-            // Rolle und Jwt-Token in der response zurückgeben
-            HashMap<String, Object> response = new HashMap<>();
-            response.put("role", role);
-            response.put("token", authenticationResponse);
+            // Erstellen des SignInResponse-Objekts
+            SignInResponse signInResponse = new SignInResponse();
+            signInResponse.setToken(authenticationResponse.getToken());
+            signInResponse.setRole(role);
+            signInResponse.setId(user.getId());
 
-            // JWT-Token in der Response zurückgeben
-            return ResponseEntity.ok(response);
+            // Rückgabe des SignInResponse-Objekts
+            return ResponseEntity.ok(signInResponse);
         } catch (BadCredentialsException e) {
-            String errorMessage = "{ \"error\": \"Login war nicht erfolgreich! " +
-                    "Email oder Passwort nicht korrekt!\" }";
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+            SignInResponse errorResponse = new SignInResponse();
+            errorResponse.setToken("Login war nicht erfolgreich! Email oder Passwort nicht korrekt!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
         catch (IllegalStateException e) {
-            String errorMessage = "{ \"error\": \"" + e.getMessage() + "\" }";
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+            SignInResponse errorResponse = new SignInResponse();
+            errorResponse.setToken(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 

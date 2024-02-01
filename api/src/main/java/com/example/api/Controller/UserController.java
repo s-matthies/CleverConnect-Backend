@@ -1,5 +1,6 @@
 package com.example.api.Controller;
 
+import com.example.api.DTO.SignInResponse;
 import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.PasswordChangeRequest;
@@ -53,23 +54,22 @@ public class UserController {
         return userService.register(userRequest);
     }
 
-    /**
-     * Methode für die Authentifizierung einer Benutzer*in.
-     * @param request Die Anfrage mit den Daten der zu authentifizierenden Benutzer*in
-     * @return ResponseEntity mit dem generierten JWT-Token
-     */
+    //die Methode ist redundant, da wir die Methode authenticate in AuthenticationService haben
+    /*
     @PostMapping(path ="/authenticate")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
     }
+    */
 
     /**
-     * Methode für das Laden aller Benutzer*innen.
-     * @return ResponseEntity mit den Daten aller Benutzer*innen
+     * Methode für das Einloggen einer Benutzer*in.
+     * @param loginRequest Die Anfrage mit den Daten der zu einloggenden Benutzer*in
+     * @return ResponseEntity mit den Daten der eingeloggten Benutzer*in
      */
     @PostMapping("/login")
-    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<SignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
