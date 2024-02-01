@@ -294,7 +294,14 @@ public class UserService implements UserDetailsService {
         return cookie;
     }
 
-    //Methode für Passwort ändern
+    /**
+     * Ändert das Passwort eines Benutzers.
+     *
+     * @param token       Das JWT-Token des Benutzers.
+     * @param oldPassword Das alte Passwort des Benutzers.
+     * @param newPassword Das neue Passwort des Benutzers.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
+     */
     public ResponseEntity<Object> changePassword(String token, String oldPassword, String newPassword) {
         try {
             // Entfernen Sie das "Bearer"-Präfix und alle möglichen Leerzeichen
