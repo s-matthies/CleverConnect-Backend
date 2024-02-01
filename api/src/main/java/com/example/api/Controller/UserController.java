@@ -69,7 +69,7 @@ public class UserController {
      * @return ResponseEntity mit den Daten der eingeloggten Benutzer*in
      */
     @PostMapping("/login")
-    public ResponseEntity<SignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
