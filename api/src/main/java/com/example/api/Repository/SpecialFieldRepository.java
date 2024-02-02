@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Repository für die Speicherung von Spezialfeldern
+ */
 @Repository
 public interface SpecialFieldRepository extends JpaRepository <SpecialField, Long>{
 

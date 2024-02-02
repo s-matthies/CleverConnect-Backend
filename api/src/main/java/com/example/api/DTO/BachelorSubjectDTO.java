@@ -1,5 +1,8 @@
 package com.example.api.DTO;
 
+/**
+ * Diese Klasse ist ein DTO Objekt, welches die Daten für ein BachelorSubject enthält.
+ */
 public class BachelorSubjectDTO {
 
     private String title;

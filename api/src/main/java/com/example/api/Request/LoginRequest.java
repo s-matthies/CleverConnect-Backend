@@ -1,10 +1,10 @@
 package com.example.api.Request;
 
-
-// hier kommen die Angaben(Request) von der Client-Seite, die zum Server weitergeleitet werden sollen
+/**
+ * Diese Klasse ist ein Request Objekt, welches die Daten für den Login eines Benutzers enthält.
+ */
 public class LoginRequest {
 
-    //beim Login werden nur Email und Passwort eingegeben, deshalb nur diese beiden Attribute hier notwendig
     private final String email;
     private final String password;
 

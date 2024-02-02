@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+/**
+ * Konfiguration für die Initialisierung der Datenbank mit Usern (Studierende oder Admins).
+ */
 @Configuration
 public class UserConfig {
 

@@ -1,5 +1,8 @@
 package com.example.api.DTO;
 
+/**
+ * Diese Klasse ist ein DTO Objekt, welches die Daten für ein Fachgebiet (SpecialField) enthält.
+ */
 public class SpecialFieldDTO {
 
     private String name;

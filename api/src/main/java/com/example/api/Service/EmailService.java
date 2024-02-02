@@ -17,23 +17,6 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    /**
-     * Methode für das Versenden einer E-Mail
-     * @param to Die E-Mail-Adresse der Empfängerin
-     * @param subject Der Betreff der E-Mail
-     * @param body Der Inhalt der E-Mail
-     */
-    public void sendEmail(String to, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
-
-        mailSender.send(message);
-
-        System.out.println("Mail wurde erfolgreich versendet.");
-    }
 
     /**
      * Methode für das Versenden einer HTML-E-Mail

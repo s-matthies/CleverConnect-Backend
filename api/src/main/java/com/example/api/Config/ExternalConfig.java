@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Konfiguration für die Initialisierung der Datenbank mit externen Benutzern.
+ */
 @Configuration
 public class ExternalConfig {
     @Autowired

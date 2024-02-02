@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+
+/**
+ * Konfiguration für die Authentifizierung.
+ */
 @Configuration
 public class ApplicationConfig {
 
@@ -21,12 +24,20 @@ public class ApplicationConfig {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Erstellt ein UserDetailsService-Objekt.
+     * @return UserDetailsService-Objekt für die Authentifizierung
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmailIgnoreCase(username).
                 orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     * Erstellt ein AuthenticationProvider-Objekt.
+     * @return AuthenticationProvider-Objekt für die Authentifizierung
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -37,11 +48,20 @@ public class ApplicationConfig {
         return authProvider;
     }
 
+    /**
+     * Erstellt ein AuthenticationManager-Objekt.
+     * @param config AuthenticationConfiguration-Objekt für die Konfiguration der Authentifizierung
+     * @return AuthenticationManager-Objekt für die Authentifizierung
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    /**
+     * Erstellt ein BCryptPasswordEncoder-Objekt.
+     * @return BCryptPasswordEncoder-Objekt für das Hashen von Passwörtern
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

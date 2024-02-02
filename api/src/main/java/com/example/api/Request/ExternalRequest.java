@@ -6,11 +6,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
+
+/**
+ * Diese Klasse ist ein Request Objekt, welches die Daten für die Registrierung eines externen Benutzers (Zweitbetreuer*in) enthält.
+ */
 
 public class ExternalRequest {
-
-    //alle Attribute, die die Userin (Externe) hier ausfüllen soll
 
     private String firstName;
     private String lastName;
@@ -26,8 +27,6 @@ public class ExternalRequest {
 
     private List<SpecialField> specialFields;
     private List<BachelorSubject> bachelorSubjects;
-
-
 
 
     public ExternalRequest(String firstName, String lastName, String email,
@@ -46,10 +45,6 @@ public class ExternalRequest {
         this.bachelorSubjects = bachelorSubjects;
 
     }
-
-
-    // alle Getter erstellen
-    // die Attribute, die wir bekommen -> für Registrierung der Userin einsetzen
 
 
     public String getFirstName() {

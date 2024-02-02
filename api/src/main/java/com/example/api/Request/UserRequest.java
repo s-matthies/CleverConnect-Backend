@@ -2,9 +2,10 @@ package com.example.api.Request;
 
 import java.time.LocalDate;
 
+/**
+ * Diese Klasse ist ein Request Objekt, welches die Daten für die Registrierung einer Studierenden* enthält.
+ */
 public class UserRequest {
-    // es werden alle Attribute angeben, die der Nutzer selbst ausfuellt
-    // Namen der Attribute sollen die der Entity User entsprechen
     private final String firstName;
     private final String lastName;
     private final String email;

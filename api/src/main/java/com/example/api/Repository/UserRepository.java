@@ -6,11 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
+/**
+ * Repository für die Speicherung von Usern
+ */
 @Repository
-//Repository greift auf Datenbank zu und mithilfe "extends" auf Repository von User zu
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // User wird mittels Email-Adresse in der Datenbank gefunden
+    // User mittels E-Mail in der DB finden
     Optional <User> findByEmailIgnoreCase(String email);
 
 }

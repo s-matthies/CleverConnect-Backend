@@ -7,6 +7,9 @@ import com.example.api.Entitys.SpecialField;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Diese Klasse ist ein DTO Objekt, welches die Daten eines externen Benutzers enthält.
+ */
 public class ExternalDTO {
     private Long id;
     private String firstName;

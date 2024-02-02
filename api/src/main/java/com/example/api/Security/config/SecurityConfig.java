@@ -12,6 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
+/**
+ * Konfiguration für die Authentifizierung.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,6 +29,11 @@ public class SecurityConfig {
     }
 
 
+    /**
+     * Erstellt ein SecurityFilterChain-Objekt.
+     * @param http HttpSecurity-Objekt für die Konfiguration der Zugriffsrechte
+     * @return SecurityFilterChain-Objekt für die Konfiguration der Filterkette
+     */
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         http

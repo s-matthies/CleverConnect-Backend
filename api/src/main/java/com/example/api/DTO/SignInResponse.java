@@ -2,6 +2,9 @@ package com.example.api.DTO;
 
 import com.example.api.Entitys.Role;
 
+/**
+ * Diese Klasse ist ein Response Objekt, welches die Daten für die Anmeldung eines Benutzers enthält.
+ */
 public class SignInResponse {
     private String token;
     private Role role;

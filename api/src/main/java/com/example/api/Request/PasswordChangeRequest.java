@@ -1,5 +1,8 @@
 package com.example.api.Request;
 
+/**
+ * Diese Klasse ist ein Request Objekt, welches die Daten für die Änderung des Passworts eines Benutzers enthält.
+ */
 public class PasswordChangeRequest {
     private String oldPassword;
     private String newPassword;
