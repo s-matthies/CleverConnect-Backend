@@ -12,7 +12,7 @@
 
 ### Grobentwurf
 
-### Feinentwurf (Klassenentwurf)
+### Feinentwurf (Klassendiagramm)
 
 ### Datenbankentwurf
 
