@@ -10,9 +10,9 @@
 
 ## Details zum Projekt
 
-### Grobentwurf
+### UseCase Diagramm
 
-### Feinentwurf (Klassendiagramm)
+### Klassendiagramm
 
 ### Datenbankentwurf
 
