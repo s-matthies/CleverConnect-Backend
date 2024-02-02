@@ -1,38 +1,31 @@
 package com.example.api.Entitys;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Entity Klasse für die Externen
+ */
 @Entity
 @Table(name = "Externals")
 public class External extends User{
 
-    //zusätzliche Attribute der abgeleiteten Klasse
     private String company;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // eingefügt weil im Client Date im backend funktioniert...
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // Formatierung des Datums
     private LocalDate availabilityStart;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate availabilityEnd;
     private String description;
 
-    /** es soll möglich sein, mehr als ein Bachelor-Thema angeben zu können,
-     // deshalb wird eine Liste erstellt
-     // oneToMany bedeutet, dass jedem External mehrere Bachelorthemen zugeordnet werden können
-     mappedBy: die Liste der Bachelorthemen wird einem External zugewiesen, (zeigt auf darauf)
-     CascadeType.ALL: alle Bachelorthemen die angelegt wurden, werden beim entsprechenden External gespeichert
-     orphanRemoval = true : wenn der External gelöscht wird, werden dadurch auch seine jeweiligen Bachelorthemen gelöscht
-     */
     @OneToMany(
-            //mappedBy = "external",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-            //orphanRemoval = true
+            //mappedBy = "external", // zeigt auf das Attribut external in der Klasse BachelorSubject
+            fetch = FetchType.LAZY, // Lazy: Daten werden erst dann geladen, wenn sie benötigt werden
+            cascade = CascadeType.ALL // alle Bachelorthemen, werden beim entsprechenden External gespeichert
+            //orphanRemoval = true // wenn der External gelöscht wird, werden auch seine jeweiligen Bachelorthemen gelöscht
     )
     @JsonIgnore
     @JoinColumn(name="external_id")
@@ -48,10 +41,14 @@ public class External extends User{
     )
     private Set<SpecialField> specialFields = new HashSet<>();
 
+
+    /**
+     * Methode um ein SpecialField zu wählen
+     * @param specialField - gewähltes SpecialField
+     */
     public void choseField( SpecialField specialField) {
         specialFields.add(specialField);
     }
-
 
 
     public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
@@ -68,8 +65,23 @@ public class External extends User{
     }
 
 
-
-    //Konstruktor ohne id, da diese automatisch beim Hinzufügen einer neuen Externen erstellt wird
+    /**
+     * Konstruktor
+     * @param firstName - Vorname des Externen
+     * @param lastName - Nachname des Externen
+     * @param email - Email des Externen
+     * @param password - Passwort des Externen
+     * @param registrationDate - Registrierungsdatum des Externen
+     * @param role - Rolle des Externen
+     * @param locked - gesperrt
+     * @param enabled - aktiviert
+     * @param company - Firma des Externen
+     * @param availabilityStart - Verfügbarkeitsstart des Externen
+     * @param availabilityEnd - Verfügbarkeitsende des Externen
+     * @param description - Beschreibung des Externen
+     * @param specialFields - gewählte SpecialFields des Externen
+     * @param bachelorSubjects - Bachelorthemen des Externen
+     */
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd, String description, Set<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
@@ -135,7 +147,6 @@ public class External extends User{
     public void setSpecialFields(Set<SpecialField> specialFields) {
         this.specialFields = specialFields;
     }
-
 
 
     @Override

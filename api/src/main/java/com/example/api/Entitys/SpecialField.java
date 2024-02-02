@@ -1,12 +1,14 @@
 package com.example.api.Entitys;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity Klasse für die SpecialField
+ */
 @Entity
 @Table (name = "Special_Field")
 public class SpecialField {
@@ -16,10 +18,10 @@ public class SpecialField {
     private Long id;
     private String name;
 
-
     @JsonIgnore
     @ManyToMany(mappedBy = "specialFields", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<External> externals = new HashSet<>();
+
 
     public SpecialField(String name,  Set<External> externals) {
         this.name = name;

@@ -17,13 +17,8 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements UserDetails {
 
-    //Schlüsselattribut Id vergeben
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    // Id wird mit SequenceGenerator und GeneratedValue eigenständig generiert
-    //@SequenceGenerator(name= "userSequence", sequenceName= "userSequence", allocationSize = 1)
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
-
+    @GeneratedValue(strategy = GenerationType.AUTO) // Id wird mit SequenceGenerator und GeneratedValue eigenständig generiert
     private Long id;
     private String firstName;
     private String lastName;
@@ -36,7 +31,6 @@ public class User implements UserDetails {
     boolean enabled;
 
 
-    //Konstruktor ohne id, weil bei Ausgabe des studenten, id nicht mit angezeigt werden soll
     public User(String firstName,
                 String lastName,
                 String email,
@@ -193,7 +187,5 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, role);
     }
-
-
 
 }
