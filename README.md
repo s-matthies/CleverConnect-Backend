@@ -13,6 +13,11 @@
 ### UseCase Diagramm
 
 ### Klassendiagramm
+<image
+  src="../bilder/Klassendiagramm.png"
+  alt="Klassendiagramm"
+  caption="Klasssendigramm">
+
 
 ### Datenbankentwurf
 
@@ -22,6 +27,7 @@ Erstellung der Tabellen
 
 >>> Muss geprüft werden!
 >>> Create User table fehlt
+>>> liber Pdf/Bild einfügen, für bessere Übersicht
 
 CREATE TABLE Externals
     (id                 SERIAL PRIMARY KEY,
