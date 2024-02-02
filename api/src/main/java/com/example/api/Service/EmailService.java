@@ -2,22 +2,27 @@ package com.example.api.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service für das Versenden von E-Mails
+ */
 @Service
 public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
 
-
-
-
+    /**
+     * Methode für das Versenden einer E-Mail
+     * @param to Die E-Mail-Adresse der Empfängerin
+     * @param subject Der Betreff der E-Mail
+     * @param body Der Inhalt der E-Mail
+     */
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@gmail.com");
@@ -30,6 +35,12 @@ public class EmailService {
         System.out.println("Mail wurde erfolgreich versendet.");
     }
 
+    /**
+     * Methode für das Versenden einer HTML-E-Mail
+     * @param to Die E-Mail-Adresse des Empfängers
+     * @param subject Der Betreff der E-Mail
+     * @param body Der Inhalt der E-Mail
+     */
     private void sendHtmlEmail(String to, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
@@ -48,6 +59,12 @@ public class EmailService {
         System.out.println("Mail wurde erfolgreich versendet.");
     }
 
+    /**
+     * Methode für das Versenden einer Willkommens-E-Mail an eine externe Person (Zweitbetreuer*in)
+     * @param to Die E-Mail-Adresse der Empfängerin
+     * @param firstName Der Vorname der Empfängerin
+     * @param lastName Der Nachname der Empfängerin
+     */
     public void sendWelcomeEmailExternal(String to, String firstName, String lastName) {
         String subject = "Willkommen bei CleverConnect";
         String body = String.format("<p>Hallo %s %s,</p><p> wir freuen uns sehr, dass Sie jetzt auch clever connecten! </br> " +
@@ -58,6 +75,12 @@ public class EmailService {
         sendHtmlEmail(to, subject, body);
     }
 
+    /**
+     * Methode für das Versenden einer Willkommens-E-Mail an eine Studierende
+     * @param to Die E-Mail-Adresse der Empfängerin
+     * @param firstName Der Vorname der Empfängerin
+     * @param lastName Der Nachname der Empfängerin
+     */
     public void sendWelcomeEmailUser(String to, String firstName, String lastName) {
         String subject = "Willkommen bei CleverConnect";
         String body = String.format("<p>Hallo %s %s,</p><p> Du hast sich erfolgreich registriert.</br> " +
