@@ -67,11 +67,17 @@ public class UserService implements UserDetailsService {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * Lädt einen User anhand der E-Mail-Adresse.
+     *
+     * @param email Die E-Mail-Adresse des zu ladenden Users.
+     * @return Der gefundene User.
+     * @throws UsernameNotFoundException Falls der User nicht gefunden wird.
+     */
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        // Instanz der Klasse erstellen und die Methode aufrufen
-
+        // Überprüfen, ob ein User mit der angegebenen E-Mail-Adresse vorhanden ist
         return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
@@ -87,7 +93,6 @@ public class UserService implements UserDetailsService {
             // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
             boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
 
-            // Wenn die E-Mail-Adresse bereits existiert, Exception auslösen
             if (userExists) {
                 throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
             }
@@ -104,19 +109,17 @@ public class UserService implements UserDetailsService {
 
             emailService.sendWelcomeEmailUser(email, firstName, lastName);
 
-            // Erfolgreiche Registrierung - User-Objekt zurückgeben
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         } catch (IllegalStateException e) {
-            // Exception abfangen und Fehler-JSON-Response zurückgeben
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorMessage);
         }
     }
 
     /**
-     * Registriert einen User anhand eines UserRequest-Objekts und gibt eine entsprechende JSON-Antwort zurück.
+     * Registriert einen User und gibt eine entsprechende JSON-Antwort zurück.
      *
-     * @param userRequest Das UserRequest-Objekt mit den Benutzerdaten.
+     * @param userRequest Die Anfrage mit den Daten des zu registrierenden Users.
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
     public ResponseEntity<Object> register(UserRequest userRequest){
@@ -166,7 +169,6 @@ public class UserService implements UserDetailsService {
      */
     public ResponseEntity<User> updateUser(Long id, User newUser) {
 
-            // Externe Person anhand der ID finden
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException(id));
 
@@ -179,7 +181,7 @@ public class UserService implements UserDetailsService {
             return ResponseEntity.ok(savedUser);
     }
 
-    //Methode zum Löschen eines Users
+
     /**
      * Löscht einen User anhand der angegebenen ID.
      *
@@ -189,12 +191,9 @@ public class UserService implements UserDetailsService {
      */
     public ResponseEntity<Object> deleteUser(Long id) {
         try {
-            // den User anhand der ID im Repository zu finden
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException(id));
-            
 
-            // Wenn der User gefunden wird, wird er aus dem Repository geloescht
             userRepository.delete(existingUser);
 
             String message = "{\"User mit der ID \"" + id + "\" erfolgreich gelöscht!\"}";
@@ -207,7 +206,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-    // Methode für Login
     /**
      * Meldet einen User anhand der E-Mail-Adresse und des Passworts an und gibt eine entsprechende JSON-Antwort zurück.
      *
@@ -222,13 +220,11 @@ public class UserService implements UserDetailsService {
                     new AuthenticationRequest(email, password)
             );
 
-            // Überprüfen, ob die Authentifizierung erfolgreich war
             if (authenticationResponse == null) {
                 throw new IllegalStateException("Login war nicht erfolgreich! " +
                         "Email oder Passwort nicht korrekt!");
             }
 
-            //Rolle des Users ermitteln
             User user = (User) loadUserByUsername(email);
             Role role = user.getRole();
 
@@ -238,9 +234,7 @@ public class UserService implements UserDetailsService {
             signInResponse.setRole(role);
             signInResponse.setId(user.getId());
 
-            /// Rückgabe des SignInResponse-Objekts
             return ResponseEntity.ok(signInResponse);
-
         } catch (BadCredentialsException e) {
             SignInResponse errorResponse = new SignInResponse();
             errorResponse.setToken("Login war nicht erfolgreich! Email oder Passwort nicht korrekt!");
@@ -255,7 +249,13 @@ public class UserService implements UserDetailsService {
     }
 
 
-    //Methode für Logout
+    /**
+     * Methode für das Ausloggen eines Benutzers.
+     *
+     * @param request Die Anfrage mit den Daten des zu ausloggenden Users.
+     * @param response Die Antwort mit den Daten des zu ausloggenden Users.
+     * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
+     */
     public ResponseEntity<Object> signOut(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Überprüfen, ob der Benutzer ein gültiges JWT-Token im Header hat
@@ -268,14 +268,14 @@ public class UserService implements UserDetailsService {
             // Token aus dem Authorization-Header extrahieren
             String token = authorizationHeader.substring(7);
 
-            // Hier wird angenommen, dass die Methode isTokenValid implementiert ist und das Token überprüft
+            // Überprüfen, ob Token gültig ist
             if (!jwtService.isTokenValid(token, loadUserByUsername(jwtService.extractUsername(token))))
                 throw new IllegalStateException("Das Token ist ungültig oder abgelaufen.");
 
-            // Die Session des Benutzers ungültig machen
+            // die Session des Users ungültig machen
             request.getSession().invalidate();
 
-            // Das JWT-Token im Cookie löschen
+            // das JWT-Token im Cookie löschen
             Cookie cookie = getCookie();
             response.addCookie(cookie);
 
@@ -287,6 +287,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * Erstellt ein Cookie-Objekt, das das JWT-Token enthält.
+     *
+     * @return Das erstellte Cookie-Objekt.
+     */
     private static Cookie getCookie() {
         Cookie cookie = new Cookie("jwtToken", null);
         cookie.setMaxAge(0); // Ablaufdatum auf null (Vergangenheit) setzen
