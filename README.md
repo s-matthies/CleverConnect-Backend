@@ -23,6 +23,9 @@
 
 Erstellung der Tabellen
 
+<img src="images/sql.jpg" width="60%" height="60%">
+
+
 >>> Muss geprüft werden!
 >>> Create User table fehlt
 >>> liber Pdf/Bild einfügen, für bessere Übersicht
