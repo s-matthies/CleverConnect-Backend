@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * Controller für die Admin-Funktionen
+ */
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -20,6 +24,12 @@ public class AdminController {
         this.externalService = externalService;
     }
 
+    /**
+     * Methode für das Anlegen einer externen Person (Zweitbetreuer*in)
+     *
+     * @param externalRequest Die Daten der externen Person
+     * @return ResponseEntity mit den Daten der registrierten externen Person
+     */
     @PostMapping("/createExternal")
     public ResponseEntity<Object> createExternal(@RequestBody ExternalRequest externalRequest) {
         return externalService.registration(externalRequest, true);
