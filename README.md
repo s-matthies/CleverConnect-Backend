@@ -14,7 +14,7 @@
 
 ### Klassendiagramm
 ![](images/Klassendiagramm.drawio.jpg ) 
-<img src="images/Klassendiagramm.drawio.jpg" width="75%" height="75%">
+<img src="images/Klassendiagramm.drawio.jpg" width="50%" height="50%">
 
 
 ### Datenbankentwurf
