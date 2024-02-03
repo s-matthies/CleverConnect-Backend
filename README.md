@@ -13,7 +13,8 @@
 ### UseCase Diagramm
 
 ### Klassendiagramm
-![](images/Klassendiagramm.drawio.jpg )
+![](images/Klassendiagramm.drawio.jpg ) 
+<img src="images/Klassendiagramm.drawio.jpg" width="75%" height="75%">
 
 
 ### Datenbankentwurf
