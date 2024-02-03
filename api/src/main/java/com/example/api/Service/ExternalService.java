@@ -110,7 +110,7 @@ public class ExternalService {
             String email = externalRequest.getEmail();
 
             if (isAdmin) {
-                emailService.sendAdminCreatedExternalEmail(email, firstName, lastName);
+                emailService.sendWelcomeEmailExternalByAdmin(email, firstName, lastName);
             } else {
             emailService.sendWelcomeEmailExternal(email, firstName, lastName);
             }
