@@ -17,7 +17,7 @@
 
 
 ### Datenbankentwurf
-![](images/Datenbankentwurf2_Team_C.drawio.pdf )
+![](images/Datenbankentwurf2_Team_C.drawio.png )
 
 ### PostgresSQL-Datenbank anlegen
 
