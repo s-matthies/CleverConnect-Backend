@@ -13,7 +13,9 @@
 ### UseCase Diagramm
 
 ### Klassendiagramm
-![](images/Klassendiagramm.drawio.jpg width="80")
+![](images/Klassendiagramm.drawio.jpg )
+<img src="images/Klassendigramm.drawio.jpg" width="80">
+
 ### Datenbankentwurf
 
 ### PostgresSQL-Datenbank anlegen
