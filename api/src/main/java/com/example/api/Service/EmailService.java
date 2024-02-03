@@ -73,12 +73,17 @@ public class EmailService {
         sendHtmlEmail(to, subject, body);
     }
 
-    public void sendAdminCreatedExternalEmail(String to, String firstName, String lastName) {
+    public void sendWelcomeEmailExternalByAdmin(String to, String firstName, String lastName) {
         String subject = "Willkommen bei CleverConnect";
-        String body = String.format("<p>Hallo %s %s,</p><p> Sie wurden registriert.</br> " +
-                "                Test!</p>" +
-                "<p>Dein CleverConnect Team </p>", firstName, lastName);
+        String body = String.format("<p>Hallo %s %s,</p><p> Sie wurden erfolgreich bei unserer Platform Clever Connect registriert. </br>" +
+                "Wir freuen uns sehr, dass Sie jetzt auch clever connecten! </br> " +
+                "Ein aussagekräftiges Profil erhöht die Chancen, von den Richtigen gefunden zu werden., also legen Sie am besten gleich los. </br> " +
+                "Viel Freude dabei!</br></br>" +
+                "Infos zu Ihren Zugangsdaten zum Portal holen Sie bitte bei Herrn Prof. Dr.-Ing. Jörn Freiheit ein. </br>" +
+                "Email: Joern.Freiheit@HTW-Berlin.de </p>" +
+                "<p>Ihr CleverConnect Team </p>", firstName, lastName);
 
         sendHtmlEmail(to, subject, body);
     }
+
 }

@@ -13,10 +13,11 @@
 ### UseCase Diagramm
 
 ### Klassendiagramm
-![](images/Klassendiagramm.drawio.jpg )
-<img src="images/Klassendigramm.drawio.jpg" width="100">
+<img src="images/Klassendiagramm.drawio.jpg" width="60%" height="60%">
+
 
 ### Datenbankentwurf
+<img src="images/Datenbankentwurf2_Team_C.drawio.png" width="50%" height="50%">
 
 ### PostgresSQL-Datenbank anlegen
 
