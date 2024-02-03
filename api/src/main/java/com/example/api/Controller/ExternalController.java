@@ -35,7 +35,7 @@ public class ExternalController {
      */
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody ExternalRequest externalRequest) {
-        return externalService.registration(externalRequest);
+        return externalService.registration(externalRequest, false);
     }
 
     /**

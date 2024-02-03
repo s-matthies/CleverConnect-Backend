@@ -72,7 +72,7 @@ public class ExternalService {
      * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
      */
     @Transactional
-    public ResponseEntity<Object> registration(ExternalRequest externalRequest) {
+    public ResponseEntity<Object> registration(ExternalRequest externalRequest, boolean isAdmin) {
         try {
             boolean externExists = externalRepository.findByEmail(externalRequest.getEmail()).isPresent();
             if (externExists) {
@@ -109,7 +109,11 @@ public class ExternalService {
             String lastName = externalRequest.getLastName();
             String email = externalRequest.getEmail();
 
+            if (isAdmin) {
+                emailService.sendAdminCreatedExternalEmail(email, firstName, lastName);
+            } else {
             emailService.sendWelcomeEmailExternal(email, firstName, lastName);
+            }
 
             // BachelorSubjects behandeln
             List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();

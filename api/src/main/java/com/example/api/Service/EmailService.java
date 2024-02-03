@@ -3,7 +3,6 @@ package com.example.api.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -69,6 +68,15 @@ public class EmailService {
         String body = String.format("<p>Hallo %s %s,</p><p> Du hast sich erfolgreich registriert.</br> " +
                 "                Leg direkt los und finde die passende Zweitbetreuung für deine Bachelorarbeit.</br> " +
                 "                Viel Freude dabei! </p>" +
+                "<p>Dein CleverConnect Team </p>", firstName, lastName);
+
+        sendHtmlEmail(to, subject, body);
+    }
+
+    public void sendAdminCreatedExternalEmail(String to, String firstName, String lastName) {
+        String subject = "Willkommen bei CleverConnect";
+        String body = String.format("<p>Hallo %s %s,</p><p> Sie wurden registriert.</br> " +
+                "                Test!</p>" +
                 "<p>Dein CleverConnect Team </p>", firstName, lastName);
 
         sendHtmlEmail(to, subject, body);

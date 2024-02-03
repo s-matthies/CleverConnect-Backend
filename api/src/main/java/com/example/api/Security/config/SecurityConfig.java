@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 //.requestMatchers("/", "/user/register, "/external/register", "/user/login").permitAll()
-                                .requestMatchers("/user/**", "/external/**").permitAll()
+                                .requestMatchers("/user/**", "/external/**", "/admin/**").permitAll()
                                 //.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
                                 //.requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")
                                 .anyRequest().authenticated()
