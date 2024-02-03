@@ -13,7 +13,7 @@
 ### UseCase Diagramm
 
 ### Klassendiagramm
-![](images/Klassendiagramm.png)
+![](images/Klassendiagramm.jpg)
 ### Datenbankentwurf
 
 ### PostgresSQL-Datenbank anlegen
