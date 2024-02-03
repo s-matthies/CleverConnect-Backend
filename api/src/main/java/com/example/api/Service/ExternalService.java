@@ -65,11 +65,11 @@ public class ExternalService {
 
 
     /**
-     * Methode für die Registrierung einer externen Person (Zweitbtreuer*in)
+     * Methode für das Registrieren einer externen Person (Zweitbetreuer*in)
      *
-     * @param externalRequest Die Anfrage mit den Daten der zu registrierenden Person (Zweitbetreuer*in)
-     * @return ResponseEntity mit den Daten der registrierten Person (Zweitbetreuer*in)
-     * @throws IllegalStateException wenn die E-Mail bereits vergeben ist
+     * @param externalRequest Die Anfrage mit den Daten der externen Person (Zweitbetreuer*in)
+     * @param isAdmin Gibt an, ob die Registrierung von einem Admin durchgeführt wird
+     * @return ResponseEntity mit den Daten der registrierten externen Person (Zweitbetreuer*in)
      */
     @Transactional
     public ResponseEntity<Object> registration(ExternalRequest externalRequest, boolean isAdmin) {
@@ -112,7 +112,7 @@ public class ExternalService {
             if (isAdmin) {
                 emailService.sendWelcomeEmailExternalByAdmin(email, firstName, lastName);
             } else {
-            emailService.sendWelcomeEmailExternal(email, firstName, lastName);
+                emailService.sendWelcomeEmailExternal(email, firstName, lastName);
             }
 
             // BachelorSubjects behandeln
