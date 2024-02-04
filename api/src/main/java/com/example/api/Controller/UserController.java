@@ -201,6 +201,7 @@ public class UserController {
         return userService.getUser(id);
     }
 
+
     /**
      * Aktualisiert einen User.
      * Nimmt eine ID und ein User-Objekt mit den aktualisierten Informationen entgegen
@@ -245,6 +246,7 @@ public class UserController {
         return userService.updateUser(id, newUser);
     }
 
+
     /**
      * Löscht einen User.
      * Nimmt eine ID entgegen und delegiert das Löschen des Users an den UserService.
@@ -253,6 +255,17 @@ public class UserController {
      * @return ResponseEntity mit den Daten des gelöschten Users
      */
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Löscht eine*n Benutzer*in",
+            description = "Löscht eine*n Benutzer*in basierend auf der bereitgestellten ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich gelöscht",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 erfolgreich gelöscht!\"}"))),
+            @ApiResponse(responseCode = "404", description = "Nicht gefunden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+    })
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
