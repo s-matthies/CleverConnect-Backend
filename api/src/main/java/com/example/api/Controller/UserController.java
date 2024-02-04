@@ -124,8 +124,8 @@ public class UserController {
      * @return ResponseEntity mit den Daten aller User
      */
     @GetMapping("/load")
-    @Operation(summary = "Lädt alle externen Personen",
-            description = "Ruft eine Liste aller registrierten Benutzer ab.")
+    @Operation(summary = "Lädt alle Benutzer*innen (Studierende und Admin)",
+            description = "Ruft eine Liste aller registrierten Benutzer*innen ab.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
@@ -166,6 +166,36 @@ public class UserController {
      * @return ResponseEntity mit den Daten des Users
      */
     @GetMapping("/load/{id}")
+    @Operation(summary = "Lädt eine*n Benutzer*in (Studierende oder Admin)",
+            description = "Ruft eine*n Benutzer*in basierend auf der bereitgestellten ID ab.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class),
+                            examples = @ExampleObject(value = "{\n" +
+                                    "  \"id\": 1,\n" +
+                                    "  \"firstName\": \"John\",\n" +
+                                    "  \"lastName\": \"Doe\",\n" +
+                                    "  \"email\": \"john.doe@example.com\",\n" +
+                                    "  \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
+                                    "  \"registrationDate\": \"2024-02-04\",\n" +
+                                    "  \"role\": \"STUDENT\",\n" +
+                                    "  \"enabled\": true,\n" +
+                                    "  \"username\": \"johndoe\",\n" +
+                                    "  \"authorities\": [\n" +
+                                    "    {\n" +
+                                    "      \"authority\": \"STUDENT\"\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"credentialsNonExpired\": true,\n" +
+                                    "  \"accountNonExpired\": true,\n" +
+                                    "  \"accountNonLocked\": true\n" +
+                                    "}"
+                            ))),
+            @ApiResponse(responseCode = "404", description = "Nicht gefunden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+    })
     User getUsers(@PathVariable Long id) {
         return userService.getUser(id);
     }
