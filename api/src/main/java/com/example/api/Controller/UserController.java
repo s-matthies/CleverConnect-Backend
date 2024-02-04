@@ -10,7 +10,6 @@ import com.example.api.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.PatternProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -57,8 +55,8 @@ public class UserController {
      * @return ResponseEntity mit den Daten des registrierten Users
      */
     @PostMapping(path ="/register")
-    @Operation(summary = "Registriert einen neuen Benutzer",
-            description = "Erstellt einen neuen Benutzer basierend auf den bereitgestellten Informationen.")
+    @Operation(summary = "Registriert eine Studierende*",
+            description = "Erstellt eine neuen User (Studierende*) basierend auf den bereitgestellten Informationen.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Erfolgreich registriert",
                     content = @Content(mediaType = "application/json",
@@ -99,7 +97,7 @@ public class UserController {
      * @return ResponseEntity mit den Daten des eingeloggten Users
      */
     @PostMapping("/login")
-    @Operation(summary = "Meldet eine Studierende* an",
+    @Operation(summary = "Meldet einen User an",
             description = "Authentifiziert einen User basierend auf den bereitgestellten Informationen ein.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich eingeloggt",
@@ -125,8 +123,8 @@ public class UserController {
      * @return ResponseEntity mit den Daten aller User
      */
     @GetMapping("/load")
-    @Operation(summary = "Lädt alle Benutzer*innen (Studierende und Admin)",
-            description = "Ruft eine Liste aller registrierten Benutzer*innen ab.")
+    @Operation(summary = "Lädt alle Studierenden (und Admins)",
+            description = "Ruft eine Liste aller registrierten Studierenden (und Admins) ab.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
@@ -167,8 +165,8 @@ public class UserController {
      * @return ResponseEntity mit den Daten des Users
      */
     @GetMapping("/load/{id}")
-    @Operation(summary = "Lädt eine*n Benutzer*in (Studierende oder Admin)",
-            description = "Ruft eine*n Benutzer*in basierend auf der bereitgestellten ID ab.")
+    @Operation(summary = "Lädt eine Studierende (oder Admin)",
+            description = "Ruft einen User basierend auf der bereitgestellten ID ab.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
@@ -212,8 +210,8 @@ public class UserController {
      * @return ResponseEntity mit den aktualisierten Benutzer*innen-Informationen
      */
     @PutMapping("/update/{id}")
-    @Operation(summary = "Aktualisiert eine*n Benutzer*in (Studierende oder Admin)",
-            description = "Aktualisiert eine*n Benutzer*in basierend auf der bereitgestellten ID und den aktualisierten Informationen.")
+    @Operation(summary = "Aktualisiert eine Studierende* (oder Admin)",
+            description = "Aktualisiert einen User basierend auf der bereitgestellten ID und den aktualisierten Informationen.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich aktualisiert",
                     content = @Content(mediaType = "application/json",
@@ -255,8 +253,8 @@ public class UserController {
      * @return ResponseEntity mit den Daten des gelöschten Users
      */
     @DeleteMapping("/delete/{id}")
-    @Operation(summary = "Löscht eine*n Benutzer*in",
-            description = "Löscht eine*n Benutzer*in basierend auf der bereitgestellten ID.")
+    @Operation(summary = "Löscht einen User",
+            description = "Löscht einenUser basierend auf der bereitgestellten ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich gelöscht",
                     content = @Content(mediaType = "application/json",
@@ -279,6 +277,17 @@ public class UserController {
      * @return ResponseEntity mit den Daten des ausgeloggten Users
      */
     @GetMapping("/logout")
+    @Operation(summary = "Meldet einen User ab",
+            description = "Beendet die aktuelle Sitzung und meldet die*den Benutzer*in ab.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich abgemeldet",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"Logout erfolgreich\"}"))),
+            @ApiResponse(responseCode = "401", description = "Nicht autorisiert",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"Es ist kein Benutzer eingeloggt.\"}"))),
+    })
     public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
         return userService.signOut(request, response);
     }
@@ -292,6 +301,20 @@ public class UserController {
      * @return ResponseEntity mit den Daten des geänderten Users
      */
     @PutMapping("/updatePassword/{id}")
+    @Operation(summary = "Ändert das Passwort eines Users",
+            description = "Ändert das Passwort eines Users basierend auf der bereitgestellten ID und den neuen Informationen.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Passwort erfolgreich geändert",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"Passwort erfolgreich geändert\"}"))),
+            @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"Das alte Passwort ist nicht korrekt!\"}"))),
+            @ApiResponse(responseCode = "404", description = "Nicht gefunden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+    })
     public ResponseEntity<Object> updatePassword(@RequestHeader("Authorization") String token,
                                                  @RequestBody PasswordChangeRequest request) {
         return userService.changePassword(token, request.getOldPassword(), request.getNewPassword());
