@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -318,6 +319,12 @@ public class UserController {
     public ResponseEntity<Object> updatePassword(@RequestHeader("Authorization") String token,
                                                  @RequestBody PasswordChangeRequest request) {
         return userService.changePassword(token, request.getOldPassword(), request.getNewPassword());
+    }
+
+
+    @GetMapping("/swagger")
+    public RedirectView redirectToSwagger() {
+        return new RedirectView("http://localhost:3000/swagger-ui/index.html#/");
     }
 
 
