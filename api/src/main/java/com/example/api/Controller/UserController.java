@@ -86,10 +86,10 @@ public class UserController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"message\": \"E-Mail Adresse ist bereits vergeben!\"}")))
     })
-
     public ResponseEntity<Object> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
+
 
     /** Methode für das Einloggen eines Users.
      * Nimmt eine LoginRequest entgegen und delegiert das Einloggen an den UserService.
@@ -98,6 +98,21 @@ public class UserController {
      * @return ResponseEntity mit den Daten des eingeloggten Users
      */
     @PostMapping("/login")
+    @Operation(summary = "Meldet eine Studierende* an",
+            description = "Authentifiziert einen User basierend auf den bereitgestellten Informationen ein.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich eingeloggt",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SignInResponse.class),
+                            examples = @ExampleObject(value = "{\n" +
+                                    "\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuaWNraS5taW5hampAdGVzdC5jb20\",\n" +
+                                    "\"role\": \"STUDENT\",\n" +
+                                    "\"id\": 1\n" +
+                                    "}"))),
+            @ApiResponse(responseCode = "401", description = "Nicht autorisiert",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"Login war nicht erfolgreich! Email oder Passwort nicht korrekt!\"}")))
+    })
     public ResponseEntity<SignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
@@ -109,10 +124,33 @@ public class UserController {
      * @return ResponseEntity mit den Daten aller User
      */
     @GetMapping("/load")
-    @Operation(summary = "Lädt alle externen Personen")
+    @Operation(summary = "Lädt alle externen Personen",
+            description = "Ruft eine Liste aller registrierten Benutzer ab.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Erfolgreich geladen"),
-            @ApiResponse(responseCode = "404", description = "Nicht gefunden"),
+            @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class),
+                            examples = @ExampleObject(value = "[\n" +
+                                    "  {\n" +
+                                    "    \"id\": 1,\n" +
+                                    "    \"firstName\": \"John\",\n" +
+                                    "    \"lastName\": \"Doe\",\n" +
+                                    "    \"email\": \"john.doe@example.com\",\n" +
+                                    "    \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
+                                    "    \"registrationDate\": \"2024-02-04\",\n" +
+                                    "    \"role\": \"STUDENT\",\n" +
+                                    "    \"enabled\": true,\n" +
+                                    "    \"username\": \"johndoe\",\n" +
+                                    "    \"authorities\": [\n" +
+                                    "      {\n" +
+                                    "        \"authority\": \"STUDENT\"\n" +
+                                    "      }\n" +
+                                    "    ],\n" +
+                                    "    \"credentialsNonExpired\": true,\n" +
+                                    "    \"accountNonExpired\": true,\n" +
+                                    "    \"accountNonLocked\": true\n" +
+                                    "  }\n" +
+                                    "]"))),
             @ApiResponse(responseCode = "500", description = "Interner Serverfehler")
     })
     List<User> allUsers() {

@@ -94,7 +94,8 @@ public class UserService implements UserDetailsService {
             boolean userExists = userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent();
 
             if (userExists) {
-                throw new IllegalStateException("E-Mail Adresse ist bereits vergeben!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"error\": \"E-Mail Adresse ist bereits vergeben!\"}");
             }
 
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
