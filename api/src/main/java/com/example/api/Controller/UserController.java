@@ -193,7 +193,7 @@ public class UserController {
                             ))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
-                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+                            examples = @ExampleObject(value = "{\"error\": \"User not found\", \"userId\": 1"))),
     })
     User getUsers(@PathVariable Long id) {
         return userService.getUser(id);
@@ -238,7 +238,7 @@ public class UserController {
                             ))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
-                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+                            examples = @ExampleObject(value = "{\"error\": \"User not found\", \"userId\": 1}"))),
     })
     public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
         return userService.updateUser(id, newUser);
@@ -262,7 +262,7 @@ public class UserController {
                             examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 erfolgreich gelöscht!\"}"))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
-                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+                            examples = @ExampleObject(value = "{\"error\": \"User mit der ID 1 wurde nicht gefunden.\"}"))),
     })
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
@@ -300,7 +300,7 @@ public class UserController {
      * @param request Die Anfrage mit den Daten des zu ändernden Users
      * @return ResponseEntity mit den Daten des geänderten Users
      */
-    @PutMapping("/updatePassword/{id}")
+    @PutMapping("/updatePassword")
     @Operation(summary = "Ändert das Passwort eines Users",
             description = "Ändert das Passwort eines Users basierend auf der bereitgestellten ID und den neuen Informationen.")
     @ApiResponses(value = {

@@ -23,17 +23,6 @@ public class SpecialField {
     private Set<External> externals = new HashSet<>();
 
 
-    public SpecialField(String name,  Set<External> externals) {
-        this.name = name;
-        this.externals = externals;
-    }
-
-    public SpecialField(Long id, String name, Set<External> externals) {
-        this.id = id;
-        this.name = name;
-        this.externals = externals;
-    }
-
     public SpecialField() {
     }
 
@@ -45,20 +34,8 @@ public class SpecialField {
         this.id = id;
     }
 
-    public Set<External> getExternals() {
-        return externals;
-    }
-
-    public void setExternals(Set<External> externals) {
-        this.externals = externals;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String value) {
-        this.name = value;
     }
 
 
@@ -67,10 +44,6 @@ public class SpecialField {
         return externals;
     }
 
-    public void setExternal(Set<External> externals) {
-
-        this.externals = externals;
-    }
 }
 
 
