@@ -123,7 +123,6 @@ public class UserService implements UserDetailsService {
      * @return ResponseEntity mit einer Erfolgsmeldung oder Fehlermeldung und dem entsprechenden HTTP-Status.
      */
     public ResponseEntity<Object> register(UserRequest userRequest){
-        // greift vorher erstellte Methode zurück
         return userRegistration(new User(
                 userRequest.getFirstname(),
                 userRequest.getLastname(),

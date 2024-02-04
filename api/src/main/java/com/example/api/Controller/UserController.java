@@ -7,6 +7,12 @@ import com.example.api.Request.PasswordChangeRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Security.auth.AuthenticationService;
 import com.example.api.Service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +56,37 @@ public class UserController {
      * @return ResponseEntity mit den Daten des registrierten Users
      */
     @PostMapping(path ="/register")
+    @Operation(summary = "Registriert einen neuen Benutzer",
+            description = "Erstellt einen neuen Benutzer basierend auf den bereitgestellten Informationen.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Erfolgreich registriert",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class),
+                            examples = @ExampleObject(value = "{\n" +
+                                    "\"id\": 1,\n" +
+                                    "\"firstName\": \"Nicki\",\n" +
+                                    "\"lastName\": \"Minaj\",\n" +
+                                    "\"email\": \"nicki.minaj@test.com\",\n" +
+                                    "\"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
+                                    "\"registrationDate\": \"2024-01-17\",\n" +
+                                    "\"role\": \"STUDENT\",\n" +
+                                    "\"enabled\": true,\n" +
+                                    "\"username\": \"nicki.minaj@test.com\",\n" +
+                                    "\"authorities\": [\n" +
+                                    "{\n" +
+                                    "\"authority\": \"STUDENT\"\n" +
+                                    "}\n" +
+                                    "],\n" +
+                                    "\"accountNonExpired\": true,\n" +
+                                    "\"credentialsNonExpired\": true,\n" +
+                                    "\"accountNonLocked\": true\n" +
+                                    "}"))),
+
+            @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"E-Mail Adresse ist bereits vergeben!\"}")))
+    })
+
     public ResponseEntity<Object> register(@RequestBody UserRequest userRequest){
         return userService.register(userRequest);
     }
@@ -72,9 +109,16 @@ public class UserController {
      * @return ResponseEntity mit den Daten aller User
      */
     @GetMapping("/load")
+    @Operation(summary = "Lädt alle externen Personen")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich geladen"),
+            @ApiResponse(responseCode = "404", description = "Nicht gefunden"),
+            @ApiResponse(responseCode = "500", description = "Interner Serverfehler")
+    })
     List<User> allUsers() {
         return userService.allUser();
     }
+
 
     /**
      * Methode für das Laden eines Users.
