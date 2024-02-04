@@ -10,6 +10,7 @@ import com.example.api.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.PatternProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -210,6 +211,36 @@ public class UserController {
      * @return ResponseEntity mit den aktualisierten Benutzer*innen-Informationen
      */
     @PutMapping("/update/{id}")
+    @Operation(summary = "Aktualisiert eine*n Benutzer*in (Studierende oder Admin)",
+            description = "Aktualisiert eine*n Benutzer*in basierend auf der bereitgestellten ID und den aktualisierten Informationen.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Erfolgreich aktualisiert",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class),
+                            examples = @ExampleObject(value = "{\n" +
+                                    "  \"id\": 1,\n" +
+                                    "  \"firstName\": \"John\",\n" +
+                                    "  \"lastName\": \"Doe\",\n" +
+                                    "  \"email\": \"john.doe@example.com\",\n" +
+                                    "  \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
+                                    "  \"registrationDate\": \"2024-02-04\",\n" +
+                                    "  \"role\": \"STUDENT\",\n" +
+                                    "  \"enabled\": true,\n" +
+                                    "  \"username\": \"johndoe\",\n" +
+                                    "  \"authorities\": [\n" +
+                                    "    {\n" +
+                                    "      \"authority\": \"STUDENT\"\n" +
+                                    "    }\n" +
+                                    "  ],\n" +
+                                    "  \"credentialsNonExpired\": true,\n" +
+                                    "  \"accountNonExpired\": true,\n" +
+                                    "  \"accountNonLocked\": true\n" +
+                                    "}"
+                            ))),
+            @ApiResponse(responseCode = "404", description = "Nicht gefunden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
+                            examples = @ExampleObject(value = "{\"message\": \"User mit der ID 1 nicht gefunden.\"}"))),
+    })
     public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
         return userService.updateUser(id, newUser);
     }
