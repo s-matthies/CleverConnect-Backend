@@ -239,7 +239,6 @@ public class UserService implements UserDetailsService {
             SignInResponse errorResponse = new SignInResponse();
             errorResponse.setToken("Login war nicht erfolgreich! Email oder Passwort nicht korrekt!");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-
         }
         catch (IllegalStateException e) {
             SignInResponse errorResponse = new SignInResponse();
