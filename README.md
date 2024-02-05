@@ -125,7 +125,7 @@ Folgender Endpunkt leitet zur Dokumentation der Endpunkte weiter:
 
 **GET `/user/swagger`** (localhost:3000/user/swagger)
 
-## Javadoc-Dokumentation
+### Javadoc-Dokumentation
 
 Die Javadoc-Dokumentation für dieses Projekt wurde generiert und kann im Verzeichnis `target/site/apidocs` gefunden werden. Sie können die Dokumentation anzeigen, indem Sie die Datei `index.html` in diesem Verzeichnis in einem Webbrowser öffnen.
 
