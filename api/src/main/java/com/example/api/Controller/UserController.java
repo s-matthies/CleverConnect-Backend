@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -279,7 +280,9 @@ public class UserController {
      */
     @GetMapping("/logout")
     @Operation(summary = "Meldet einen User ab",
-            description = "Beendet die aktuelle Sitzung und meldet die*den Benutzer*in ab.")
+            description = "Beendet die aktuelle Sitzung und meldet die_den Benutzer_in ab." +
+                    "Dieser Endpunkt erfordert eine Authentifizierung mittels JWT-Token.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich abgemeldet",
                     content = @Content(mediaType = "application/json",

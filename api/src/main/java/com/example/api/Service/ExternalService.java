@@ -56,10 +56,12 @@ public class ExternalService {
     public ExternalService(ExternalRepository externalRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            BachelorSubjectRepository bachelorSubjectRepository,
+                           SpecialFieldRepository specialFieldRepository,
                            EmailService emailService) {
         this.externalRepository = externalRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.bachelorSubjectRepository = bachelorSubjectRepository;
+        this.specialFieldRepository = specialFieldRepository;
         this.emailService = emailService;
     }
 
@@ -117,6 +119,7 @@ public class ExternalService {
 
             // BachelorSubjects behandeln
             List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();
+            List<SpecialField> specialFields = null;
             if (bachelorSubjects != null) {
                 for (BachelorSubject subject : bachelorSubjects) {
                     // für jedes BachelorSubject die externe Person setzen
@@ -127,7 +130,7 @@ public class ExternalService {
                 // dazugehörige BachelorSubjects speichern
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
 
-                List<SpecialField> specialFields = externalRequest.getSpecialFields();
+                specialFields = externalRequest.getSpecialFields();
                 if (specialFields != null) {
 
                     if (savedExternal.getSpecialFields() == null) {
@@ -145,7 +148,9 @@ public class ExternalService {
                     }
                 }
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
+            ExternalDTO externalDTO = new ExternalDTO(savedExternal, specialFields, bachelorSubjects);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(externalDTO);
         } catch (IllegalStateException e) {
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.status(400).body(errorMessage);

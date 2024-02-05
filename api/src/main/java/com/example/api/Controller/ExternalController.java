@@ -47,27 +47,28 @@ public class ExternalController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExternalDTO.class),
                             examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 4703,\n" +
+                                    "  \"id\": 1,\n" +
                                     "  \"firstName\": \"Missy\",\n" +
                                     "  \"lastName\": \"Elliot\",\n" +
                                     "  \"email\": \"missy@test.com\",\n" +
-                                    "  \"password\": \"$2a$10$uW68b3ta0w.uTKiKlBdD1uA.wNZ7JIb030oHaK0hfX7a0blwVlS4S\",\n" +
                                     "  \"registrationDate\": \"2024-02-04\",\n" +
                                     "  \"role\": \"EXTERN\",\n" +
-                                    "  \"enabled\": true,\n" +
                                     "  \"company\": \"Big Company\",\n" +
                                     "  \"availabilityStart\": \"2023-12-12\",\n" +
                                     "  \"availabilityEnd\": \"2024-11-11\",\n" +
                                     "  \"description\": \"ich bin hoch motiviert\",\n" +
-                                    "  \"username\": \"missy@test.com\",\n" +
-                                    "  \"authorities\": [\n" +
+                                    "  \"specialFields\": [\n" +
                                     "    {\n" +
-                                    "      \"authority\": \"EXTERN\"\n" +
-                                    "    }\n" +
+                                    "      \"name\": \"Cybersecurity\"\n" +
+                                    "    },\n" +
                                     "  ],\n" +
-                                    "  \"accountNonLocked\": true,\n" +
-                                    "  \"accountNonExpired\": true,\n" +
-                                    "  \"credentialsNonExpired\": true\n" +
+                                    "  \"bachelorSubjects\": [\n" +
+                                    "    {\n" +
+                                    "      \"title\": \"Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen\",\n" +
+                                    "      \"date\": \"2024-02-04\",\n" +
+                                    "      \"bdescription\": \"super Thema\"\n" +
+                                    "    }\n" +
+                                    "  ]\n" +
                                     "}"))),
             @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
@@ -110,7 +111,7 @@ public class ExternalController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExternalDTO.class),
                             examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 4703,\n" +
+                                    "  \"id\": 1,\n" +
                                     "  \"firstName\": \"Missy\",\n" +
                                     "  \"lastName\": \"Elliot\",\n" +
                                     "  \"email\": \"missy@test.com\",\n" +
@@ -124,13 +125,10 @@ public class ExternalController {
                                     "    {\n" +
                                     "      \"name\": \"Cybersecurity\"\n" +
                                     "    },\n" +
-                                    "    {\n" +
-                                    "      \"name\": \"Datenbanken\"\n" +
-                                    "    }\n" +
                                     "  ],\n" +
                                     "  \"bachelorSubjects\": [\n" +
                                     "    {\n" +
-                                    "      \"title\": \"Datenbanken 3.0\",\n" +
+                                    "      \"title\": \"Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen\",\n" +
                                     "      \"date\": \"2024-02-04\",\n" +
                                     "      \"bdescription\": \"super Thema\"\n" +
                                     "    }\n" +
