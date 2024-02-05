@@ -111,6 +111,7 @@ CREATE TABLE choosen_fields
     FOREIGN KEY (special_field_id) REFERENCES Special_Field(id) ON DELETE CASCADE);
 ```
 
+## Dokumentation
 
 ### Dokumentation der Endpunkte
 
@@ -122,7 +123,11 @@ Wenn die Anwendung ausgeführt wird, kann die Dokumentation hier aufgerufen werd
 Im Projekt wurde ein Endpunkt zum Aufrufen der Dokumentation implementiert.   
 Folgender Endpunkt leitet zur Dokumentation der Endpunkte weiter:  
 
-**GET /user/swagger** (localhost:3000/user/swagger)
+**GET `/user/swagger`** (localhost:3000/user/swagger)
+
+## Javadoc-Dokumentation
+
+Die Javadoc-Dokumentation für dieses Projekt wurde generiert und kann im Verzeichnis `target/site/apidocs` gefunden werden. Sie können die Dokumentation anzeigen, indem Sie die Datei `index.html` in diesem Verzeichnis in einem Webbrowser öffnen.
 
 
 
