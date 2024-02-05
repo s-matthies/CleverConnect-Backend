@@ -86,4 +86,15 @@ public class BachelorSubject {
         this.external = external;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBDescription(String bDescription) {
+        this.bDescription = bDescription;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 }

@@ -25,17 +25,18 @@ public class BachelorSubjectDTO {
         this.title = title;
     }
 
+
+    public LocalDate getDate() { return date; }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public String getBDescription() {
         return bDescription;
     }
 
     public void setBDescription(String bDescription) {
         this.bDescription = bDescription;
-    }
-
-    public LocalDate getDate() { return date; }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 }
