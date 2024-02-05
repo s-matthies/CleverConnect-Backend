@@ -1,9 +1,5 @@
 # Projekt CleverConnect
 
-Die Anwendung ermöglicht Studierenden eine Zweitbetreuung für ihre Bachelorarbeit zu finden.
-Es gibt drei Rollen von Nutzer*innen, die die Anwendung jeweils verschieden nutzen können und unetrschiedliche Bereiche einsehen können.
-Eine umfassende Erklärung zu der Anwendung und ihrer Funktionialitäten ist hier zu finden:  
-
 ## Technologien
 Im Rahmen des Projekts verwendete Technologien
 
@@ -40,12 +36,13 @@ $ mvn spring-boot:run
 Das Projekt wird nun auf http://localhost:3000 gestartet.
 
 
+
 ### Datenbank
 
 ## Details zum Projekt
 
 ### UseCase Diagramm
-<img src="images/uc_diagramm.drawio.jpg" width="60%" height="60%">
+<img src="images/uc_diagramm.drawio" width="60%" height="60%">
 
 
 ### Klassendiagramm
@@ -102,6 +99,17 @@ CREATE TABLE choosen_fields
 ```
 
 
-### Endpunkte
+### Dokumentation der Endpunkte
+
+Alle Endpunkte wurden mit OpenAPI dokumentiert.  
+Wenn die Anwednung ausgeführt wird, kann die Dokumentation hier aufgerufen werde:   
+
+[Swagger UI](http://localhost:3000/swagger-ui/index.html#/)
+
+Im Projekt wurde ein Endpunkt zum Aufrufen der Dokumentation implementiert.   
+Folgender Endpunkt leitet zur Swagger UI Dokumentation der API um:  
+
+[GET /user/swagger (localhost:3000/user/swagger)](localhost/user/swagger)
+
 
 
