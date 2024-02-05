@@ -117,6 +117,7 @@ public class UserController {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
+
     /**
      * Methode für das Laden aller User.
      * Delegiert das Laden aller User an den UserService.

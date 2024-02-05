@@ -42,10 +42,11 @@ public class SecurityConfig {
                 // Konfiguration der Zugriffsrechte
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                //.requestMatchers("/", "/user/register, "/external/register", "/user/login").permitAll()
-                                .requestMatchers("/user/**",
-                                        "/external/**",
-                                        "/admin/**",
+                                .requestMatchers("/user/register",
+                                        "/external/register",
+                                        "/user/login",
+                                        "/external/load/{id}",
+                                        "/user/load/{id}",
                                         "/swagger-ui/**" ,
                                         "/api-docs/**",
                                         "/swagger-ui.html"
