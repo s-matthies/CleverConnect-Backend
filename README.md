@@ -49,7 +49,7 @@ Das Projekt wird nun auf http://localhost:3000 gestartet.
 ## Details zum Projekt
 
 ### UseCase Diagramm
-<img src="../images/uc_diagramm.drawio.jpg" width="60%" height="60%">
+<img src="/images/uc_diagramm.drawio.png" width="60%" height="60%">
 
 
 ### Klassendiagramm
