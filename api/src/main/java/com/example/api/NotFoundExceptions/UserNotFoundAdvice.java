@@ -1,4 +1,4 @@
-package com.example.api.UserNotFound;
+package com.example.api.NotFoundExceptions;
 
 import com.example.api.NotFoundExceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
