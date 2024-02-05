@@ -65,18 +65,6 @@ public class BachelorSubject {
         this.id = id;
     }
 
-    public String getbDescription() {
-        return bDescription;
-    }
-
-    public void setbDescription(String bDescription) {
-        this.bDescription = bDescription;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
     public BachelorSubject() {
         this.date = LocalDate.now();
     }
@@ -85,25 +73,13 @@ public class BachelorSubject {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getBDescription() {
         return bDescription;
     }
 
-    public void setBDescription(String bDescription) {
-        this.bDescription = bDescription;
-    }
-
     public LocalDate getDate() {
         return date;
-    }
-
-
-    public External getExternal() {
-        return external;
     }
 
     public void setExternal(External external) {

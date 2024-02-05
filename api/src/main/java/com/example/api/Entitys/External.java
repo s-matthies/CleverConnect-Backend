@@ -43,29 +43,6 @@ public class External extends User{
 
 
     /**
-     * Methode um ein SpecialField zu wählen
-     * @param specialField - gewähltes SpecialField
-     */
-    public void choseField( SpecialField specialField) {
-        specialFields.add(specialField);
-    }
-
-
-    public External(Long id, String firstName, String lastName, String email, String password, LocalDate registrationDate,
-                    Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
-                    LocalDate availabilityEnd,
-                    String description, Set<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
-        super(id, firstName, lastName, email, password, registrationDate, role, locked, enabled);
-        this.company = company;
-        this.availabilityStart = availabilityStart;
-        this.availabilityEnd = availabilityEnd;
-        this.description = description;
-        this.specialFields = specialFields;
-        this.bachelorSubjects = bachelorSubjects;
-    }
-
-
-    /**
      * Konstruktor
      * @param firstName - Vorname des Externen
      * @param lastName - Nachname des Externen

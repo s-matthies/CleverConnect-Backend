@@ -9,7 +9,7 @@ import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Repository.SpecialFieldRepository;
 import com.example.api.Request.ExternalRequest;
-import com.example.api.UserNotFound.UserNotFoundException;
+import com.example.api.NotFoundExceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ import java.util.List;
 
 
 /**
- * Service-Klasse für externe Personen (Zweitbetreuer*innen)
+ * Service-Klasse für externe Personen
  */
 @Service
 public class ExternalService {
@@ -46,9 +46,9 @@ public class ExternalService {
 
 
     /**
-     * Konstruktor für die Service-Klasse für externe Personen (Zweitbetreuer*innen)
+     * Konstruktor für die Service-Klasse für externe Personen
      *
-     * @param externalRepository Die Repository-Klasse für externe Personen (Zweitbetreuer*innen)
+     * @param externalRepository Die Repository-Klasse für externe Personen
      * @param bCryptPasswordEncoder Die Klasse für das Verschlüsseln von Passwörtern
      * @param bachelorSubjectRepository Die Repository-Klasse für BachelorSubjects
      * @param emailService Die Service-Klasse für das Versenden von E-Mails
@@ -56,20 +56,22 @@ public class ExternalService {
     public ExternalService(ExternalRepository externalRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            BachelorSubjectRepository bachelorSubjectRepository,
+                           SpecialFieldRepository specialFieldRepository,
                            EmailService emailService) {
         this.externalRepository = externalRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.bachelorSubjectRepository = bachelorSubjectRepository;
+        this.specialFieldRepository = specialFieldRepository;
         this.emailService = emailService;
     }
 
 
     /**
-     * Methode für das Registrieren einer externen Person (Zweitbetreuer*in)
+     * Methode für das Registrieren einer externen Person
      *
-     * @param externalRequest Die Anfrage mit den Daten der externen Person (Zweitbetreuer*in)
+     * @param externalRequest Die Anfrage mit den Daten der externen Person
      * @param isAdmin Gibt an, ob die Registrierung von einem Admin durchgeführt wird
-     * @return ResponseEntity mit den Daten der registrierten externen Person (Zweitbetreuer*in)
+     * @return ResponseEntity mit den Daten der registrierten externen Person
      */
     @Transactional
     public ResponseEntity<Object> registration(ExternalRequest externalRequest, boolean isAdmin) {
@@ -117,6 +119,7 @@ public class ExternalService {
 
             // BachelorSubjects behandeln
             List<BachelorSubject> bachelorSubjects = externalRequest.getBachelorSubjects();
+            List<SpecialField> specialFields = null;
             if (bachelorSubjects != null) {
                 for (BachelorSubject subject : bachelorSubjects) {
                     // für jedes BachelorSubject die externe Person setzen
@@ -127,7 +130,7 @@ public class ExternalService {
                 // dazugehörige BachelorSubjects speichern
                 savedExternal.setBachelorSubjects(bachelorSubjectRepository.saveAll(bachelorSubjects));
 
-                List<SpecialField> specialFields = externalRequest.getSpecialFields();
+                specialFields = externalRequest.getSpecialFields();
                 if (specialFields != null) {
 
                     if (savedExternal.getSpecialFields() == null) {
@@ -145,7 +148,9 @@ public class ExternalService {
                     }
                 }
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedExternal);
+            ExternalDTO externalDTO = new ExternalDTO(savedExternal, specialFields, bachelorSubjects);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(externalDTO);
         } catch (IllegalStateException e) {
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.status(400).body(errorMessage);
@@ -154,11 +159,11 @@ public class ExternalService {
 
 
     /**
-     * Methode um eine externe Person (Zweitbetreuer*in) anhand der ID zu laden
+     * Methode um eine externe Person anhand der ID zu laden
      *
-     * @param id Die ID der zu ladenden externen Person (Zweitbetreuer*in)
-     * @return ExternalDTO mit den Daten der externen Person (Zweitbetreuer*in)
-     * @throws UserNotFoundException wenn die externe Person (Zweitbetreuer*in) nicht gefunden wurde
+     * @param id Die ID der zu ladenden externen Person
+     * @return ExternalDTO mit den Daten der externen Person
+     * @throws UserNotFoundException wenn die externe Person nicht gefunden wurde
      */
     public ExternalDTO getExternal(Long id) {
         External external = externalRepository.findById(id)
@@ -171,11 +176,11 @@ public class ExternalService {
 
 
     /**
-     * Methode um eine externe Person (Zweitbetreuer*in) anhand der E-Mail zu laden
+     * Methode um eine externe Person anhand der E-Mail zu laden
      *
-     * @param email Die E-Mail der zu ladenden externen Person (Zweitbetreuer*in)
-     * @return ExternalDTO mit den Daten der externen Person (Zweitbetreuer*in)
-     * @throws UserNotFoundException wenn die externe Person (Zweitbetreuer*in) nicht gefunden wurde
+     * @param email Die E-Mail der zu ladenden externen Person
+     * @return ExternalDTO mit den Daten der externen Person
+     * @throws UserNotFoundException wenn die externe Person nicht gefunden wurde
      */
     public ExternalDTO getExternalByEmail(String email) {
         External external = externalRepository.findByEmail(email)
@@ -206,11 +211,11 @@ public class ExternalService {
 
 
     /**
-     * Methode um eine externe Person (Zweitbetreuer*in) anhand der ID zu aktualisieren.
+     * Methode um eine externe Person anhand der ID zu aktualisieren.
      *
-     * @param id Die ID der zu aktualisierenden externen Person (Zweitbetreuer*in)
-     * @param externalRequest Die Anfrage mit den neuen Daten der externen Person (Zweitbetreuer*in)
-     * @return ResponseEntity mit den Daten der aktualisierten externen Person (Zweitbetreuer*in)
+     * @param id Die ID der zu aktualisierenden externen Person
+     * @param externalRequest Die Anfrage mit den neuen Daten der externen Person
+     * @return ResponseEntity mit den Daten der aktualisierten externen Person
      */
     public ResponseEntity<Object> updateExternal(Long id, ExternalRequest externalRequest) {
         try {
