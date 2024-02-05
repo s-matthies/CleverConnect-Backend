@@ -9,7 +9,7 @@ import com.example.api.Repository.BachelorSubjectRepository;
 import com.example.api.Repository.ExternalRepository;
 import com.example.api.Repository.SpecialFieldRepository;
 import com.example.api.Request.ExternalRequest;
-import com.example.api.UserNotFound.UserNotFoundException;
+import com.example.api.NotFoundExceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -112,7 +112,7 @@ public class UserController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"message\": \"Login war nicht erfolgreich! Email oder Passwort nicht korrekt!\"}")))
     })
-    public ResponseEntity<SignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> signInUser(@RequestBody LoginRequest loginRequest) {
         return userService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
@@ -248,6 +248,7 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
+
 
     /**
      * Methode für das Ausloggen eines Users.

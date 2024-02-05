@@ -1,4 +1,4 @@
-package com.example.api.BachelorSubjectNotFound;
+package com.example.api.NotFoundExceptions;
 
 /**
  * Diese Klasse ist eine Ausnahme, die ausgelöst wird, wenn ein BachelorSubject nicht gefunden wurde.
