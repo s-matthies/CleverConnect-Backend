@@ -1,5 +1,7 @@
 package com.example.api.DTO;
 
+import java.time.LocalDate;
+
 /**
  * Diese Klasse ist ein DTO Objekt, welches die Daten für ein BachelorSubject enthält.
  */
@@ -7,9 +9,9 @@ public class BachelorSubjectDTO {
 
     private String title;
     private String bDescription;
-    private String date;
+    private LocalDate date;
 
-    public BachelorSubjectDTO(String title, String bDescription, String date) {
+    public BachelorSubjectDTO(String title, String bDescription, LocalDate date) {
         this.title = title;
         this.bDescription = bDescription;
         this.date = date;
@@ -31,11 +33,9 @@ public class BachelorSubjectDTO {
         this.bDescription = bDescription;
     }
 
-    public String getDate() {
-        return date;
-    }
+    public LocalDate getDate() { return date; }
 
-    public void setDate(String value) {
-        this.date = value;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

@@ -4,6 +4,7 @@ import com.example.api.Entitys.BachelorSubject;
 import com.example.api.Entitys.External;
 import com.example.api.Entitys.SpecialField;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,19 +47,26 @@ public class ExternalDTO {
     }
 
     private List<SpecialFieldDTO> convertSpecialFieldsToDTO(List<SpecialField> specialFields) {
+        if (specialFields == null) {
+            return new ArrayList<>(); // Leere Liste, falls keine SpecialFields vorhanden
+        }
         return specialFields.stream()
                 .map(field -> new SpecialFieldDTO(field.getName()))
                 .collect(Collectors.toList());
     }
 
     private List<BachelorSubjectDTO> convertBachelorSubjectsToDTO(List<BachelorSubject> bachelorSubjects) {
-        return bachelorSubjects.stream()
-                .map(subject -> new BachelorSubjectDTO(
-                        subject.getTitle(),
-                        subject.getBDescription(),
-                        subject.getDate().toString()))
-                .collect(Collectors.toList());
+        if (bachelorSubjects == null){
+            return new ArrayList<>(); // Leere Liste, falls keine BachelorSubjects vorhanden
     }
+    return bachelorSubjects.stream()
+                    .map(subject -> new BachelorSubjectDTO(
+                            subject.getTitle(),
+                            subject.getBDescription(),
+                            subject.getDate()))
+                    .collect(Collectors.toList());
+}
+
 
     public Long getId() {
         return id;
