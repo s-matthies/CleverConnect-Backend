@@ -11,7 +11,6 @@ public class SignInResponse {
     private Long id;
 
     public SignInResponse() {
-
     }
 
     public SignInResponse(String token, Role role, Long id) {

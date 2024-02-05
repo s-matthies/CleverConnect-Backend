@@ -6,6 +6,7 @@ import com.example.api.Request.LoginRequest;
 import com.example.api.Request.PasswordChangeRequest;
 import com.example.api.Request.UserRequest;
 import com.example.api.Service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -276,6 +277,7 @@ public class UserController {
         return userService.signOut(request, response);
     }
 
+
     /**
      * Methode für das Ändern des Passworts eines Users.
      * Nimmt ein JWT-Token und eine PasswordChangeRequest entgegen und delegiert das Ändern des Passworts an den UserService.
@@ -305,6 +307,7 @@ public class UserController {
     }
 
 
+    @Hidden
     @GetMapping("/swagger")
     public RedirectView redirectToSwagger() {
         return new RedirectView("http://localhost:3000/swagger-ui/index.html#/");
