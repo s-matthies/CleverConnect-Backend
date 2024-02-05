@@ -109,7 +109,7 @@ CREATE TABLE choosen_fields
 ### Dokumentation der Endpunkte
 
 Alle Endpunkte wurden mit OpenAPI dokumentiert.  
-Wenn die Anwednung ausgeführt wird, kann die Dokumentation hier aufgerufen werde:   
+Wenn die Anwendung ausgeführt wird, kann die Dokumentation hier aufgerufen werde:   
 
 [Swagger UI](http://localhost:3000/swagger-ui/index.html#/)
 
