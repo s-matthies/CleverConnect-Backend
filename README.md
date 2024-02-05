@@ -122,7 +122,7 @@ Wenn die Anwendung ausgeführt wird, kann die Dokumentation hier aufgerufen werd
 Im Projekt wurde ein Endpunkt zum Aufrufen der Dokumentation implementiert.   
 Folgender Endpunkt leitet zur Swagger UI Dokumentation der API um:  
 
-[GET /user/swagger (localhost:3000/user/swagger)](localhost/user/swagger)
+GET /user/swagger (localhost:3000/user/swagger)
 
 
 
