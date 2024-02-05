@@ -49,7 +49,7 @@ Das Projekt wird nun auf http://localhost:3000 gestartet.
 ## Details zum Projekt
 
 ### UseCase Diagramm
-<img src="images/uc_diagramm.drawio" width="60%" height="60%">
+<img src="images/uc_diagramm.drawio.jpg" width="60%" height="60%">
 
 
 ### Klassendiagramm
@@ -57,7 +57,7 @@ Das Projekt wird nun auf http://localhost:3000 gestartet.
 
 
 ### Datenbankentwurf
-<img src="images/Datenbankentwurf2_Team_C.drawio.png" width="50%" height="50%">
+<img src="images/Datenbankentwurf_Team_C.drawio.png" width="50%" height="50%">
 
 ### PostgresSQL-Datenbank anlegen
 
