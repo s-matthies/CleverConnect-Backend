@@ -1,5 +1,12 @@
 # Projekt CleverConnect
 
+Die Anwendung ermöglicht Studierenden eine Zweitbetreuung für ihre Bachelorarbeit zu finden.
+Es gibt drei Rollen von Nutzer*innen, die die Anwendung jeweils verschieden nutzen können und unterschiedliche Bereiche einsehen können.
+
+Eine umfassende Erklärung zu der Anwendung und ihrer Funktionialitäten ist hier zu finden:  
+https://gitlab.rz.htw-berlin.de/Fuerueze.Saritoprak/team-c-frontend-neu/-/tree/main2?ref_type=heads
+
+
 ## Technologien
 Im Rahmen des Projekts verwendete Technologien
 
