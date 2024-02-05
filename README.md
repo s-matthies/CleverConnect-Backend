@@ -1,5 +1,9 @@
 # Projekt CleverConnect
 
+Die Anwendung ermöglicht Studierenden eine Zweitbetreuung für ihre Bachelorarbeit zu finden.
+Es gibt drei Rollen von Nutzer*innen, die die Anwendung jeweils verschieden nutzen können und unetrschiedliche Bereiche einsehen können.
+Eine umfassende Erklärung zu der Anwendung und ihrer Funktionialitäten ist hier zu finden:  
+
 ## Technologien
 Im Rahmen des Projekts verwendete Technologien
 
