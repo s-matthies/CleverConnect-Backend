@@ -15,7 +15,7 @@ Im Rahmen des Projekts verwendete Technologien
 * **Maven**: Ein Werkzeug zur Verwaltung und zum Bau von Java-Projekten. Die Version wird durch Version von Spring Boot bestimmt.
 * **PostgresSQL**: Die Datenbank, die für die Speicherung der Daten verwendet wird.
 * **JPA/Hibernate**: Ein Framework zur Abbildung von Java-Objekten auf relationale Datenbanken. Die Version wird durch Version von Spring Boot bestimmt.
-* **OpenAPI/Swagger**: in Werkzeug zur Erstellung von API-Dokumentationen. Version 2.3.0
+* **OpenAPI/Swagger**: Ein Werkzeug zur Erstellung von API-Dokumentationen. Version 2.3.0
 
 
 
@@ -64,11 +64,18 @@ Das Projekt wird nun auf http://localhost:3000 gestartet.
 Erstellen der Tabellen
 
 
->>> Muss geprüft werden!
->>> Create User table fehlt
->>> liber Pdf/Bild einfügen, für bessere Übersicht
-
 ```
+CREATE TABLE Users
+	(id	 				SERIAL PRIMARY KEY,
+	 first_name			VARCHAR(30),
+	 last_name			VARCHAR(30),
+	 email				VARCHAR(100) UNIQUE NOT NULL,
+	 password			VARCHAR(255) NOT NULL,
+	 role 				VARCHAR(10) CHECK (role IN ('ADMIN', 'STUDENT', 'EXTERN')),
+     locked 			BOOLEAN,
+     enabled 			BOOLEAN,
+	 registration_date	DATE);
+
 CREATE TABLE Externals  
     (id                 SERIAL PRIMARY KEY,  
      first_name         VARCHAR(30),
@@ -91,7 +98,6 @@ CREATE TABLE Bachelor_Subject
      date               DATE,
      external_id        SERIAL,
      FOREIGN KEY (external_id) REFERENCES Externals(id) ON DELETE CASCADE);
-
 
 CREATE TABLE Special_Field
 	(id             SERIAL PRIMARY KEY,
