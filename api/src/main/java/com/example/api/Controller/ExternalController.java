@@ -46,30 +46,34 @@ public class ExternalController {
             @ApiResponse(responseCode = "201", description = "Erfolgreich registriert",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExternalDTO.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 1,\n" +
-                                    "  \"firstName\": \"Missy\",\n" +
-                                    "  \"lastName\": \"Elliot\",\n" +
-                                    "  \"email\": \"missy@test.com\",\n" +
-                                    "  \"registrationDate\": \"2024-02-04\",\n" +
-                                    "  \"role\": \"EXTERN\",\n" +
-                                    "  \"company\": \"Big Company\",\n" +
-                                    "  \"availabilityStart\": \"2023-12-12\",\n" +
-                                    "  \"availabilityEnd\": \"2024-11-11\",\n" +
-                                    "  \"description\": \"ich bin hoch motiviert\",\n" +
-                                    "  \"specialFields\": [\n" +
-                                    "    {\n" +
-                                    "      \"name\": \"Cybersecurity\"\n" +
-                                    "    },\n" +
-                                    "  ],\n" +
-                                    "  \"bachelorSubjects\": [\n" +
-                                    "    {\n" +
-                                    "      \"title\": \"Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen\",\n" +
-                                    "      \"date\": \"2024-02-04\",\n" +
-                                    "      \"bdescription\": \"super Thema\"\n" +
-                                    "    }\n" +
-                                    "  ]\n" +
-                                    "}"))),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "id": 1,
+                                      "firstName": "Missy",
+                                      "lastName": "Elliot",
+                                      "email": "missy@test.com",
+                                      "registrationDate": "2024-02-04",
+                                      "role": "EXTERN",
+                                      "company": "Big Company",
+                                      "availabilityStart": "2023-12-12",
+                                      "availabilityEnd": "2024-11-11",
+                                      "description": "ich bin hoch motiviert",
+                                      "specialFields": [
+                                        {
+                                          "name": "Cybersecurity"
+                                        },
+                                        {
+                                          "name": "Datenbanken"
+                                        }
+                                      ],
+                                      "bachelorSubjects": [
+                                        {
+                                          "title": "Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen",
+                                          "date": "2024-02-04",
+                                          "bdescription": "super Thema"
+                                        }
+                                      ]
+                                    }"""))),
             @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"error\": \"Die E-Mail ist bereits vergeben!\"}"))),
@@ -110,30 +114,31 @@ public class ExternalController {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExternalDTO.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 1,\n" +
-                                    "  \"firstName\": \"Missy\",\n" +
-                                    "  \"lastName\": \"Elliot\",\n" +
-                                    "  \"email\": \"missy@test.com\",\n" +
-                                    "  \"registrationDate\": \"2024-02-04\",\n" +
-                                    "  \"role\": \"EXTERN\",\n" +
-                                    "  \"company\": \"Big Company\",\n" +
-                                    "  \"availabilityStart\": \"2023-12-12\",\n" +
-                                    "  \"availabilityEnd\": \"2024-11-11\",\n" +
-                                    "  \"description\": \"ich bin hoch motiviert\",\n" +
-                                    "  \"specialFields\": [\n" +
-                                    "    {\n" +
-                                    "      \"name\": \"Cybersecurity\"\n" +
-                                    "    },\n" +
-                                    "  ],\n" +
-                                    "  \"bachelorSubjects\": [\n" +
-                                    "    {\n" +
-                                    "      \"title\": \"Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen\",\n" +
-                                    "      \"date\": \"2024-02-04\",\n" +
-                                    "      \"bdescription\": \"super Thema\"\n" +
-                                    "    }\n" +
-                                    "  ]\n" +
-                                    "}"))),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "id": 1,
+                                      "firstName": "Missy",
+                                      "lastName": "Elliot",
+                                      "email": "missy@test.com",
+                                      "registrationDate": "2024-02-04",
+                                      "role": "EXTERN",
+                                      "company": "Big Company",
+                                      "availabilityStart": "2023-12-12",
+                                      "availabilityEnd": "2024-11-11",
+                                      "description": "ich bin hoch motiviert",
+                                      "specialFields": [
+                                        {
+                                          "name": "Cybersecurity"
+                                        }
+                                      ],
+                                      "bachelorSubjects": [
+                                        {
+                                          "title": "Auswirkungen von Cyberangriffen auf Musiker_innen und Musikunternehmen",
+                                          "date": "2024-02-04",
+                                          "bdescription": "super Thema"
+                                        }
+                                      ]
+                                    }"""))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"error\": \"User not found\", \"userId\": 1}"))),
