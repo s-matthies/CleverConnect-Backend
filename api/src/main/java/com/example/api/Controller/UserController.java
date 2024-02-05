@@ -5,7 +5,6 @@ import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.PasswordChangeRequest;
 import com.example.api.Request.UserRequest;
-import com.example.api.Security.auth.AuthenticationService;
 import com.example.api.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,18 +34,15 @@ public class UserController {
 
     @Autowired
     private final UserService userService;
-    private final AuthenticationService service;
 
     /**
      * Konstruktor für die Klasse UserController.
      * Initialisiert den UserController mit einem UserService und einem AuthenticationService.
      *
      * @param userService Der Service für die Benutzer*innenverwaltung
-     * @param service Der Service für die Authentifizierung
      */
-    public UserController(UserService userService, AuthenticationService service) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.service = service;
     }
 
     /**
@@ -63,25 +59,26 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "Erfolgreich registriert",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "\"id\": 1,\n" +
-                                    "\"firstName\": \"Nicki\",\n" +
-                                    "\"lastName\": \"Minaj\",\n" +
-                                    "\"email\": \"nicki.minaj@test.com\",\n" +
-                                    "\"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
-                                    "\"registrationDate\": \"2024-01-17\",\n" +
-                                    "\"role\": \"STUDENT\",\n" +
-                                    "\"enabled\": true,\n" +
-                                    "\"username\": \"nicki.minaj@test.com\",\n" +
-                                    "\"authorities\": [\n" +
-                                    "{\n" +
-                                    "\"authority\": \"STUDENT\"\n" +
-                                    "}\n" +
-                                    "],\n" +
-                                    "\"accountNonExpired\": true,\n" +
-                                    "\"credentialsNonExpired\": true,\n" +
-                                    "\"accountNonLocked\": true\n" +
-                                    "}"))),
+                            examples = @ExampleObject(value = """
+                                    {
+                                    "id": 1,
+                                    "firstName": "Nicki",
+                                    "lastName": "Minaj",
+                                    "email": "nicki.minaj@test.com",
+                                    "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
+                                    "registrationDate": "2024-01-17",
+                                    "role": "STUDENT",
+                                    "enabled": true,
+                                    "username": "nicki.minaj@test.com",
+                                    "authorities": [
+                                    {
+                                    "authority": "STUDENT"
+                                    }
+                                    ],
+                                    "accountNonExpired": true,
+                                    "credentialsNonExpired": true,
+                                    "accountNonLocked": true
+                                    }"""))),
 
             @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
@@ -105,11 +102,12 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Erfolgreich eingeloggt",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SignInResponse.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuaWNraS5taW5hampAdGVzdC5jb20\",\n" +
-                                    "\"role\": \"STUDENT\",\n" +
-                                    "\"id\": 1\n" +
-                                    "}"))),
+                            examples = @ExampleObject(value = """
+                                    {
+                                    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuaWNraS5taW5hampAdGVzdC5jb20",
+                                    "role": "STUDENT",
+                                    "id": 1
+                                    }"""))),
             @ApiResponse(responseCode = "401", description = "Nicht autorisiert",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"message\": \"Login war nicht erfolgreich! Email oder Passwort nicht korrekt!\"}")))
@@ -130,28 +128,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class),
-                            examples = @ExampleObject(value = "[\n" +
-                                    "  {\n" +
-                                    "    \"id\": 1,\n" +
-                                    "    \"firstName\": \"John\",\n" +
-                                    "    \"lastName\": \"Doe\",\n" +
-                                    "    \"email\": \"john.doe@example.com\",\n" +
-                                    "    \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
-                                    "    \"registrationDate\": \"2024-02-04\",\n" +
-                                    "    \"role\": \"STUDENT\",\n" +
-                                    "    \"enabled\": true,\n" +
-                                    "    \"username\": \"johndoe\",\n" +
-                                    "    \"authorities\": [\n" +
-                                    "      {\n" +
-                                    "        \"authority\": \"STUDENT\"\n" +
-                                    "      }\n" +
-                                    "    ],\n" +
-                                    "    \"credentialsNonExpired\": true,\n" +
-                                    "    \"accountNonExpired\": true,\n" +
-                                    "    \"accountNonLocked\": true\n" +
-                                    "  }\n" +
-                                    "]"))),
+                            schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "500", description = "Interner Serverfehler")
     })
     List<User> allUsers() {
@@ -173,25 +150,26 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 1,\n" +
-                                    "  \"firstName\": \"John\",\n" +
-                                    "  \"lastName\": \"Doe\",\n" +
-                                    "  \"email\": \"john.doe@example.com\",\n" +
-                                    "  \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
-                                    "  \"registrationDate\": \"2024-02-04\",\n" +
-                                    "  \"role\": \"STUDENT\",\n" +
-                                    "  \"enabled\": true,\n" +
-                                    "  \"username\": \"johndoe\",\n" +
-                                    "  \"authorities\": [\n" +
-                                    "    {\n" +
-                                    "      \"authority\": \"STUDENT\"\n" +
-                                    "    }\n" +
-                                    "  ],\n" +
-                                    "  \"credentialsNonExpired\": true,\n" +
-                                    "  \"accountNonExpired\": true,\n" +
-                                    "  \"accountNonLocked\": true\n" +
-                                    "}"
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "id": 1,
+                                      "firstName": "John",
+                                      "lastName": "Doe",
+                                      "email": "john.doe@example.com",
+                                      "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
+                                      "registrationDate": "2024-02-04",
+                                      "role": "STUDENT",
+                                      "enabled": true,
+                                      "username": "johndoe",
+                                      "authorities": [
+                                        {
+                                          "authority": "STUDENT"
+                                        }
+                                      ],
+                                      "credentialsNonExpired": true,
+                                      "accountNonExpired": true,
+                                      "accountNonLocked": true
+                                    }"""
                             ))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
@@ -218,25 +196,26 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Erfolgreich aktualisiert",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class),
-                            examples = @ExampleObject(value = "{\n" +
-                                    "  \"id\": 1,\n" +
-                                    "  \"firstName\": \"John\",\n" +
-                                    "  \"lastName\": \"Doe\",\n" +
-                                    "  \"email\": \"john.doe@example.com\",\n" +
-                                    "  \"password\": \"$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i\",\n" +
-                                    "  \"registrationDate\": \"2024-02-04\",\n" +
-                                    "  \"role\": \"STUDENT\",\n" +
-                                    "  \"enabled\": true,\n" +
-                                    "  \"username\": \"johndoe\",\n" +
-                                    "  \"authorities\": [\n" +
-                                    "    {\n" +
-                                    "      \"authority\": \"STUDENT\"\n" +
-                                    "    }\n" +
-                                    "  ],\n" +
-                                    "  \"credentialsNonExpired\": true,\n" +
-                                    "  \"accountNonExpired\": true,\n" +
-                                    "  \"accountNonLocked\": true\n" +
-                                    "}"
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "id": 1,
+                                      "firstName": "John",
+                                      "lastName": "Doe",
+                                      "email": "john.doe@example.com",
+                                      "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
+                                      "registrationDate": "2024-02-04",
+                                      "role": "STUDENT",
+                                      "enabled": true,
+                                      "username": "johndoe",
+                                      "authorities": [
+                                        {
+                                          "authority": "STUDENT"
+                                        }
+                                      ],
+                                      "credentialsNonExpired": true,
+                                      "accountNonExpired": true,
+                                      "accountNonLocked": true
+                                    }"""
                             ))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
