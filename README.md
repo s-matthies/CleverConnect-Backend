@@ -114,15 +114,15 @@ CREATE TABLE choosen_fields
 
 ### Dokumentation der Endpunkte
 
-Alle Endpunkte wurden mit OpenAPI dokumentiert.  
+Alle Endpunkte wurden mit **OpenAPI** dokumentiert.  
 Wenn die Anwendung ausgeführt wird, kann die Dokumentation hier aufgerufen werde:   
 
 [Swagger UI](http://localhost:3000/swagger-ui/index.html#/)
 
 Im Projekt wurde ein Endpunkt zum Aufrufen der Dokumentation implementiert.   
-Folgender Endpunkt leitet zur Swagger UI Dokumentation der API um:  
+Folgender Endpunkt leitet zur Dokumentation der Endpunkte weiter:  
 
-GET /user/swagger (localhost:3000/user/swagger)
+**GET /user/swagger** (localhost:3000/user/swagger)
 
 
 
