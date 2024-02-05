@@ -72,8 +72,8 @@ CREATE TABLE Users
 	 email				VARCHAR(100) UNIQUE NOT NULL,
 	 password			VARCHAR(255) NOT NULL,
 	 role 				VARCHAR(10) CHECK (role IN ('ADMIN', 'STUDENT', 'EXTERN')),
-     locked 			BOOLEAN,
-     enabled 			BOOLEAN,
+         locked 			BOOLEAN,
+         enabled 			BOOLEAN,
 	 registration_date	DATE);
 
 CREATE TABLE Externals  
