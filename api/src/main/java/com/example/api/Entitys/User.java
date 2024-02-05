@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Objects;
 
 
+/**
+ * Entity Klasse für die User
+ */
 @Entity
 @Table(name = "Users")
 //  jede Klasse in der Vererbungshierarchie wird einer eigenen Tabelle in der Datenbank zugeordnet

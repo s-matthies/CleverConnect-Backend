@@ -41,24 +41,6 @@ public class External extends User{
     )
     private Set<SpecialField> specialFields = new HashSet<>();
 
-
-    /**
-     * Konstruktor
-     * @param firstName - Vorname des Externen
-     * @param lastName - Nachname des Externen
-     * @param email - Email des Externen
-     * @param password - Passwort des Externen
-     * @param registrationDate - Registrierungsdatum des Externen
-     * @param role - Rolle des Externen
-     * @param locked - gesperrt
-     * @param enabled - aktiviert
-     * @param company - Firma des Externen
-     * @param availabilityStart - Verfügbarkeitsstart des Externen
-     * @param availabilityEnd - Verfügbarkeitsende des Externen
-     * @param description - Beschreibung des Externen
-     * @param specialFields - gewählte SpecialFields des Externen
-     * @param bachelorSubjects - Bachelorthemen des Externen
-     */
     public External(String firstName, String lastName, String email, String password, LocalDate registrationDate,
                     Role role, boolean locked, boolean enabled, String company, LocalDate availabilityStart,
                     LocalDate availabilityEnd, String description, Set<SpecialField> specialFields, List<BachelorSubject> bachelorSubjects) {
@@ -71,7 +53,6 @@ public class External extends User{
         this.bachelorSubjects = bachelorSubjects;
 
     }
-
 
     public External() {
     }

@@ -1,6 +1,7 @@
 package com.example.api.Service;
 
 import com.example.api.DTO.SignInResponse;
+import com.example.api.DTO.UserDTO;
 import com.example.api.Entitys.Role;
 import com.example.api.Entitys.User;
 import com.example.api.Repository.UserRepository;
@@ -109,7 +110,9 @@ public class UserService implements UserDetailsService {
 
             emailService.sendWelcomeEmailUser(email, firstName, lastName);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+            UserDTO response = new UserDTO(savedUser);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalStateException e) {
             String errorMessage = "{\"error\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorMessage);
@@ -135,6 +138,7 @@ public class UserService implements UserDetailsService {
         ));
     }
 
+
     /**
      * Lädt einen User anhand der angegebenen ID.
      *
@@ -142,9 +146,11 @@ public class UserService implements UserDetailsService {
      * @return Der gefundene User.
      * @throws UserNotFoundException Falls der User nicht gefunden wird.
      */
-    public User getUser(Long id) {
-        return userRepository.findById(id)
+    public ResponseEntity<UserDTO> getUser(Long id) {
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+        UserDTO response = new UserDTO(existingUser);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -166,18 +172,21 @@ public class UserService implements UserDetailsService {
      * @return ResponseEntity mit einer Erfolgsmeldung und dem HTTP-Status OK.
      * @throws UserNotFoundException Falls der User nicht gefunden wird.
      */
-    public ResponseEntity<User> updateUser(Long id, User newUser) {
+    public ResponseEntity<UserDTO> updateUser(Long id, User newUser) {
 
-            User existingUser = userRepository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException(id));
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-            //existierende USerin mit neuen Daten updaten
-            existingUser.setFirstName(newUser.getFirstName());
-            existingUser.setLastName(newUser.getLastName());
-            existingUser.setEmail(newUser.getEmail());
+        //existierende Userin mit neuen Daten updaten
+        existingUser.setFirstName(newUser.getFirstName());
+        existingUser.setLastName(newUser.getLastName());
+        existingUser.setEmail(newUser.getEmail());
 
-            User savedUser = userRepository.save(existingUser);
-            return ResponseEntity.ok(savedUser);
+        User savedUser = userRepository.save(existingUser);
+
+        UserDTO response = new UserDTO(savedUser);
+
+        return ResponseEntity.ok(response);
     }
 
 
@@ -319,10 +328,8 @@ public class UserService implements UserDetailsService {
             String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
             existingUser.setPassword(encodedPassword);
 
-            // User speichern
-            User savedUser = userRepository.save(existingUser);
+            userRepository.save(existingUser);
 
-            // Erfolgsnachricht zurückgeben
             String message = "Passwort erfolgreich geändert";
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
         } catch (UserNotFoundException e) {

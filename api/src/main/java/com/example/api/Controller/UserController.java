@@ -1,6 +1,7 @@
 package com.example.api.Controller;
 
 import com.example.api.DTO.SignInResponse;
+import com.example.api.DTO.UserDTO;
 import com.example.api.Entitys.User;
 import com.example.api.Request.LoginRequest;
 import com.example.api.Request.PasswordChangeRequest;
@@ -59,28 +60,16 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Erfolgreich registriert",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class),
+                            schema = @Schema(implementation = UserDTO.class),
                             examples = @ExampleObject(value = """
                                     {
                                     "id": 1,
                                     "firstName": "Nicki",
                                     "lastName": "Minaj",
                                     "email": "nicki.minaj@test.com",
-                                    "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
                                     "registrationDate": "2024-01-17",
-                                    "role": "STUDENT",
-                                    "enabled": true,
-                                    "username": "nicki.minaj@test.com",
-                                    "authorities": [
-                                    {
-                                    "authority": "STUDENT"
-                                    }
-                                    ],
-                                    "accountNonExpired": true,
-                                    "credentialsNonExpired": true,
-                                    "accountNonLocked": true
+                                    "role": "STUDENT"
                                     }"""))),
-
             @ApiResponse(responseCode = "400", description = "Ungültige Anfrage",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"message\": \"E-Mail Adresse ist bereits vergeben!\"}")))
@@ -125,13 +114,12 @@ public class UserController {
      * @return ResponseEntity mit den Daten aller User
      */
     @GetMapping("/load")
-    @Operation(summary = "Lädt alle Studierenden (und Admins)",
-            description = "Ruft eine Liste aller registrierten Studierenden (und Admins) ab.")
+    @Operation(summary = "Lädt alle User",
+            description = "Ruft eine Liste aller registrierten Benutzer:innen ab.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class))),
-            @ApiResponse(responseCode = "500", description = "Interner Serverfehler")
     })
     List<User> allUsers() {
         return userService.allUser();
@@ -151,33 +139,21 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich geladen",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class),
+                            schema = @Schema(implementation = UserDTO.class),
                             examples = @ExampleObject(value = """
                                     {
-                                      "id": 1,
-                                      "firstName": "John",
-                                      "lastName": "Doe",
-                                      "email": "john.doe@example.com",
-                                      "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
-                                      "registrationDate": "2024-02-04",
-                                      "role": "STUDENT",
-                                      "enabled": true,
-                                      "username": "johndoe",
-                                      "authorities": [
-                                        {
-                                          "authority": "STUDENT"
-                                        }
-                                      ],
-                                      "credentialsNonExpired": true,
-                                      "accountNonExpired": true,
-                                      "accountNonLocked": true
-                                    }"""
-                            ))),
+                                    "id": 1,
+                                    "firstName": "Nicki",
+                                    "lastName": "Minaj",
+                                    "email": "nicki.minaj@test.com",
+                                    "registrationDate": "2024-01-17",
+                                    "role": "STUDENT"
+                                    }"""))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"error\": \"User not found\", \"userId\": 1"))),
     })
-    User getUsers(@PathVariable Long id) {
+    ResponseEntity<UserDTO> getUsers(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
@@ -187,7 +163,7 @@ public class UserController {
      * Nimmt eine ID und ein User-Objekt mit den aktualisierten Informationen entgegen
      * und delegiert das Aktualisieren an den UserService.
      *
-     * @param id Die ID des Users
+     * @param id      Die ID des Users
      * @param newUser Das User-Objekt, das die aktualisierten Informationen enthält
      * @return ResponseEntity mit den aktualisierten Benutzer*innen-Informationen
      */
@@ -197,33 +173,21 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Erfolgreich aktualisiert",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class),
+                            schema = @Schema(implementation = UserDTO.class),
                             examples = @ExampleObject(value = """
-                                    {
-                                      "id": 1,
-                                      "firstName": "John",
-                                      "lastName": "Doe",
-                                      "email": "john.doe@example.com",
-                                      "password": "$2a$10$FqKFfbM7/caXdXjoVjbtNuGHXHIU4GW4pznpbK3e1MIcN5N0UjI/i",
-                                      "registrationDate": "2024-02-04",
-                                      "role": "STUDENT",
-                                      "enabled": true,
-                                      "username": "johndoe",
-                                      "authorities": [
-                                        {
-                                          "authority": "STUDENT"
-                                        }
-                                      ],
-                                      "credentialsNonExpired": true,
-                                      "accountNonExpired": true,
-                                      "accountNonLocked": true
-                                    }"""
-                            ))),
+                                   {
+                                    "id": 1,
+                                    "firstName": "Nicki",
+                                    "lastName": "Minaj",
+                                    "email": "nicki.minaj@test.com",
+                                    "registrationDate": "2024-01-17",
+                                    "role": "STUDENT"
+                                    }"""))),
             @ApiResponse(responseCode = "404", description = "Nicht gefunden",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class),
                             examples = @ExampleObject(value = "{\"error\": \"User not found\", \"userId\": 1}"))),
     })
-    public ResponseEntity<User> updateUser (@PathVariable Long id, @RequestBody User newUser) {
+    public ResponseEntity<UserDTO> updateUser (@PathVariable Long id, @RequestBody User newUser) {
         return userService.updateUser(id, newUser);
     }
 
