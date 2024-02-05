@@ -46,6 +46,13 @@ Das Projekt wird nun auf http://localhost:3000 gestartet.
 
 ### Datenbank
 
+Wir nutzen für das Projekt eine PostgresSQL-Datenbank.
+Sie ist auf dem Server cleverconnect (IP-Adresse: 141.45.146.134) installiert.
+
+- Name der Datenbank: clever
+- UserName: clever_user
+- Passwort: cleverconnect
+
 ## Details zum Projekt
 
 ### UseCase Diagramm
