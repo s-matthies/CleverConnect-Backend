@@ -19,7 +19,6 @@ Im Rahmen des Projekts verwendete Technologien
 
 
 
-
 ## Projekt lokal ausführen
 
 Um dieses Projekt lokal auszuführen, führen Sie die folgenden Schritte aus:
@@ -55,18 +54,8 @@ Sie ist auf dem Server cleverconnect (IP-Adresse: 141.45.146.134) installiert.
 
 ## Details zum Projekt
 
-### UseCase Diagramm
-<img src="/images/uc_diagramm.drawio.png" width="60%" height="60%">
 
-
-### Klassendiagramm
-<img src="images/Klassendiagramm.drawio.jpg" width="60%" height="60%">
-
-
-### Datenbankentwurf
-<img src="images/Datenbankentwurf2_Team_C.drawio.png" width="50%" height="50%">
-
-### PostgresSQL-Datenbank anlegen
+### PostgreSQL-Datenbank 
 
 Erstellen der Tabellen
 
@@ -118,9 +107,8 @@ CREATE TABLE choosen_fields
     FOREIGN KEY (special_field_id) REFERENCES Special_Field(id) ON DELETE CASCADE);
 ```
 
-## Dokumentation
 
-### Dokumentation der Endpunkte
+## Dokumentation der Endpunkte
 
 Alle Endpunkte wurden mit **OpenAPI** dokumentiert.  
 Wenn die Anwendung ausgeführt wird, kann die Dokumentation hier aufgerufen werde:   
@@ -132,9 +120,7 @@ Folgender Endpunkt leitet zur Dokumentation der Endpunkte weiter:
 
 **GET `/user/swagger`** (localhost:3000/user/swagger)
 
-### Javadoc-Dokumentation
 
-Die Javadoc-Dokumentation für dieses Projekt wurde generiert und kann im Verzeichnis `target/site/apidocs` gefunden werden. Sie können die Dokumentation anzeigen, indem Sie die Datei `index.html` in diesem Verzeichnis in einem Webbrowser öffnen.
 
 
 
