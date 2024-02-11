@@ -57,7 +57,7 @@ Sie ist auf dem Server cleverconnect (IP-Adresse: 141.45.146.134) installiert.
 
 ### PostgreSQL-Datenbank 
 
-Erstellen der Tabellen
+<details><summary>Skript zur Erstellung der Tabellen</summary>
 
 
 ```
@@ -106,7 +106,7 @@ CREATE TABLE choosen_fields
     FOREIGN KEY (external_id) REFERENCES Externals(id) ON DELETE CASCADE,
     FOREIGN KEY (special_field_id) REFERENCES Special_Field(id) ON DELETE CASCADE);
 ```
-
+</details>
 
 ## Dokumentation der Endpunkte
 
