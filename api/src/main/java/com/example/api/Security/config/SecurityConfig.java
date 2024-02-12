@@ -42,22 +42,19 @@ public class SecurityConfig {
                 // Konfiguration der Zugriffsrechte
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/user/register",
-                                        "/external/register",
-                                        "/user/login",
-                                        "/external/load/{id}",
-                                        "/user/load/{id}",
-                                        "/swagger-ui/**" ,
-                                        "/api-docs/**",
-                                        "/swagger-ui.html"
+                                .requestMatchers("/user/register", // Zugriff auf die Registrierung
+                                        "/external/register", // Zugriff auf die Registrierung
+                                        "/user/login", // Zugriff auf den Login
+                                        "/swagger-ui/**" , // Zugriff auf die Swagger-UI
+                                        "/api-docs/**", // Zugriff auf die API-Dokumentation
+                                        "/swagger-ui.html" // Zugriff auf die Swagger-UI
                                 ).permitAll()
-                                //.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
-                                //.requestMatchers("/external/**").hasAnyRole("EXTERN","ADMIN")
-                                //.requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
+                                .anyRequest().authenticated() // alle anderen Anfragen müssen authentifiziert sein
 
                 )
+                // Konfiguration des JWT-Authentifizierungs-Filters
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                // Konfiguration der Sitzungsverwaltung
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
