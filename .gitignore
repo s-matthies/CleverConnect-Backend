@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,macos,windows
 
@@ -150,6 +150,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,macos,windows
+<<<<<<< HEAD
 =======
 .idea
 
@@ -188,3 +189,5 @@ build/
 .vscode/
 
 >>>>>>> 4f8eda50636913ae2fa64bc7283398e776708f21
+=======
+>>>>>>> 315bdfb22bb4fe4b249ba3d26318227aea8e98dc
